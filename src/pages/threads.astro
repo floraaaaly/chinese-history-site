@@ -1,0 +1,172 @@
+---
+import threads from '../data/threads.json';
+
+// 类别顺序：大势统领，其后分门别类
+const categoryOrder = ['母题', '思想', '制度', '民族', '科技', '文艺'];
+const categoryDesc: Record<string, string> = {
+  '母题': '贯通古今、反复上演的历史母题——观复之眼所凝视者',
+  '思想': '思想流派的兴替与交锋',
+  '制度': '权力与治理结构的演进',
+  '民族': '农耕与游牧的千年互动',
+  '科技': '技术与物质文明的脉络',
+  '文艺': '文学艺术的流变',
+};
+const grouped = categoryOrder
+  .map((cat) => ({ cat, items: threads.filter((t) => t.category === cat) }))
+  .filter((g) => g.items.length > 0);
+---
+
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>脉络 · 观复</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="texture-overlay" aria-hidden="true"></div>
+<div class="grain-overlay" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="/" class="logo-link"><img src="/logo.png" alt="观复" class="site-logo" /></a>
+      <nav class="top-nav">
+        <a href="/threads" class="nav-link active">脈絡</a>
+        <a href="/people" class="nav-link">人物</a>
+        <a href="/shijing" class="nav-link">詩境</a>
+      </nav>
+    </div>
+  </div>
+  <div class="header-rule"><div class="container"><div class="rule-line"></div></div></div>
+</header>
+
+<main class="container">
+
+  <section class="intro">
+    <h1 class="intro-title">脉络</h1>
+    <p class="intro-sub">万物并作，吾以观复</p>
+    <p class="intro-text">历史不是一堆孤立的事件，而是若干贯穿千年的主线在反复演变。顺着脉络去看，方能于纷繁中见条理、于兴亡中观其复。</p>
+  </section>
+
+  {grouped.map((g) => (
+    <section class="cat-block">
+      <div class="cat-head">
+        <h2 class="cat-name">{g.cat}</h2>
+        <span class="cat-desc">{categoryDesc[g.cat]}</span>
+      </div>
+      <div class="thread-grid">
+        {g.items.map((t) => (
+          <a href={`/thread/${t.id}`} class="thread-card">
+            <div class="tc-top">
+              <span class="tc-cat">{t.category}</span>
+              <span class="tc-span">{t.span_label}</span>
+            </div>
+            <h3 class="tc-title">{t.title}</h3>
+            <p class="tc-summary">{t.summary}</p>
+            <span class="tc-arrow">展开脉络 →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <p class="footer-name">观 复</p>
+      <p class="footer-sub">Every era leaves a trace.</p>
+      <p class="footer-note">万物并作，吾以观复</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
+<style>
+:root {
+  --bg: #F2EDE3;
+  --bg-card: #FAF7F0;
+  --ink: #1A1814;
+  --ink-light: #6B6458;
+  --red: #B83232;
+  --blue: #3F6F8F;
+  --font-serif: 'Noto Serif SC', 'Songti SC', serif;
+  --font-en: 'EB Garamond', Georgia, serif;
+  --max-w: 880px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: var(--font-serif); background-color: var(--bg); color: var(--ink); line-height: 1.85; overflow-x: hidden; }
+.container { position: relative; z-index: 1; max-width: var(--max-w); margin: 0 auto; padding: 0 2rem; }
+a, a:visited, a:link { color: inherit; text-decoration: none; }
+
+.texture-overlay {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 250px;
+}
+.grain-overlay {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(160,148,128,0.04) 2px,rgba(160,148,128,0.04) 3px);
+}
+
+.site-header { padding-top: 3.5rem; }
+.header-inner { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; }
+.logo-link { display: inline-block; }
+.site-logo { display: block; width: 170px; height: auto; mix-blend-mode: multiply; opacity: 0.88; transition: opacity 0.2s; }
+.logo-link:hover .site-logo { opacity: 1; }
+.top-nav { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; padding-bottom: 0.2rem; }
+.nav-link { font-family: var(--font-serif); font-size: 0.82rem; letter-spacing: 0.14em; color: var(--ink-light); transition: color 0.2s; }
+.nav-link:hover, .nav-link.active { color: var(--ink); }
+.nav-link.active { border-bottom: 1px solid var(--ink); }
+.header-rule { margin-top: 1.5rem; }
+.rule-line { height: 1px; background: linear-gradient(to right, transparent, var(--ink) 15%, var(--ink) 85%, transparent); opacity: 0.18; }
+
+/* 引子 */
+.intro { text-align: center; padding: 3rem 0 1rem; }
+.intro-title { font-size: 2.4rem; font-weight: 700; letter-spacing: 0.3em; color: var(--ink); }
+.intro-sub { font-family: var(--font-en); font-style: italic; font-size: 0.9rem; color: var(--red); letter-spacing: 0.06em; margin-top: 0.6rem; }
+.intro-text { max-width: 540px; margin: 1.4rem auto 0; font-size: 0.9rem; line-height: 2; color: var(--ink-light); letter-spacing: 0.02em; }
+
+/* 类别分组 */
+.cat-block { margin-top: 3rem; }
+.cat-head { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding-bottom: 0.7rem; border-bottom: 1px solid rgba(42,38,32,0.14); margin-bottom: 1.5rem; }
+.cat-name { font-size: 1.3rem; font-weight: 700; letter-spacing: 0.2em; color: var(--ink); }
+.cat-desc { font-size: 0.78rem; color: var(--ink-light); letter-spacing: 0.02em; }
+
+.thread-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.thread-card {
+  display: block; position: relative; padding: 1.3rem 1.4rem 1.2rem;
+  background: var(--bg-card); border: 1px solid rgba(42,38,32,0.12); border-left: 3px solid var(--blue);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.thread-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(42,38,32,0.1); }
+.tc-top { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.6rem; }
+.tc-cat { font-size: 0.66rem; color: var(--blue); border: 1px solid var(--blue); padding: 0.05em 0.45em; letter-spacing: 0.1em; }
+.tc-span { font-family: var(--font-en); font-size: 0.74rem; color: var(--ink-light); }
+.tc-title { font-size: 1.35rem; font-weight: 500; letter-spacing: 0.1em; color: var(--ink); margin-bottom: 0.6rem; }
+.thread-card:hover .tc-title { color: var(--blue); }
+.tc-summary { font-size: 0.82rem; line-height: 1.95; color: var(--ink-light); letter-spacing: 0.02em; }
+.tc-arrow { display: inline-block; margin-top: 0.9rem; font-size: 0.74rem; color: var(--blue); letter-spacing: 0.06em; opacity: 0; transition: opacity 0.2s; }
+.thread-card:hover .tc-arrow { opacity: 1; }
+
+.site-footer { padding: 4rem 0 2.5rem; margin-top: 4rem; border-top: 1px solid rgba(42,38,32,0.1); }
+.footer-inner { text-align: center; }
+.footer-name { font-family: var(--font-serif); font-size: 1.1rem; font-weight: normal; letter-spacing: 0.22em; margin-bottom: 0.25rem; color: var(--ink); }
+.footer-sub { font-family: var(--font-en); font-style: italic; font-size: 0.78rem; color: var(--red); margin-bottom: 0.75rem; }
+.footer-note { font-size: 0.7rem; color: var(--ink-light); opacity: 0.55; letter-spacing: 0.04em; }
+
+@media (max-width: 640px) {
+  .thread-grid { grid-template-columns: 1fr; }
+  .intro-title { font-size: 2rem; }
+}
+</style>

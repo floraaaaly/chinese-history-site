@@ -1,0 +1,148 @@
+---
+// 关联图谱组件：Obsidian 式力导向关系网
+// nodes: { id, label, type:'event'|'person'|'poem', url?, current? }
+// links: { source, target }
+interface GNode { id: string; label: string; type: string; url?: string; current?: boolean; }
+interface GLink { source: string; target: string; }
+interface Props { nodes: GNode[]; links: GLink[]; }
+const { nodes, links } = Astro.props as Props;
+const show = nodes.length > 1;
+---
+
+{show && (
+  <section class="module graph-module">
+    <h2 class="gm-title">关联图谱</h2>
+    <p class="gm-hint">朱红为当前页面 · 拖动可移动 · 点击节点跳转</p>
+    <div id="relation-graph" class="relation-graph"></div>
+    <div class="gm-legend">
+      <span class="lg lg-cur">● 当前</span>
+      <span class="lg lg-ev">● 事件</span>
+      <span class="lg lg-pe">■ 人物</span>
+      <span class="lg lg-ph">◆ 脉络</span>
+      <span class="lg lg-po">▲ 诗词</span>
+    </div>
+  </section>
+
+  <script is:inline src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script is:inline define:vars={{ nodes, links }}>
+    (function () {
+      function init() {
+        if (typeof d3 === 'undefined') { return setTimeout(init, 60); }
+        var el = document.getElementById('relation-graph');
+        if (!el || el.dataset.ready) return;
+        el.dataset.ready = '1';
+
+        var width = el.clientWidth || 640;
+        var height = el.clientHeight || 460;
+        var INK = '#1A1814', RED = '#B83232', PAPER = '#FAF7F0', LIGHT = '#6B6458';
+
+        var typeColor = { event: INK, person: RED, thread: '#3F6F8F', poem: '#9A7B3F' };
+        function nodeSize(d) {
+          if (d.current) return 13;
+          return d.type === 'person' ? 8 : (d.type === 'thread' || d.type === 'poem' ? 9 : 8);
+        }
+
+        var svg = d3.select(el).append('svg')
+          .attr('width', '100%').attr('height', height)
+          .attr('viewBox', '0 0 ' + width + ' ' + height);
+
+        var link = svg.append('g').attr('stroke', 'rgba(42,38,32,0.22)').attr('stroke-width', 1)
+          .selectAll('line').data(links).join('line');
+
+        var node = svg.append('g').selectAll('g').data(nodes).join('g')
+          .attr('class', 'gnode')
+          .style('cursor', function (d) { return d.current ? 'default' : 'pointer'; })
+          .call(d3.drag()
+            .on('start', function (e, d) { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+            .on('drag', function (e, d) { d.fx = e.x; d.fy = e.y; })
+            .on('end', function (e, d) { if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }));
+
+        // 不同类型用不同形状：事件=圆 · 人物=方 · 脉络=菱形 · 诗词=三角
+        node.each(function (d) {
+          var g = d3.select(this);
+          var c = d.current ? RED : (typeColor[d.type] || INK);
+          var s = nodeSize(d);
+          var shape;
+          if (d.type === 'person') {
+            shape = g.append('rect').attr('x', -s).attr('y', -s).attr('width', 2 * s).attr('height', 2 * s).attr('rx', 1.5);
+          } else if (d.type === 'thread') {
+            shape = g.append('path').attr('d', 'M0,' + (-s * 1.15) + ' L' + (s * 1.15) + ',0 L0,' + (s * 1.15) + ' L' + (-s * 1.15) + ',0 Z');
+          } else if (d.type === 'poem') {
+            shape = g.append('path').attr('d', 'M0,' + (-s * 1.1) + ' L' + (s) + ',' + (s * 0.8) + ' L' + (-s) + ',' + (s * 0.8) + ' Z');
+          } else {
+            shape = g.append('circle').attr('r', s);
+          }
+          shape.attr('class', 'gshape')
+            .attr('fill', c)
+            .attr('fill-opacity', d.current ? 0.92 : 0.2)
+            .attr('stroke', c)
+            .attr('stroke-width', 2)
+            .attr('stroke-linejoin', 'round');
+        });
+
+        node.append('text')
+          .text(function (d) { return d.label; })
+          .attr('y', function (d) { return nodeSize(d) + 15; })
+          .attr('text-anchor', 'middle')
+          .attr('font-family', "'Noto Serif SC', serif")
+          .attr('font-size', function (d) { return d.current ? '0.8rem' : '0.72rem'; })
+          .attr('font-weight', function (d) { return d.current ? 600 : 400; })
+          .attr('fill', INK)
+          .attr('stroke', PAPER).attr('stroke-width', 3).attr('paint-order', 'stroke')
+          .style('pointer-events', 'none');
+
+        node.on('mouseenter', function () {
+          d3.select(this).select('.gshape').transition().duration(120).attr('transform', 'scale(1.25)');
+          d3.select(this).select('text').attr('fill', RED);
+        }).on('mouseleave', function () {
+          d3.select(this).select('.gshape').transition().duration(120).attr('transform', null);
+          d3.select(this).select('text').attr('fill', INK);
+        }).on('click', function (e, d) {
+          if (d.url && !d.current) window.location.href = d.url;
+        });
+
+        var sim = d3.forceSimulation(nodes)
+          .force('link', d3.forceLink(links).id(function (d) { return d.id; }).distance(96).strength(0.6))
+          .force('charge', d3.forceManyBody().strength(-280))
+          .force('center', d3.forceCenter(width / 2, height / 2))
+          .force('collide', d3.forceCollide(38))
+          .on('tick', function () {
+            nodes.forEach(function (d) {
+              d.x = Math.max(46, Math.min(width - 46, d.x));
+              d.y = Math.max(28, Math.min(height - 28, d.y));
+            });
+            link.attr('x1', function (d) { return d.source.x; })
+                .attr('y1', function (d) { return d.source.y; })
+                .attr('x2', function (d) { return d.target.x; })
+                .attr('y2', function (d) { return d.target.y; });
+            node.attr('transform', function (d) { return 'translate(' + d.x + ',' + d.y + ')'; });
+          });
+      }
+      if (document.readyState !== 'loading') init();
+      else document.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+)}
+
+<style>
+.graph-module { max-width: 640px; margin: 3.5rem auto 0; }
+.gm-title {
+  font-size: 0.92rem; font-weight: 500; letter-spacing: 0.22em; color: #1A1814;
+  padding-bottom: 0.7rem; border-bottom: 1px solid rgba(42,38,32,0.14);
+}
+.gm-hint { margin-top: 0.8rem; font-size: 0.74rem; color: #6B6458; letter-spacing: 0.04em; opacity: 0.8; }
+.relation-graph {
+  margin-top: 1rem; height: 460px; width: 100%;
+  border: 1px solid rgba(42,38,32,0.16); background: #FAF7F0;
+}
+.gm-legend { margin-top: 0.7rem; display: flex; gap: 1.1rem; flex-wrap: wrap; font-size: 0.7rem; color: #6B6458; letter-spacing: 0.04em; }
+.lg-cur { color: #B83232; }
+.lg-ev { color: #1A1814; }
+.lg-pe { color: #B83232; opacity: 0.85; }
+.lg-ph { color: #3F6F8F; }
+.lg-po { color: #9A7B3F; }
+
+@media (max-width: 600px) {
+  .relation-graph { height: 360px; }
+}
+</style>

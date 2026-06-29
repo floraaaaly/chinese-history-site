@@ -1,0 +1,152 @@
+/* ============================================================
+   观复 · 全局样式
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+/* ── 变量 ── */
+:root {
+  --bg:         #F2EDE3;
+  --bg-card:    #FAF7F2;
+  --ink:        #1A1814;
+  --ink-light:  #6B6458;
+  --red:        #B83232;
+  --red-light:  #C8404040;
+  --rule:       #2C2820;
+  --rule-light: #C4BAB020;
+
+  --font-serif: 'Noto Serif SC', 'Songti SC', 'STSong', serif;
+  --font-en:    'EB Garamond', 'Georgia', serif;
+
+  --max-w: 780px;
+}
+
+/* ── 重置 ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-serif);
+  background-color: var(--bg);
+  color: var(--ink);
+  line-height: 1.85;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── 宣纸纹理（SVG noise 叠加） ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* 纸张纤维感：细横纹 */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(180, 168, 148, 0.04) 3px,
+    rgba(180, 168, 148, 0.04) 4px
+  );
+}
+
+/* ── 版心 ── */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ── 斑驳大标题 ── */
+.title-distressed {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--ink);
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.12em;
+}
+
+.title-distressed::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04 0.08' numOctaves='5' seed='8' stitchTiles='stitch' result='noise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='noise' scale='4' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23d)' fill='%23F2EDE3' opacity='0.45'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* ── 朱红印章标签 ── */
+.tag-red {
+  display: inline-block;
+  font-family: var(--font-serif);
+  font-size: 0.72rem;
+  color: var(--red);
+  border: 1.5px solid var(--red);
+  padding: 0.1em 0.55em;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  position: relative;
+}
+
+.tag-red::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border: 0.5px solid var(--red);
+  opacity: 0.3;
+}
+
+/* ── 细分割线 ── */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--rule) 20%, var(--rule) 80%, transparent);
+  opacity: 0.25;
+  margin: 2rem 0;
+}
+
+/* ── 朱批竖线（诗词模块用） ── */
+.verse-block {
+  border-left: 2.5px solid var(--red);
+  padding-left: 1.25rem;
+  margin: 1rem 0;
+}
+
+/* ── 链接 ── */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--red);
+}
+
+/* ── 滚动条 ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--ink-light); opacity: 0.4; }
