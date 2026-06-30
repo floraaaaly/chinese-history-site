@@ -57,5 +57,11 @@
   { "id": "sima-yan", "name": "司马炎", "dynasty": "西晋", "role": "君主", "summary": "晋武帝，受魏禅而建西晋，后灭吴一统天下，结束三国鼎立。" },
   { "id": "sima-rui", "name": "司马睿", "dynasty": "东晋", "role": "君主", "summary": "晋元帝，西晋覆灭后于建康重建晋室，是为东晋，偏安江左。" },
   { "id": "li-yuan", "name": "李渊", "dynasty": "唐", "role": "君主", "summary": "唐高祖，隋末自太原起兵，攻入长安建立唐朝，开三百年大唐基业。" },
-  { "id": "song-gaozong", "name": "赵构", "dynasty": "南宋", "role": "君主", "summary": "宋高宗，靖康之变后于南方重建宋室，是为南宋，偏安临安。" }
+  { "id": "song-gaozong", "name": "赵构", "dynasty": "南宋", "role": "君主", "summary": "宋高宗，靖康之变后于南方重建宋室，是为南宋，偏安临安。" },
+  { "id": "wang-wei", "name": "王维", "dynasty": "唐", "role": "诗人", "summary": "字摩诘，盛唐山水田园诗派代表，诗中有画、画中有诗，兼通禅理，世称诗佛。" },
+  { "id": "tao-yuanming", "name": "陶渊明", "dynasty": "东晋", "role": "诗人", "summary": "号五柳先生，不为五斗米折腰，归隐田园，开中国田园诗一派，淡远高古。" },
+  { "id": "liu-zongyuan", "name": "柳宗元", "dynasty": "唐", "role": "诗人", "summary": "字子厚，唐宋八大家之一，参与永贞革新失败被贬，山水游记与诗文清峻孤峭。" },
+  { "id": "wang-changling", "name": "王昌龄", "dynasty": "唐", "role": "诗人", "summary": "字少伯，盛唐边塞诗派代表，七绝圣手，气势雄浑，有「诗家夫子」之誉。" },
+  { "id": "li-shangyin", "name": "李商隐", "dynasty": "唐", "role": "诗人", "summary": "字义山，晚唐诗坛巨擘，工于律绝，辞采瑰丽、情思深隐，无题诸作千古难解。" },
+  { "id": "li-yu", "name": "李煜", "dynasty": "南唐", "role": "词人", "summary": "南唐后主，亡国之君却为千古词帝，国破后词风由绮丽转为沉痛，血泪铸句。" }
 ]

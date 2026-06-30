@@ -1,6 +1,7 @@
 ---
 import events from '../data/events.json';
 import eras from '../data/eras.json';
+import SiteSearch from '../components/SiteSearch.astro';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 function getDynastyGroup(dynasty: string) {
@@ -75,16 +76,10 @@ function formatYear(y: number) {
   </div>
 </header>
 
-<!-- 搜索 -->
+<!-- 四维搜索 -->
 <section class="search-section">
   <div class="container">
-    <div class="search-wrap">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/>
-      </svg>
-      <input type="search" id="search-input" class="search-input"
-        placeholder="搜索事件、人物、诗词、意象……" autocomplete="off" />
-    </div>
+    <SiteSearch placeholder="搜索事件、人物、诗词、脉络……" />
   </div>
 </section>
 
@@ -210,13 +205,9 @@ function formatYear(y: number) {
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       const selected = tab.dataset.dynasty || '全部';
-      const searchInput = document.getElementById('search-input') as HTMLInputElement;
-      if (searchInput) searchInput.value = '';
       blocks.forEach(block => {
         const group = block.dataset.dynastyGroup || '';
         block.style.display = selected === '全部' || group === selected ? 'block' : 'none';
-        // 重置块内条目显隐
-        block.querySelectorAll<HTMLElement>('.timeline-item').forEach(it => (it.style.display = ''));
       });
     });
   });
@@ -225,24 +216,6 @@ function formatYear(y: number) {
   document.querySelectorAll<HTMLElement>('.tl-card').forEach(card => {
     card.addEventListener('mouseenter', () => card.classList.add('is-hovered'));
     card.addEventListener('mouseleave', () => card.classList.remove('is-hovered'));
-  });
-
-  // 搜索：跨时代过滤事件，自动隐藏空时代段
-  const searchInput = document.getElementById('search-input') as HTMLInputElement;
-  searchInput?.addEventListener('input', () => {
-    const q = searchInput.value.trim().toLowerCase();
-    if (q) tabs.forEach(t => t.classList.remove('active'));
-    else tabs.forEach(t => t.classList.toggle('active', t.dataset.dynasty === '全部'));
-
-    blocks.forEach(block => {
-      let visible = 0;
-      block.querySelectorAll<HTMLElement>('.timeline-item').forEach(it => {
-        const match = !q || (it.textContent?.toLowerCase() || '').includes(q);
-        it.style.display = match ? '' : 'none';
-        if (match) visible++;
-      });
-      block.style.display = visible > 0 ? 'block' : 'none';
-    });
   });
 </script>
 
@@ -336,7 +309,7 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 .rule-line { height: 1px; background: linear-gradient(to right, transparent, var(--ink) 15%, var(--ink) 85%, transparent); opacity: 0.18; }
 
 /* 搜索 */
-.search-section { padding: 1.75rem 0 0; }
+.search-section { padding: 1.75rem 0 0; position: relative; z-index: 30; }
 .search-wrap { position: relative; display: flex; align-items: center; }
 .search-icon { position: absolute; left: 1rem; width: 15px; height: 15px; color: var(--ink-light); pointer-events: none; }
 .search-input {

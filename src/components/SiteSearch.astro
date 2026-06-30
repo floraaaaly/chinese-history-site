@@ -1,0 +1,128 @@
+---
+// 四维搜索：事件 / 人物 / 诗词 / 脉络，即时下拉结果
+import events from '../data/events.json';
+import people from '../data/people.json';
+import poems from '../data/poems.json';
+import threads from '../data/threads.json';
+
+interface Props { placeholder?: string; autofocus?: boolean; }
+const { placeholder = '搜索事件、人物、诗词、脉络……', autofocus = false } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const peopleMap = Object.fromEntries(people.map((p) => [p.id, p.name]));
+
+function fy(y: number) { return y < 0 ? `前${Math.abs(y)}` : `${y}`; }
+
+const records = [
+  ...events.map((e) => ({
+    t: '事件', title: e.title, url: `${base}event/${e.id}`,
+    sub: `${e.dynasty} · ${fy(e.year_start)}`,
+    kw: [e.title, e.summary, e.dynasty, (e.category || []).join(''), (e.tags || []).join(''),
+      (e.related_people || []).map((id) => peopleMap[id] || '').join('')].join(' '),
+  })),
+  ...people.map((p) => ({
+    t: '人物', title: p.name, url: `${base}person/${p.id}`,
+    sub: `${p.dynasty} · ${p.role}`,
+    kw: [p.name, p.role, p.dynasty, p.summary].join(' '),
+  })),
+  ...poems.map((p) => ({
+    t: '诗词', title: p.title, url: `${base}poem/${p.id}`,
+    sub: `${p.author} · ${p.dynasty}`,
+    kw: [p.title, p.author, p.dynasty, (p.lines || []).join(''), (p.imagery || []).join(''),
+      (p.motif || []).join('')].join(' '),
+  })),
+  ...threads.map((t) => ({
+    t: '脉络', title: t.title, url: `${base}thread/${t.id}`,
+    sub: `脉络 · ${t.category}`,
+    kw: [t.title, t.category, t.summary, (t.tags || []).join('')].join(' '),
+  })),
+];
+---
+
+<div class="sitesearch" data-sitesearch>
+  <div class="ss-wrap">
+    <svg class="ss-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L20 20" />
+    </svg>
+    <input type="search" class="ss-input" placeholder={placeholder} autocomplete="off" autofocus={autofocus} />
+  </div>
+  <div class="ss-panel" hidden></div>
+</div>
+
+<script is:inline define:vars={{ records }}>
+  (function () {
+    document.querySelectorAll('[data-sitesearch]').forEach(function (root) {
+      if (root.dataset.ready) return;
+      root.dataset.ready = '1';
+      var input = root.querySelector('.ss-input');
+      var panel = root.querySelector('.ss-panel');
+      var order = ['事件', '人物', '诗词', '脉络'];
+
+      function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+      function render(q) {
+        var query = q.trim().toLowerCase();
+        if (!query) { panel.hidden = true; panel.innerHTML = ''; return; }
+        var hits = records.filter(function (r) { return r.kw.toLowerCase().indexOf(query) !== -1; });
+        if (hits.length === 0) {
+          panel.innerHTML = '<div class="ss-empty">未找到「' + esc(q) + '」相关内容</div>';
+          panel.hidden = false; return;
+        }
+        var groups = {};
+        hits.forEach(function (r) { (groups[r.t] = groups[r.t] || []).push(r); });
+        var html = '';
+        order.forEach(function (t) {
+          var arr = groups[t]; if (!arr) return;
+          html += '<div class="ss-group"><div class="ss-gt">' + t + '<span class="ss-gc">' + arr.length + '</span></div>';
+          arr.slice(0, 6).forEach(function (r) {
+            html += '<a class="ss-item" href="' + r.url + '"><span class="ss-title">' + esc(r.title) + '</span><span class="ss-sub">' + esc(r.sub) + '</span></a>';
+          });
+          if (arr.length > 6) html += '<div class="ss-more">还有 ' + (arr.length - 6) + ' 条…</div>';
+          html += '</div>';
+        });
+        panel.innerHTML = html;
+        panel.hidden = false;
+      }
+
+      input.addEventListener('input', function () { render(input.value); });
+      input.addEventListener('focus', function () { if (input.value.trim()) render(input.value); });
+      document.addEventListener('click', function (e) {
+        if (!root.contains(e.target)) { panel.hidden = true; }
+      });
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { panel.hidden = true; input.blur(); }
+        if (e.key === 'Enter') { var first = panel.querySelector('.ss-item'); if (first) window.location.href = first.getAttribute('href'); }
+      });
+    });
+  })();
+</script>
+
+<style is:global>
+.sitesearch { position: relative; max-width: 560px; margin: 0 auto; }
+.ss-wrap { position: relative; display: flex; align-items: center; }
+.ss-icon { position: absolute; left: 1rem; width: 16px; height: 16px; color: #6B6458; pointer-events: none; }
+.ss-input {
+  width: 100%; font-family: 'Noto Serif SC', serif; font-size: 0.9rem; color: #1A1814;
+  background: rgba(250,247,240,0.6); border: 1px solid rgba(42,38,32,0.2); border-radius: 0;
+  padding: 0.7rem 1rem 0.7rem 2.8rem; outline: none; transition: border-color 0.2s; letter-spacing: 0.03em;
+}
+.ss-input::placeholder { color: #6B6458; opacity: 0.65; }
+.ss-input:focus { border-color: #1A1814; }
+
+.ss-panel {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 50;
+  background: #FAF7F0; border: 1px solid rgba(42,38,32,0.18); box-shadow: 0 10px 30px rgba(42,38,32,0.14);
+  max-height: 60vh; overflow-y: auto; padding: 0.4rem 0;
+}
+.ss-group { padding: 0.3rem 0; }
+.ss-group + .ss-group { border-top: 1px solid rgba(42,38,32,0.08); }
+.ss-gt { font-size: 0.7rem; letter-spacing: 0.16em; color: #6B6458; padding: 0.4rem 1rem 0.3rem; display: flex; align-items: center; gap: 0.5rem; }
+.ss-gc { font-family: 'EB Garamond', serif; font-size: 0.66rem; color: #B83232; }
+.ss-item { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.5rem 1rem; transition: background 0.15s; }
+.ss-item:hover { background: rgba(184,50,50,0.06); }
+.ss-title { font-size: 0.92rem; color: #1A1814; letter-spacing: 0.03em; }
+.ss-item:hover .ss-title { color: #B83232; }
+.ss-sub { font-size: 0.72rem; color: #6B6458; flex-shrink: 0; }
+.ss-more { font-size: 0.7rem; color: #6B6458; opacity: 0.7; padding: 0.2rem 1rem 0.4rem; }
+.ss-empty { font-size: 0.82rem; color: #6B6458; padding: 0.9rem 1rem; text-align: center; }
+</style>
