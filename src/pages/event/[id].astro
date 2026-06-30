@@ -4,6 +4,7 @@ import poems from '../../data/poems.json';
 import people from '../../data/people.json';
 import threads from '../../data/threads.json';
 import RelationGraph from '../../components/RelationGraph.astro';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 export function getStaticPaths() {
   return events.map((e) => ({ params: { id: e.id }, props: { event: e } }));
@@ -55,10 +56,10 @@ const hasMap = mapPoints.length > 0;
 const relPeopleIds = new Set(relPeople.map((p) => p.id));
 const relEventIds = new Set(relEvents.map((e) => e.id));
 const graphNodes = [
-  { id: event.id, label: event.title, type: 'event', current: true, url: `/event/${event.id}` },
-  ...relThreads.map((t) => ({ id: 'th:' + t.id, label: t.title, type: 'thread', url: `/thread/${t.id}` })),
-  ...relPeople.map((p) => ({ id: 'p:' + p.id, label: p.name, type: 'person', url: `/person/${p.id}` })),
-  ...relEvents.map((e) => ({ id: e.id, label: e.title, type: 'event', url: `/event/${e.id}` })),
+  { id: event.id, label: event.title, type: 'event', current: true, url: `${base}event/${event.id}` },
+  ...relThreads.map((t) => ({ id: 'th:' + t.id, label: t.title, type: 'thread', url: `${base}thread/${t.id}` })),
+  ...relPeople.map((p) => ({ id: 'p:' + p.id, label: p.name, type: 'person', url: `${base}person/${p.id}` })),
+  ...relEvents.map((e) => ({ id: e.id, label: e.title, type: 'event', url: `${base}event/${e.id}` })),
 ];
 const graphLinks = [
   ...relThreads.map((t) => ({ source: event.id, target: 'th:' + t.id })),
@@ -114,11 +115,11 @@ relThreads.forEach((t) => {
 <header class="site-header">
   <div class="container">
     <div class="header-inner">
-      <a href="/" class="logo-link"><img src="/logo.png" alt="观复" class="site-logo" /></a>
+      <a href={base} class="logo-link"><img src={`${base}logo.png`} alt="观复" class="site-logo" /></a>
       <nav class="top-nav">
-        <a href="/threads" class="nav-link">脈絡</a>
-        <a href="/people" class="nav-link">人物</a>
-        <a href="/shijing" class="nav-link">詩境</a>
+        <a href={`${base}threads`} class="nav-link">脈絡</a>
+        <a href={`${base}people`} class="nav-link">人物</a>
+        <a href={`${base}shijing`} class="nav-link">詩境</a>
       </nav>
     </div>
   </div>
@@ -127,7 +128,7 @@ relThreads.forEach((t) => {
 
 <main class="container detail">
 
-  <a href="/" class="back-link">← 返回時間軸</a>
+  <a href={base} class="back-link">← 返回時間軸</a>
 
   <!-- 事件标题区 -->
   <div class="event-head">
@@ -227,7 +228,7 @@ relThreads.forEach((t) => {
       <h2 class="module-title">所属脉络</h2>
       <div class="rel-events">
         {relThreads.map((t) => (
-          <a href={`/thread/${t.id}`} class="rel-event">
+          <a href={`${base}thread/${t.id}`} class="rel-event">
             <span class="rel-event-year"><span class="rel-cat">{t.category}</span></span>
             <span class="rel-event-title">{t.title}</span>
             <span class="rel-event-arrow">→</span>
@@ -243,7 +244,7 @@ relThreads.forEach((t) => {
       <h2 class="module-title">相关人物</h2>
       <div class="people-grid">
         {relPeople.map((p) => (
-          <a href={`/person/${p.id}`} class="person-card">
+          <a href={`${base}person/${p.id}`} class="person-card">
             <div class="person-top">
               <span class="person-name">{p.name}</span>
               <span class="person-role">{p.dynasty} · {p.role}</span>
@@ -261,7 +262,7 @@ relThreads.forEach((t) => {
       <h2 class="module-title">相关事件</h2>
       <div class="rel-events">
         {relEvents.map((e) => (
-          <a href={`/event/${e.id}`} class="rel-event">
+          <a href={`${base}event/${e.id}`} class="rel-event">
             <span class="rel-event-year">
               {e.year_start === e.year_end ? formatYear(e.year_start) : `${formatYear(e.year_start)}—`}
             </span>

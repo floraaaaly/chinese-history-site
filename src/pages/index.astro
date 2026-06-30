@@ -1,6 +1,7 @@
 ---
 import events from '../data/events.json';
 import eras from '../data/eras.json';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 function getDynastyGroup(dynasty: string) {
   if (['先秦','夏','商','西周','春秋','战国','春秋战国'].includes(dynasty)) return '先秦';
@@ -57,15 +58,15 @@ function formatYear(y: number) {
   <div class="container">
     <div class="header-inner">
       <div class="site-identity">
-        <a href="/" class="logo-link">
-          <img src="/logo.png" alt="观复" class="site-logo" />
+        <a href={base} class="logo-link">
+          <img src={`${base}logo.png`} alt="观复" class="site-logo" />
         </a>
         <p class="site-subtitle">Every era leaves a trace.</p>
       </div>
       <nav class="top-nav">
-        <a href="/threads" class="nav-link">脈絡</a>
-        <a href="/people" class="nav-link">人物</a>
-        <a href="/shijing" class="nav-link">詩境</a>
+        <a href={`${base}threads`} class="nav-link">脈絡</a>
+        <a href={`${base}people`} class="nav-link">人物</a>
+        <a href={`${base}shijing`} class="nav-link">詩境</a>
       </nav>
     </div>
   </div>
@@ -138,7 +139,7 @@ function formatYear(y: number) {
                   {group.major && (
                     <article class="timeline-item is-major" data-id={group.major.id}>
                       <span class="tl-node"></span>
-                      <a href={`/event/${group.major.id}`} class="tl-card">
+                      <a href={`${base}event/${group.major.id}`} class="tl-card">
                         <div class="tl-meta">
                           <span class="tl-year">{yl(group.major)}</span>
                           <span class="tag-red tl-dynasty">{group.major.dynasty}</span>
@@ -164,7 +165,7 @@ function formatYear(y: number) {
                       {group.minors.map((m) => (
                         <article class="timeline-item is-minor" data-id={m.id}>
                           <span class="tl-node"></span>
-                          <a href={`/event/${m.id}`} class="tl-card minor">
+                          <a href={`${base}event/${m.id}`} class="tl-card minor">
                             <div class="tl-minor-row">
                               <span class="tl-year">{yl(m)}</span>
                               <span class="tl-title">{m.title}</span>

@@ -1,5 +1,6 @@
 ---
 import threads from '../data/threads.json';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 // 类别顺序：大势统领，其后分门别类
 const categoryOrder = ['母题', '思想', '制度', '民族', '科技', '文艺'];
@@ -34,11 +35,11 @@ const grouped = categoryOrder
 <header class="site-header">
   <div class="container">
     <div class="header-inner">
-      <a href="/" class="logo-link"><img src="/logo.png" alt="观复" class="site-logo" /></a>
+      <a href={base} class="logo-link"><img src={`${base}logo.png`} alt="观复" class="site-logo" /></a>
       <nav class="top-nav">
-        <a href="/threads" class="nav-link active">脈絡</a>
-        <a href="/people" class="nav-link">人物</a>
-        <a href="/shijing" class="nav-link">詩境</a>
+        <a href={`${base}threads`} class="nav-link active">脈絡</a>
+        <a href={`${base}people`} class="nav-link">人物</a>
+        <a href={`${base}shijing`} class="nav-link">詩境</a>
       </nav>
     </div>
   </div>
@@ -61,7 +62,7 @@ const grouped = categoryOrder
       </div>
       <div class="thread-grid">
         {g.items.map((t) => (
-          <a href={`/thread/${t.id}`} class="thread-card">
+          <a href={`${base}thread/${t.id}`} class="thread-card">
             <div class="tc-top">
               <span class="tc-cat">{t.category}</span>
               <span class="tc-span">{t.span_label}</span>
