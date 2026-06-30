@@ -142,7 +142,7 @@ const graphLinks = [
       {relPoems.map((poem) => (
         <div class="poem-block">
           <div class="poem-head">
-            <span class="poem-name">《{poem.title}》</span>
+            <a href={`${base}poem/${poem.id}`} class="poem-name">《{poem.title}》</a>
             <span class="poem-author">{poem.author} · {poem.dynasty}</span>
           </div>
           <div class="poem-lines">
@@ -306,7 +306,8 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 .poem-block { border-left: 2.5px solid var(--red); padding-left: 1.3rem; margin-bottom: 2rem; }
 .poem-block:last-child { margin-bottom: 0; }
 .poem-head { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.7rem; }
-.poem-name { font-size: 1.05rem; font-weight: 500; letter-spacing: 0.06em; }
+.poem-name { font-size: 1.05rem; font-weight: 500; letter-spacing: 0.06em; color: var(--ink); transition: color 0.2s; }
+.poem-name:hover { color: var(--red); }
 .poem-author { font-size: 0.78rem; color: var(--ink-light); }
 .poem-line { font-size: 0.95rem; line-height: 2.05; letter-spacing: 0.08em; color: var(--ink); }
 
