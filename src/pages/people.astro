@@ -5,8 +5,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 // 身份 → 类别
 function roleCategory(role: string) {
-  if (['君主', '大汗'].includes(role)) return '君主';
-  if (['丞相', '宰相', '谋臣', '谏臣', '钦差大臣', '改革家'].includes(role)) return '文臣';
+  if (['君主', '大汗', '太后'].includes(role)) return '君主';
+  if (['丞相', '宰相', '谋臣', '谏臣', '钦差大臣', '改革家', '重臣', '大臣'].includes(role)) return '文臣';
   if (['名将', '霸王', '将领', '起义领袖', '节度使'].includes(role)) return '武将';
   if (['思想家'].includes(role)) return '思想';
   if (['诗人', '词人'].includes(role)) return '文人';
@@ -35,6 +35,15 @@ const cats = catOrder.filter((c) => counts[c] > 0);
 
 <div class="texture-overlay" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="torn-edge" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.014 0.022" numOctaves="4" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="13" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 
 <header class="site-header">
   <div class="container">
@@ -129,7 +138,22 @@ const cats = catOrder.filter((c) => counts[c] > 0);
   loadMore?.addEventListener('click', () => { shown += BATCH; update(); });
 
   update();
+
+  // 撕纸墨迹高亮：JS 切换 .is-hovered（与时间轴统一的机制）
+  cards.forEach((card) => {
+    card.addEventListener('mouseenter', () => card.classList.add('is-hovered'));
+    card.addEventListener('mouseleave', () => card.classList.remove('is-hovered'));
+  });
 </script>
+
+<style is:global>
+.personcard.is-hovered { border-color: transparent; }
+.personcard.is-hovered::before {
+  content: ''; position: absolute; inset: 4px; z-index: 0; pointer-events: none;
+  background: rgba(255,255,255,0.62); filter: url(#torn-edge);
+}
+.personcard.is-hovered .pcc-name { color: #B83232; }
+</style>
 
 <style>
 :root {
@@ -192,10 +216,10 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 
 .people-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 2.5rem; }
 .personcard {
-  display: block; padding: 1.2rem 1.35rem; background: var(--bg-card);
-  border: 1px solid rgba(42,38,32,0.12); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  display: block; position: relative; padding: 1.2rem 1.35rem; background: var(--bg-card);
+  border: 1px solid rgba(42,38,32,0.12); transition: border-color 0.2s;
 }
-.personcard:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(42,38,32,0.1); border-color: rgba(184,50,50,0.4); }
+.personcard > * { position: relative; z-index: 1; }
 .pcc-top { display: flex; align-items: baseline; gap: 0.6rem; }
 .pcc-name { font-size: 1.2rem; font-weight: 500; letter-spacing: 0.08em; color: var(--ink); }
 .personcard:hover .pcc-name { color: var(--red); }

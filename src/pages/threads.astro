@@ -32,6 +32,15 @@ const grouped = categoryOrder
 <div class="texture-overlay" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="torn-edge" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.014 0.022" numOctaves="4" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="13" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
 <header class="site-header">
   <div class="container">
     <div class="header-inner">
@@ -88,8 +97,24 @@ const grouped = categoryOrder
   </div>
 </footer>
 
+<script>
+  document.querySelectorAll<HTMLElement>('.thread-card').forEach((card) => {
+    card.addEventListener('mouseenter', () => card.classList.add('is-hovered'));
+    card.addEventListener('mouseleave', () => card.classList.remove('is-hovered'));
+  });
+</script>
+
 </body>
 </html>
+
+<style is:global>
+.thread-card.is-hovered { border-color: transparent; border-left-color: #3F6F8F; }
+.thread-card.is-hovered::before {
+  content: ''; position: absolute; inset: 4px; z-index: 0; pointer-events: none;
+  background: rgba(255,255,255,0.62); filter: url(#torn-edge);
+}
+.thread-card.is-hovered .tc-title { color: #3F6F8F; }
+</style>
 
 <style>
 :root {
@@ -148,9 +173,9 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 .thread-card {
   display: block; position: relative; padding: 1.3rem 1.4rem 1.2rem;
   background: var(--bg-card); border: 1px solid rgba(42,38,32,0.12); border-left: 3px solid var(--blue);
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  transition: border-color 0.2s;
 }
-.thread-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(42,38,32,0.1); }
+.thread-card > * { position: relative; z-index: 1; }
 .tc-top { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.6rem; }
 .tc-cat { font-size: 0.66rem; color: var(--blue); border: 1px solid var(--blue); padding: 0.05em 0.45em; letter-spacing: 0.1em; }
 .tc-span { font-family: var(--font-en); font-size: 0.74rem; color: var(--ink-light); }

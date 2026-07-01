@@ -54,7 +54,7 @@
     "span_label": "前3世纪 — 18世纪",
     "summary": "长城内外，农耕的中原王朝与游牧的草原民族，上演了长达两千年的冲突、贸易、和亲与融合。这条农耕—游牧的互动主线，是理解中国疆域形成与民族融合的关键。",
     "related_people": ["han-wudi", "genghis-khan", "kublai-khan", "shunzhi-emperor"],
-    "related_events": ["silk-road", "feishui-battle", "jingkang-incident", "tumu-crisis", "mongol-conquest", "qing-founded"],
+    "related_events": ["silk-road", "feishui-battle", "shi-jingtang-yanyun", "jingkang-incident", "tumu-crisis", "mongol-conquest", "qing-founded"],
     "related_poems": [],
     "tags": ["长城", "匈奴", "和亲", "民族融合"],
     "detail": {
@@ -123,7 +123,7 @@
     "span_label": "先秦 — 近世",
     "summary": "历代王朝几乎都亡于同一台机器：开国均田、与民休息 → 承平日久、豪强兼并 → 自耕农破产沦为流民 → 流民揭竿、天下大乱 → 新朝重新分配土地，循环重启。土地，是王朝兴亡的隐秘引擎。",
     "related_people": ["wang-mang", "li-zicheng"],
-    "related_events": ["shangyang-reform", "chensheng-uprising", "chu-han-war", "western-han-founded", "wang-mang-usurp", "wang-anshi-reform"],
+    "related_events": ["shangyang-reform", "chensheng-uprising", "chu-han-war", "western-han-founded", "wang-mang-usurp", "wang-anshi-reform", "taiping-rebellion"],
     "related_poems": [],
     "tags": ["土地兼并", "自耕农", "王朝周期"],
     "detail": {
@@ -215,7 +215,7 @@
     "span_label": "明中叶 — 近代",
     "summary": "一个农业帝国的命脉，竟系于海外白银。明清以白银为货币，本土却不产银，全赖美洲与日本输入；白银滚滚流入则繁荣，一旦断流，便牵动财政崩溃与王朝危亡。",
     "related_people": [],
-    "related_events": ["zheng-he-voyages", "opium-war"],
+    "related_events": ["opium-war"],
     "related_poems": [],
     "tags": ["一条鞭法", "白银", "全球贸易"],
     "detail": {
@@ -227,6 +227,52 @@
         { "phase": "鸦片与白银外流", "date": "晚清", "place": "中英贸易", "text": "清代白银财政延续，海外白银续注支撑了康乾盛世。然至晚清，英国为扭转对华白银逆差而走私鸦片，致白银大量外流——鸦片战争的祸根，正在于此。" }
       ],
       "significance": "白银帝国揭示了一个惊人的事实：看似闭关自守的明清中国，其经济命脉早已深嵌于全球贸易网络之中。白银的流入与流出，无声地牵动着王朝的盛衰。一条白银的线，串起了明清的繁荣、明朝的覆灭，乃至近代的屈辱开端。"
+    }
+  },
+  {
+    "id": "national-salvation",
+    "title": "救亡图存",
+    "category": "母题",
+    "era_group": "近现代",
+    "dynasty": "近代",
+    "span_label": "1840 — 1919",
+    "summary": "鸦片战争惊破天朝迷梦，此后百年，仁人志士前赴后继地探寻救国之路——从学器物（洋务）到学制度（变法、革命）再到求思想（新文化），层层递进、屡败屡战，汇成近代中国救亡图存的悲壮长卷。",
+    "related_people": ["lin-zexu", "sun-yat-sen"],
+    "related_events": ["opium-war", "second-opium-war", "westernization-movement", "sino-japanese-war", "wuxu-reform", "boxer-rebellion", "xinhai-revolution", "may-fourth"],
+    "related_poems": [],
+    "tags": ["师夷长技", "变法", "革命", "新文化"],
+    "detail": {
+      "background": "鸦片战争以来，古老的中华帝国在列强坚船利炮下一败再败，「三千年未有之大变局」骤然降临。亡国灭种的危机，逼迫一代代中国人不断追问：中国向何处去？这一追问，贯穿了整个近代史。",
+      "process": [
+        { "phase": "开眼看世界", "date": "1840年代", "place": "鸦片战争后", "text": "鸦片战争的惨败惊醒国人。林则徐、魏源提出「师夷长技以制夷」，编《海国图志》，开睁眼看世界、向西方学习之先声。" },
+        { "phase": "洋务自强", "date": "1861—1894年", "place": "洋务运动", "text": "清廷兴办洋务，造枪炮、建海军、办实业，学西方之「器物」以图自强。然甲午一战，北洋水师全军覆没，证明仅学器物远远不够。" },
+        { "phase": "变法维新", "date": "1898年", "place": "戊戌变法", "text": "甲午之痛促使志士转而学西方之「制度」。康有为、梁启超推动戊戌变法，欲行君主立宪，却百日而夭，改良之路宣告碰壁。" },
+        { "phase": "革命与新生", "date": "1911—1919年", "place": "辛亥 · 五四", "text": "改良不成，革命继起。辛亥革命推翻帝制、建立共和，然共和有名无实；五四运动遂转向更深的思想启蒙与社会革命，为中国的新生开辟道路。" }
+      ],
+      "significance": "从「器物」到「制度」再到「思想」，近代中国的救亡图存，是一条层层递进、屡败屡战、愈挫愈奋的探索之路。每一次失败，都将探索推向更深的一层。这条主线，串起了鸦片战争以来近百年的屈辱、抗争与求索，是理解中国近代史的一把总钥匙。"
+    }
+  },
+  {
+    "id": "warlords-era",
+    "title": "武人当国",
+    "category": "母题",
+    "era_group": "隋唐",
+    "dynasty": "唐 — 宋",
+    "span_label": "755 — 960",
+    "summary": "「天子，兵强马壮者当为之。」自安史之乱藩镇坐大，到五代五十年间武夫篡夺相寻，军权一再凌驾于皇权之上；直到宋太祖「杯酒释兵权」、以文治收束，这条军权失控与重归驾驭的主线才告一段落。",
+    "related_people": ["an-lushan", "zhu-wen", "shi-jingtang", "zhao-kuangyin"],
+    "related_events": ["anshi-rebellion", "zhuwen-liang", "li-cunxu-houtang", "shi-jingtang-yanyun", "later-han-founded", "later-zhou-founded", "chairong-reform", "song-founded"],
+    "related_poems": [],
+    "tags": ["藩镇", "武人", "兵权"],
+    "detail": {
+      "background": "唐代中后期，节度使集军、民、财权于一身，尾大不掉。安史之乱后，藩镇割据成为难以根治的顽疾，中央权威不断流失，为此后近两百年的武人乱政埋下了祸根。",
+      "process": [
+        { "phase": "藩镇坐大", "date": "安史之后", "place": "唐", "text": "安史之乱后，藩镇拥兵自重、父死子继、不奉朝命。唐廷虽屡图削藩，却终难制，军权失控之势愈演愈烈。" },
+        { "phase": "唐亡梁兴", "date": "907年", "place": "汴梁", "text": "最强藩镇朱温篡唐建后梁，以武力夺取天下成为常态，五代更替的乱世由此开启。" },
+        { "phase": "武夫相寻", "date": "五代", "place": "中原", "text": "五十余年间，梁、唐、晋、汉、周五代更替，帝位多由武将拥立或篡夺。石敬瑭甚至割燕云、事契丹，纲常礼乐荡然无存。" },
+        { "phase": "杯酒释兵权", "date": "960年后", "place": "开封", "text": "后周世宗整军初见成效，赵匡胤陈桥兵变后以「杯酒释兵权」收回大将兵柄，确立重文抑武之制，终结了武人乱政。" }
+      ],
+      "significance": "「武人当国」是中晚唐至五代的核心病灶。它揭示了军权一旦失控对王朝的颠覆性，也解释了宋朝为何矫枉过正、重文抑武——这一抉择造就了两宋的文盛武衰，影响极为深远。读懂这条主线，便理解了唐宋之变的关键所在。"
     }
   }
 ]

@@ -161,6 +161,18 @@ const graphLinks = [
   </div>
 </footer>
 
+<script is:inline>
+  document.querySelectorAll('.person-card').forEach(function (card) {
+    card.addEventListener('mouseenter', function () { card.classList.add('is-hovered'); });
+    card.addEventListener('mouseleave', function () { card.classList.remove('is-hovered'); });
+  });
+</script>
+<style is:global>
+.person-card.is-hovered { border-color: transparent; }
+.person-card.is-hovered::before { content: ''; position: absolute; inset: 4px; z-index: 0; pointer-events: none; background: rgba(255,255,255,0.62); filter: url(#torn-edge); }
+.person-card.is-hovered .person-name { color: #B83232; }
+</style>
+
 </body>
 </html>
 
@@ -264,9 +276,8 @@ a.poem-author-link:hover { opacity: 0.7; }
 .rel-event:hover .rel-event-arrow { opacity: 1; }
 
 .people-grid { display: grid; grid-template-columns: 1fr; gap: 0.85rem; }
-.person-card { display: block; padding: 1.1rem 1.25rem; background: var(--bg-card); border: 1px solid rgba(42,38,32,0.12); transition: border-color 0.2s, transform 0.2s; }
-.person-card:hover { border-color: rgba(184,50,50,0.5); transform: translateY(-2px); }
-.person-card:hover .person-name { color: var(--red); }
+.person-card { display: block; position: relative; padding: 1.1rem 1.25rem; background: var(--bg-card); border: 1px solid rgba(42,38,32,0.12); transition: border-color 0.2s; }
+.person-card > * { position: relative; z-index: 1; }
 .person-top { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
 .person-name { font-size: 1.05rem; font-weight: 500; letter-spacing: 0.08em; }
 .person-role { font-size: 0.72rem; color: var(--red); letter-spacing: 0.04em; }
