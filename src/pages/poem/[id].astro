@@ -2,7 +2,9 @@
 import events from '../../data/events.json';
 import poems from '../../data/poems.json';
 import people from '../../data/people.json';
+import threads from '../../data/threads.json';
 import RelationGraph from '../../components/RelationGraph.astro';
+import { autolink } from '../../lib/links';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 export function getStaticPaths() {
@@ -21,21 +23,26 @@ const eventMap = Object.fromEntries(events.map((e) => [e.id, e]));
 const author = poem.author_id ? peopleMap[poem.author_id] : null;
 const relEvents = (poem.related_events || []).map((id) => eventMap[id]).filter(Boolean);
 
+// 所属脉络：哪些脉络把本诗列为关联（反查）
+const relThreads = threads.filter((t) => (t.related_poems || []).includes(poem.id));
+
 // 同境之诗：与本诗共享意象的其他诗
 const imagerySet = new Set(poem.imagery || []);
 const kinPoems = poems.filter(
   (p) => p.id !== poem.id && (p.imagery || []).some((im) => imagerySet.has(im))
 );
 
-// 关联图谱：诗 ↔ 作者 ↔ 相关事件 ↔ 同境之诗
+// 关联图谱：诗 ↔ 作者 ↔ 所属脉络 ↔ 相关事件 ↔ 同境之诗
 const graphNodes = [
   { id: 'po:' + poem.id, label: poem.title, type: 'poem', current: true, url: `${base}poem/${poem.id}` },
   ...(author ? [{ id: 'p:' + author.id, label: author.name, type: 'person', url: `${base}person/${author.id}` }] : []),
+  ...relThreads.map((t) => ({ id: 'th:' + t.id, label: t.title, type: 'thread', url: `${base}thread/${t.id}` })),
   ...relEvents.map((e) => ({ id: e.id, label: e.title, type: 'event', url: `${base}event/${e.id}` })),
   ...kinPoems.map((p) => ({ id: 'po:' + p.id, label: p.title, type: 'poem', url: `${base}poem/${p.id}` })),
 ];
 const graphLinks = [
   ...(author ? [{ source: 'po:' + poem.id, target: 'p:' + author.id }] : []),
+  ...relThreads.map((t) => ({ source: 'po:' + poem.id, target: 'th:' + t.id })),
   ...relEvents.map((e) => ({ source: 'po:' + poem.id, target: e.id })),
   ...kinPoems.map((p) => ({ source: 'po:' + poem.id, target: 'po:' + p.id })),
 ];
@@ -111,7 +118,14 @@ const graphLinks = [
   {poem.background && (
     <section class="module">
       <h2 class="module-title">创作背景</h2>
-      <p class="detail-para">{poem.background}</p>
+      <p class="detail-para" set:html={autolink(poem.background, `${base}poem/${poem.id}`)} />
+    </section>
+  )}
+
+  {poem.appreciation && (
+    <section class="module">
+      <h2 class="module-title">品读</h2>
+      <p class="detail-para" set:html={autolink(poem.appreciation, `${base}poem/${poem.id}`)} />
     </section>
   )}
 
@@ -125,6 +139,21 @@ const graphLinks = [
               {e.year_start === e.year_end ? formatYear(e.year_start) : `${formatYear(e.year_start)}—`}
             </span>
             <span class="rel-event-title">{e.title}</span>
+            <span class="rel-event-arrow">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {relThreads.length > 0 && (
+    <section class="module">
+      <h2 class="module-title">所属脉络</h2>
+      <div class="rel-events">
+        {relThreads.map((t) => (
+          <a href={`${base}thread/${t.id}`} class="rel-event">
+            <span class="rel-event-year"><span class="rel-cat">{t.category}</span></span>
+            <span class="rel-event-title">{t.title}</span>
             <span class="rel-event-arrow">→</span>
           </a>
         ))}
@@ -272,12 +301,19 @@ a.poem-author-link:hover { opacity: 0.7; }
 .rel-event-year { font-family: var(--font-en); font-size: 0.82rem; color: var(--ink-light); flex-shrink: 0; min-width: 5.5em; }
 .rel-event:hover .rel-event-year { color: var(--red); }
 .rel-event-title { flex: 1; font-size: 0.98rem; letter-spacing: 0.04em; }
+.rel-cat { font-size: 0.68rem; color: var(--blue, #3F6F8F); border: 1px solid var(--blue, #3F6F8F); padding: 0.02em 0.35em; letter-spacing: 0.08em; }
 .rel-event-arrow { opacity: 0; transition: opacity 0.2s; }
 .rel-event:hover .rel-event-arrow { opacity: 1; }
 
 .people-grid { display: grid; grid-template-columns: 1fr; gap: 0.85rem; }
 .person-card { display: block; position: relative; padding: 1.1rem 1.25rem; background: var(--bg-card); border: 1px solid rgba(42,38,32,0.12); transition: border-color 0.2s; }
 .person-card > * { position: relative; z-index: 1; }
+
+/* 正文自动交链：朱批式红字，无线；hover 才出下划线 */
+.detail-para :global(.xlink) {
+  color: #B0503E; text-decoration: none; transition: color 0.15s;
+}
+.detail-para :global(.xlink:hover) { color: var(--red); text-decoration: underline; text-underline-offset: 3px; }
 .person-top { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
 .person-name { font-size: 1.05rem; font-weight: 500; letter-spacing: 0.08em; }
 .person-role { font-size: 0.72rem; color: var(--red); letter-spacing: 0.04em; }

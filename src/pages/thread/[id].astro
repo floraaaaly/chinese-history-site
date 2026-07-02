@@ -4,7 +4,9 @@ import poems from '../../data/poems.json';
 import people from '../../data/people.json';
 import threads from '../../data/threads.json';
 import RelationGraph from '../../components/RelationGraph.astro';
+import { autolink } from '../../lib/links';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const selfUrl = `${base}thread/${Astro.params.id}`;
 
 export function getStaticPaths() {
   return threads.map((t) => ({ params: { id: t.id }, props: { thread: t } }));
@@ -101,7 +103,7 @@ const graphLinks = [
   {detail?.background && (
     <section class="module">
       <h2 class="module-title">背景</h2>
-      <p class="detail-para">{detail.background}</p>
+      <p class="detail-para" set:html={autolink(detail.background, selfUrl)} />
     </section>
   )}
 
@@ -121,7 +123,7 @@ const graphLinks = [
                 {step.date && <span class="proc-date">{step.date}</span>}
               </div>
               {step.place && <p class="proc-place">{step.place}</p>}
-              <p class="proc-text">{step.text}</p>
+              <p class="proc-text" set:html={autolink(step.text, selfUrl)} />
             </div>
           </div>
         ))}
@@ -132,7 +134,7 @@ const graphLinks = [
   {detail?.significance && (
     <section class="module">
       <h2 class="module-title">影响</h2>
-      <p class="detail-para">{detail.significance}</p>
+      <p class="detail-para" set:html={autolink(detail.significance, selfUrl)} />
     </section>
   )}
 
@@ -211,6 +213,8 @@ const graphLinks = [
 .person-card.is-hovered { border-color: transparent; }
 .person-card.is-hovered::before { content: ''; position: absolute; inset: 4px; z-index: 0; pointer-events: none; background: rgba(255,255,255,0.62); filter: url(#torn-edge); }
 .person-card.is-hovered .person-name { color: #B83232; }
+.xlink { color: #B0503E; text-decoration: none; transition: color 0.15s; }
+.xlink:hover { color: #B83232; text-decoration: underline; text-underline-offset: 3px; }
 </style>
 
 </body>

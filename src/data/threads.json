@@ -55,7 +55,7 @@
     "summary": "长城内外，农耕的中原王朝与游牧的草原民族，上演了长达两千年的冲突、贸易、和亲与融合。这条农耕—游牧的互动主线，是理解中国疆域形成与民族融合的关键。",
     "related_people": ["han-wudi", "genghis-khan", "kublai-khan", "shunzhi-emperor"],
     "related_events": ["silk-road", "feishui-battle", "shi-jingtang-yanyun", "jingkang-incident", "tumu-crisis", "mongol-conquest", "qing-founded"],
-    "related_poems": [],
+    "related_poems": ["chu-sai", "man-jiang-hong", "yong-yu-le-jingkou"],
     "tags": ["长城", "匈奴", "和亲", "民族融合"],
     "detail": {
       "background": "中国北方的地理与气候，孕育出截然不同的两种文明：黄河流域的定居农耕，与蒙古高原的逐水草而居。资源的此消彼长，使两者既彼此需要、又长期对抗，构成中国历史一条贯穿始终的张力。",
@@ -101,7 +101,7 @@
     "summary": "从《诗经》的质朴、楚辞的瑰丽，到唐诗的雄浑、宋词的婉转，中国古典诗词随时代流转而气象万千。它既是文学的高峰，也是一部用韵律写就的民族心灵史。",
     "related_people": ["li-bai", "du-fu", "li-qingzhao"],
     "related_events": ["anshi-rebellion"],
-    "related_poems": ["jing-ye-si", "chun-wang", "sheng-sheng-man"],
+    "related_poems": ["gai-xia-ge", "duan-ge-xing", "jing-ye-si", "chun-wang", "yu-mei-ren", "nian-nu-jiao-chibi", "sheng-sheng-man", "yong-yu-le-jingkou"],
     "tags": ["诗经", "唐诗", "宋词", "意象"],
     "detail": {
       "background": "诗，是中国文学的正宗与源头。先民「饥者歌其食，劳者歌其事」，自《诗经》起，诗便承载着中国人最深的情感与最高的审美，并在两千余年间不断演化出新的形式与境界。",
@@ -147,7 +147,7 @@
     "summary": "两千年中国政治有一条几乎不回头的单行道：相权不断被削、皇权不断独大。丞相 → 三省分权 → 明废丞相 → 清设军机处，皇帝把权力一点点收进自己手里，专制只增不减。",
     "related_people": ["li-si", "sui-wendi", "zhu-yuanzhang"],
     "related_events": ["qin-unification", "sui-unification", "song-founded", "ming-founded", "xinhai-revolution"],
-    "related_poems": [],
+    "related_poems": ["gai-xia-ge", "yu-mei-ren"],
     "tags": ["皇权", "相权", "中央集权"],
     "detail": {
       "background": "皇帝（君权）与丞相（官僚集团之首，相权）之间的张力，是中国传统政治的核心矛盾。耐人寻味的是，这场千年拉锯的结果几乎是单向的：相权一步步被分割、削弱，直至消亡，皇权则一步步走向极致。",
@@ -170,7 +170,7 @@
     "summary": "商鞅车裂、王莽身死、王安石黜退、张居正死后抄家、戊戌六君子喋血——中国历史上的改革者，几乎都没有好下场。变法为何如此凶险？这条母题反复上演，令人扼腕。",
     "related_people": ["shang-yang", "wang-mang", "wang-anshi"],
     "related_events": ["shangyang-reform", "wang-mang-usurp", "wang-anshi-reform", "wuxu-reform"],
-    "related_poems": [],
+    "related_poems": ["mei-hua", "jiang-xue", "zuoqian-languan"],
     "tags": ["变法", "改革", "人亡政息"],
     "detail": {
       "background": "变法，意味着重新分配权力与利益，必然触动既得利益集团的根基；而改革者往往只能依靠君主一人的信任作为靠山。一旦君主驾崩或变心，改革者便瞬间失去庇护，沦为众矢之的。这是一种结构性的凶险。",
@@ -193,7 +193,7 @@
     "summary": "「中国」从来不是固定不变的。华夷之辨的标准在血统与文化之间摇摆；一次次被视为「夷狄」的征服者入主中原，又被中华所吸纳同化。中国的边界与内涵，是在征服与融合中被反复重新定义的。",
     "related_people": ["kublai-khan", "shunzhi-emperor"],
     "related_events": ["mongol-conquest", "ming-founded", "qing-founded"],
-    "related_poems": [],
+    "related_poems": ["guo-ling-tan", "yong-yu-le-jingkou", "man-jiang-hong"],
     "tags": ["华夷之辨", "正统", "多元一体"],
     "detail": {
       "background": "上古的「华夷之辨」，区分华夏与蛮夷靠的是文化（礼乐文野），而非血统——「夷狄进于中国则中国之，中国而夷狄则夷狄之」。然而每逢异族入主中原，何为正统、谁是中国，便又被重新拷问。这条关于身份认同的主线，贯穿了整部中国史。",

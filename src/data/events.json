@@ -166,7 +166,7 @@
     "location": "中原、江东、蜀地",
     "summary": "曹魏、蜀汉、东吴三足鼎立，英雄辈出，赤壁之战、官渡之战奠定三分格局，留下无数历史传奇。",
     "related_people": ["cao-cao", "liu-bei", "sun-quan", "zhuge-liang", "guan-yu"],
-    "related_poems": ["duan-ge-xing", "chi-bi-huaigujin"],
+    "related_poems": ["duan-ge-xing", "nian-nu-jiao-chibi", "chi-bi-dumu"],
     "tags": ["赤壁", "官渡", "三顾茅庐"],
     "detail": {
       "background": "东汉末年，政治腐败，黄巾起义动摇天下，群雄并起、军阀混战。在这场大乱中，曹操「挟天子以令诸侯」，逐步统一北方，成为最强一方；而刘备、孙权也各自积蓄力量，三股势力的角逐，拉开了三国时代的序幕。",
@@ -233,7 +233,7 @@
     "location": "长安",
     "summary": "唐太宗开创贞观之治，唐玄宗前期缔造开元盛世，唐朝国力达到鼎盛，诗歌、艺术、对外交流空前繁荣。",
     "related_people": ["tang-taizong", "tang-xuanzong", "wei-zheng", "li-bai", "du-fu"],
-    "related_poems": ["jing-ye-si", "chun-wang"],
+    "related_poems": ["jing-ye-si", "chun-wang", "chang-hen-ge"],
     "tags": ["盛唐", "贞观", "开元"],
     "detail": {
       "background": "隋末天下大乱，李渊父子起兵建唐。唐初百废待兴，如何医治战乱创伤、开创长治久安，成为新王朝的首要课题。唐太宗以隋亡为鉴，由此拉开了中国古代最辉煌盛世的序幕。",
@@ -256,7 +256,7 @@
     "location": "中原、河北",
     "summary": "安禄山、史思明发动叛乱，历时八年，唐朝由盛转衰，藩镇割据局面由此形成，诗圣杜甫以诗记录了这段历史。",
     "related_people": ["an-lushan", "du-fu", "tang-xuanzong", "yang-guifei"],
-    "related_poems": ["chun-wang", "bei-zheng"],
+    "related_poems": ["chun-wang", "chang-hen-ge"],
     "tags": ["藩镇割据", "由盛转衰", "杜甫"],
     "detail": {
       "background": "开元盛世之后，唐玄宗怠政、奸相当道，地方节度使权力膨胀。身兼范阳、平卢、河东三镇节度使的安禄山，手握重兵、久蓄异志。盛唐繁华的表象之下，一场动摇国本的大乱一触即发。",
@@ -290,7 +290,7 @@
     "category": ["政治"],
     "location": "陈桥驿",
     "summary": "后周大将赵匡胤发动陈桥兵变，黄袍加身，建立宋朝，结束五代十国分裂局面，以文治国成为宋朝基本国策。",
-    "related_people": ["zhao-kuangyin"],
+    "related_people": ["zhao-kuangyin", "chai-rong"],
     "related_poems": [],
     "tags": ["重文轻武", "杯酒释兵权", "五代十国"],
     "detail": {
@@ -671,7 +671,7 @@
     "title": "赤壁之战", "year_start": 208, "year_end": 208, "dynasty": "东汉末",
     "category": ["战争"], "location": "赤壁",
     "summary": "孙刘联军以少胜多，借东风火攻大破曹操水军于赤壁，奠定天下三分之势。",
-    "related_people": ["cao-cao", "liu-bei", "sun-quan", "zhuge-liang"], "related_poems": [], "tags": ["火攻", "以少胜多", "三分天下"],
+    "related_people": ["cao-cao", "liu-bei", "sun-quan", "zhuge-liang"], "related_poems": ["duan-ge-xing", "nian-nu-jiao-chibi", "chi-bi-dumu"], "tags": ["火攻", "以少胜多", "三分天下"],
     "detail": {
       "background": "曹操统一北方后，亲率大军南下，意在一举荡平江南、混一天下。荆州不战而降，曹操声势浩大，号称八十万众。面对强敌压境，势单力薄的刘备与据有江东的孙权，唯有联合一途。",
       "process": [
@@ -721,7 +721,7 @@
     "title": "玄武门之变", "year_start": 626, "year_end": 626, "dynasty": "唐",
     "category": ["政治"], "location": "长安 · 玄武门",
     "summary": "李世民于玄武门射杀太子李建成与齐王李元吉，旋即即位，是为唐太宗，开启贞观之治。",
-    "related_people": ["tang-taizong"], "related_poems": [], "tags": ["夺位", "贞观之治"],
+    "related_people": ["tang-taizong", "li-yuan"], "related_poems": [], "tags": ["夺位", "贞观之治"],
     "detail": {
       "background": "唐朝开国，秦王李世民战功赫赫，威望与势力远超身为太子的兄长李建成。太子忌惮，联合齐王李元吉屡屡排挤、谋害世民。兄弟之间的权力之争，已到你死我活的地步。",
       "process": [
@@ -737,7 +737,7 @@
     "title": "王安石变法", "year_start": 1069, "year_end": 1085, "dynasty": "宋",
     "category": ["政治", "改革"], "location": "北宋 · 汴京",
     "summary": "宋神宗任王安石推行熙宁变法，行青苗、募役、方田均税诸法以富国强兵，然因新旧党争激烈，终告失败。",
-    "related_people": ["wang-anshi"], "related_poems": [], "tags": ["熙宁变法", "新旧党争"],
+    "related_people": ["wang-anshi", "su-shi"], "related_poems": [], "tags": ["熙宁变法", "新旧党争"],
     "detail": {
       "background": "北宋立国百年，「冗官、冗兵、冗费」积弊深重，财政入不敷出，外有辽、夏威胁，积贫积弱之势日显。宋神宗锐意图强，起用力主变法的王安石为相，一场旨在富国强兵的大改革就此推行。",
       "process": [
@@ -801,7 +801,7 @@
     "title": "甲午战争", "year_start": 1894, "year_end": 1895, "dynasty": "晚清",
     "category": ["战争", "外交"], "location": "黄海 · 辽东 · 威海",
     "summary": "中日甲午之战，北洋水师全军覆没，清廷被迫签《马关条约》割台赔款，洋务运动宣告破产，民族危机空前加深。",
-    "related_people": ["li-hongzhang"], "related_poems": [], "tags": ["北洋水师", "马关条约", "民族危机"],
+    "related_people": ["li-hongzhang", "cixi"], "related_poems": [], "tags": ["北洋水师", "马关条约", "民族危机"],
     "detail": {
       "background": "经过明治维新而崛起的日本，蓄意对外扩张，朝鲜半岛成为中日角力的焦点。1894年，借朝鲜东学党起义之机，日本悍然挑起战端，矛头直指自诩「同光中兴」的清王朝。",
       "process": [
@@ -922,7 +922,7 @@
     "title": "西汉建立", "year_start": -202, "year_end": -202, "dynasty": "西汉",
     "category": ["政治"], "location": "长安",
     "summary": "刘邦于垓下击灭项羽后称帝，定都长安，建立汉朝，开创延续四百余年的两汉基业。",
-    "related_people": ["liu-bang"], "related_poems": [], "tags": ["刘邦", "建汉", "长安"],
+    "related_people": ["liu-bang", "zhang-liang", "han-xin"], "related_poems": [], "tags": ["刘邦", "建汉", "长安"],
     "detail": {
       "background": "秦末天下大乱，群雄逐鹿。历经四年楚汉相争，平民出身的刘邦终于在垓下击灭不可一世的西楚霸王项羽。这位提三尺剑取天下的开国之君，即将开创一个影响极为深远的伟大王朝。",
       "process": [
@@ -986,7 +986,7 @@
     "title": "唐朝建立", "year_start": 618, "year_end": 618, "dynasty": "唐",
     "category": ["政治"], "location": "长安",
     "summary": "隋末天下大乱，李渊自太原起兵，攻入长安称帝，建立唐朝，奠定此后近三百年的大唐基业。",
-    "related_people": ["li-yuan"], "related_poems": [], "tags": ["太原起兵", "李渊", "长安"],
+    "related_people": ["li-yuan", "tang-taizong"], "related_poems": [], "tags": ["太原起兵", "李渊", "长安"],
     "detail": {
       "background": "隋炀帝暴政无度，三征高丽、滥用民力，激起天下大乱，群雄并起。身为隋朝重臣、镇守太原的唐国公李渊，在次子李世民等人的劝说与推动下，决意起兵逐鹿中原。",
       "process": [
@@ -1002,7 +1002,7 @@
     "title": "南宋建立", "year_start": 1127, "year_end": 1127, "dynasty": "南宋",
     "category": ["政治"], "location": "应天 · 临安",
     "summary": "靖康之变北宋覆灭后，康王赵构于南方即位，重建宋室，后定都临安，是为南宋，与金隔淮对峙。",
-    "related_people": ["song-gaozong"], "related_poems": [], "tags": ["赵构", "南渡", "临安"],
+    "related_people": ["song-gaozong"], "related_poems": ["yong-yu-le-jingkou"], "tags": ["赵构", "南渡", "临安"],
     "detail": {
       "background": "靖康之变，金军攻破汴京，掳走徽、钦二帝，北宋灭亡。中原板荡、皇室倾覆之际，侥幸在外的康王赵构，成为延续赵宋国祚的唯一希望。",
       "process": [
@@ -1169,7 +1169,7 @@
     "title": "郭威建后周", "year_start": 951, "year_end": 951, "dynasty": "五代十国",
     "category": ["政治"], "location": "汴梁",
     "summary": "后汉大将郭威遭隐帝猜忌、被逼起兵，入汴后被军士「黄旗加身」拥立为帝，代后汉建立后周。郭威革除弊政、与民休息，开五代少有的清明之治，为养子柴荣与日后北宋的统一奠基。",
-    "related_people": ["guo-wei"], "related_poems": [], "tags": ["后周", "黄旗加身", "休养生息"],
+    "related_people": ["guo-wei", "chai-rong"], "related_poems": [], "tags": ["后周", "黄旗加身", "休养生息"],
     "detail": {
       "background": "后汉隐帝年少猜忌，对手握重兵的大将多加防范。镇守邺都的枢密使郭威功高震主，君臣之间的裂痕日深，一场兵变一触即发。",
       "process": [
