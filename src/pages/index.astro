@@ -19,14 +19,30 @@ function getDynastyGroup(dynasty: string) {
   return '其他';
 }
 
-// tab 仅显示「有事件」的时代，按 eras.json 顺序排列
-const dynasties = ['全部', ...eras
-  .filter((era) => events.some((e) => getDynastyGroup(e.dynasty) === era.group))
-  .map((era) => era.name)];
-
 function formatYear(y: number) {
   return y < 0 ? `前${Math.abs(y)}年` : `${y}年`;
 }
+function tickYear(y: number) {
+  if (y === 0) return '元年';
+  return y < 0 ? `前${Math.abs(y)}` : `${y}`;
+}
+
+const eraColor: Record<string, string> = {
+  '先秦': '#6E7B5B', '秦汉': '#A6603A', '三国': '#8C5A4E', '两晋南北朝': '#5F6E7A',
+  '隋唐': '#B8542F', '五代十国': '#8A7355', '宋': '#4E7A6E', '元': '#4A5468',
+  '明': '#9C4A3C', '清': '#6B5B45', '近现代': '#3F6F8F',
+};
+// 缩览条窄段用缩写，全名仍在悬停提示里
+const shortName: Record<string, string> = { '两晋南北朝': '魏晋', '五代十国': '五代' };
+
+// 有事件的时代 + 统计（缩览条按事件量比例分段，并取该段起始年做刻度）
+const eraStats = eras
+  .map((era) => {
+    const evs = events.filter((e) => getDynastyGroup(e.dynasty) === era.group);
+    const startYear = evs.length ? Math.min(...evs.map((e) => e.year_start)) : 0;
+    return { group: era.group, name: era.name, label: shortName[era.group] || era.name, span: era.span_label, count: evs.length, startYear, color: eraColor[era.group] || '#8A7355' };
+  })
+  .filter((s) => s.count > 0);
 ---
 
 <!doctype html>
@@ -44,7 +60,7 @@ function formatYear(y: number) {
 <div class="texture-overlay" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
 
-<!-- 撕裂边缘 SVG 滤镜：把填充块的四边扭曲成撕纸毛边 -->
+<!-- 撕裂边缘 SVG 滤镜 -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <filter id="torn-edge" x="-12%" y="-12%" width="124%" height="124%">
@@ -83,18 +99,29 @@ function formatYear(y: number) {
   </div>
 </section>
 
+<!-- 缩览条 + 详略切换（吸顶导航） -->
+<div class="navbar" id="navbar">
+  <div class="container navbar-inner">
+    <div class="minimap" id="minimap">
+      {eraStats.map((s) => (
+        <button class="mm-seg" data-group={s.group} style={`flex-grow:${s.count};--era-color:${s.color}`} title={`${s.name}　${s.span}　·　${s.count} 事件`}>
+          <span class="mm-year">{tickYear(s.startYear)}</span>
+          <span class="mm-band"></span>
+          <span class="mm-label">{s.label}</span>
+        </button>
+      ))}
+      <span class="mm-end"><span class="mm-year mm-year-end">今</span></span>
+    </div>
+    <div class="detail-switch" id="detail-switch">
+      <button class="ds-opt active" data-mode="all">全部</button>
+      <button class="ds-opt" data-mode="skeleton">只看大事</button>
+    </div>
+  </div>
+</div>
 
 <!-- 时间轴 -->
 <main class="timeline-section">
   <div class="container">
-    <div class="dynasty-tabs" id="dynasty-tabs">
-      {dynasties.map((d) => (
-        <button class={`dynasty-tab ${d === '全部' ? 'active' : ''}`} data-dynasty={d}>
-          {d}
-        </button>
-      ))}
-    </div>
-
     <div id="timeline">
       {eras.map((era) => {
         const eraEvents = events
@@ -102,26 +129,20 @@ function formatYear(y: number) {
           .sort((a, b) => a.year_start - b.year_start);
         if (eraEvents.length === 0) return null;
 
-        // 分组：每个大事件携带其后的小事件，形成主线 + 缩进次线
-        const groups = [];
-        let cur = null;
+        const groups: any[] = [];
+        let cur: any = null;
         for (const e of eraEvents) {
-          if (e.tier !== 'minor') {
-            cur = { major: e, minors: [] };
-            groups.push(cur);
-          } else {
-            if (!cur) { cur = { major: null, minors: [] }; groups.push(cur); }
-            cur.minors.push(e);
-          }
+          if (e.tier !== 'minor') { cur = { major: e, minors: [] }; groups.push(cur); }
+          else { if (!cur) { cur = { major: null, minors: [] }; groups.push(cur); } cur.minors.push(e); }
         }
-        const yl = (e) => e.year_start === e.year_end
-          ? formatYear(e.year_start)
-          : `${formatYear(e.year_start)} — ${formatYear(e.year_end)}`;
+        const yl = (e: any) => e.year_start === e.year_end ? formatYear(e.year_start) : `${formatYear(e.year_start)} — ${formatYear(e.year_end)}`;
+        const color = eraColor[era.group] || '#8A7355';
 
         return (
-          <section class="era-block" data-dynasty-group={era.group}>
+          <section class="era-block" data-dynasty-group={era.group} style={`--era-color:${color}`}>
             <div class="era-head">
               <div class="era-headline">
+                <span class="era-dot"></span>
                 <h2 class="era-name">{era.name}</h2>
                 <span class="era-span">{era.span_label}</span>
               </div>
@@ -138,26 +159,19 @@ function formatYear(y: number) {
                         <div class="tl-meta">
                           <span class="tl-year">{yl(group.major)}</span>
                           <span class="tag-red tl-dynasty">{group.major.dynasty}</span>
-                          {group.major.category.map((c) => (
-                            <span class="tl-cat">{c}</span>
-                          ))}
+                          {group.major.category.map((c: string) => (<span class="tl-cat">{c}</span>))}
                         </div>
                         <h2 class="tl-title">{group.major.title}</h2>
                         <p class="tl-summary">{group.major.summary}</p>
                         {group.major.tags.length > 0 && (
-                          <div class="tl-tags">
-                            {group.major.tags.map((t) => (
-                              <span class="tl-tag">#{t}</span>
-                            ))}
-                          </div>
+                          <div class="tl-tags">{group.major.tags.map((t: string) => (<span class="tl-tag">#{t}</span>))}</div>
                         )}
                       </a>
                     </article>
                   )}
-
                   {group.minors.length > 0 && (
                     <div class="minor-track">
-                      {group.minors.map((m) => (
+                      {group.minors.map((m: any) => (
                         <article class="timeline-item is-minor" data-id={m.id}>
                           <span class="tl-node"></span>
                           <a href={`${base}event/${m.id}`} class="tl-card minor">
@@ -196,24 +210,62 @@ function formatYear(y: number) {
 </html>
 
 <script>
-  const tabs = document.querySelectorAll<HTMLElement>('.dynasty-tab');
-  const blocks = document.querySelectorAll<HTMLElement>('.era-block');
+  // 缩览条：滚动高亮当前朝代 + 点击平滑跳转
+  const segs = Array.from(document.querySelectorAll<HTMLElement>('.mm-seg'));
+  const segByGroup: Record<string, HTMLElement> = {};
+  segs.forEach((s) => { segByGroup[s.dataset.group || ''] = s; });
+  const blocks = Array.from(document.querySelectorAll<HTMLElement>('.era-block'));
 
-  // 朝代筛选：整段时代显隐
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const selected = tab.dataset.dynasty || '全部';
-      blocks.forEach(block => {
-        const group = block.dataset.dynastyGroup || '';
-        block.style.display = selected === '全部' || group === selected ? 'block' : 'none';
-      });
+  // 刻度避让：从左到右，会与前一个重叠的年份自动隐藏，只留排得开的
+  function declutterTicks() {
+    const years = Array.from(document.querySelectorAll<HTMLElement>('.mm-year:not(.mm-year-end)'));
+    years.forEach((y) => { y.style.display = ''; });
+    let lastRight = -1e9;
+    years.forEach((y) => {
+      const r = y.getBoundingClientRect();
+      if (r.left < lastRight + 8) { y.style.display = 'none'; }
+      else { lastRight = r.right; }
+    });
+  }
+  declutterTicks();
+  window.addEventListener('load', declutterTicks);
+  window.addEventListener('resize', declutterTicks);
+
+  // 当前朝代高亮：取"顶部参考线已越过"的最后一个时代块（对跳转/连续滚动都稳）
+  function updateActive() {
+    let current = blocks[0];
+    for (const b of blocks) {
+      if (b.getBoundingClientRect().top <= 110) current = b;
+      else break;
+    }
+    const g = current ? (current.dataset.dynastyGroup || '') : '';
+    segs.forEach((s) => s.classList.toggle('active', s.dataset.group === g));
+  }
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(() => { updateActive(); ticking = false; }); ticking = true; }
+  }, { passive: true });
+  updateActive();
+
+  segs.forEach((s) => s.addEventListener('click', () => {
+    const g = s.dataset.group || '';
+    const b = document.querySelector<HTMLElement>(`.era-block[data-dynasty-group="${g}"]`);
+    if (b) window.scrollTo({ top: b.getBoundingClientRect().top + window.scrollY - 92, behavior: 'smooth' });
+  }));
+
+  // 详略切换：只看大事 / 全部
+  const tl = document.getElementById('timeline');
+  document.querySelectorAll<HTMLElement>('.ds-opt').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.ds-opt').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (btn.dataset.mode === 'skeleton') tl?.classList.add('skeleton');
+      else tl?.classList.remove('skeleton');
     });
   });
 
-  // 撕裂边框：JS 事件直接控制，绕开 Astro scoped CSS 对伪元素的限制
-  document.querySelectorAll<HTMLElement>('.tl-card').forEach(card => {
+  // 撕裂边框 hover
+  document.querySelectorAll<HTMLElement>('.tl-card').forEach((card) => {
     card.addEventListener('mouseenter', () => card.classList.add('is-hovered'));
     card.addEventListener('mouseleave', () => card.classList.remove('is-hovered'));
   });
@@ -221,36 +273,16 @@ function formatYear(y: number) {
 
 <style is:global>
 a, a:link, a:visited { color: inherit; text-decoration: none; }
-
-/* 撕裂边框：全局样式，JS 添加 .is-hovered 类触发 */
-.tl-card {
-  position: relative;
-}
-/* 撕裂高亮：填充块经位移滤镜扭曲，四边成撕纸毛边，无框线 */
+.tl-card { position: relative; }
 .tl-card.is-hovered::before {
-  content: '';
-  position: absolute;
-  inset: 6px 2px;
-  background: rgba(255,255,255,0.55);
-  filter: url(#torn-edge);
-  pointer-events: none;
-  z-index: 0;
+  content: ''; position: absolute; inset: 6px 2px;
+  background: rgba(255,255,255,0.55); filter: url(#torn-edge); pointer-events: none; z-index: 0;
 }
-.tl-card > * {
-  position: relative;
-  z-index: 1;
-}
-.tl-card.is-hovered .tl-title {
-  color: #B83232;
-}
-.tl-card.is-hovered .tl-arrow {
-  opacity: 1;
-  color: #B83232;
-}
+.tl-card > * { position: relative; z-index: 1; }
+.tl-card.is-hovered .tl-title { color: #B83232; }
 </style>
 
 <style>
-
 .texture-overlay {
   position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
@@ -262,171 +294,124 @@ a, a:link, a:visited { color: inherit; text-decoration: none; }
 }
 
 :root {
-  --bg: #F2EDE3;
-  --bg-card: #FAF7F0;
-  --ink: #1A1814;
-  --ink-light: #6B6458;
-  --red: #B83232;
-  --blue: #3F6F8F;
+  --bg: #F2EDE3; --bg-card: #FAF7F0; --ink: #1A1814; --ink-light: #6B6458;
+  --red: #B83232; --blue: #3F6F8F;
   --font-display: 'NanxiLiming', 'Noto Serif SC', 'Songti SC', serif;
-  --font-serif: 'Noto Serif SC', 'Songti SC', serif;
-  --font-en: 'EB Garamond', Georgia, serif;
+  --font-serif: 'Noto Serif SC', 'Songti SC', serif; --font-en: 'EB Garamond', Georgia, serif;
   --max-w: 820px;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; }
 body { font-family: var(--font-serif); background-color: var(--bg); color: var(--ink); line-height: 1.85; overflow-x: hidden; }
 .container { position: relative; z-index: 1; max-width: var(--max-w); margin: 0 auto; padding: 0 2rem; }
-a, a:visited, a:link { color: inherit; text-decoration: none; }
 
 /* 页头 */
 .site-header { padding-top: 3.5rem; }
 .header-inner { display: flex; align-items: flex-end; gap: 1.5rem; }
-
 .site-identity { flex: 1; }
-
 .logo-link { display: inline-block; }
-
-.site-logo {
-  display: block;
-  width: 200px;
-  height: auto;
-  mix-blend-mode: multiply;
-  opacity: 0.88;
-  transition: opacity 0.2s;
-}
+.site-logo { display: block; width: 200px; height: auto; mix-blend-mode: multiply; opacity: 0.88; transition: opacity 0.2s; }
 .logo-link:hover .site-logo { opacity: 1; }
-
 .site-subtitle { font-family: var(--font-en); font-style: italic; font-size: 0.88rem; color: var(--red); letter-spacing: 0.05em; margin-top: 0.1rem; }
-
 .top-nav { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; padding-bottom: 0.2rem; }
 .nav-link, .nav-link:link, .nav-link:visited { font-family: var(--font-serif); font-size: 0.82rem; letter-spacing: 0.14em; color: var(--ink-light); transition: color 0.2s; }
 .nav-link:hover, .nav-link.active { color: var(--ink); }
-.nav-link.active { border-bottom: 1px solid var(--ink); }
-
 .header-rule { margin-top: 1.5rem; }
 .rule-line { height: 1px; background: linear-gradient(to right, transparent, var(--ink) 15%, var(--ink) 85%, transparent); opacity: 0.18; }
 
 /* 搜索 */
-.search-section { padding: 1.75rem 0 0; position: relative; z-index: 30; }
-.search-wrap { position: relative; display: flex; align-items: center; }
-.search-icon { position: absolute; left: 1rem; width: 15px; height: 15px; color: var(--ink-light); pointer-events: none; }
-.search-input {
-  width: 100%; font-family: var(--font-serif); font-size: 0.88rem; color: var(--ink);
-  background: transparent; border: none; border-bottom: 1px solid rgba(42,38,32,0.2);
-  padding: 0.65rem 1rem 0.65rem 2.75rem; outline: none; transition: border-color 0.2s; letter-spacing: 0.03em;
-}
-.search-input::placeholder { color: var(--ink-light); opacity: 0.65; }
-.search-input:focus { border-bottom-color: var(--ink); }
+.search-section { padding: 1.75rem 0 1.25rem; position: relative; z-index: 30; }
 
-/* 双入口 */
-.entry-gates { padding: 1.75rem 0; }
-.gates-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
-.gate {
-  display: flex; flex-direction: column;
-  padding: 1.2rem 1.4rem;
-  border: 1px solid rgba(42,38,32,0.16); background: var(--bg-card);
-  transition: border-color 0.2s;
+/* ===== 吸顶导航栏：缩览条 + 详略切换 ===== */
+.navbar {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(242,237,227,0.97);
+  border-top: 1px solid rgba(42,38,32,0.1); border-bottom: 1px solid rgba(42,38,32,0.12);
+  padding: 0.55rem 0;
 }
-.gate:hover { border-color: rgba(42,38,32,0.45); }
-.active-gate { border-color: var(--ink); }
-.gate-ch { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.12em; }
-.gate-en { font-family: var(--font-en); font-style: italic; font-size: 0.78rem; color: var(--red); margin-top: 0.1rem; }
-.gate-desc { font-size: 0.73rem; color: var(--ink-light); margin-top: 0.55rem; letter-spacing: 0.04em; }
+.navbar-inner { display: flex; align-items: center; gap: 1rem; }
+
+/* 缩览条：朝代色段（宽度 ∝ 事件量），段首标注起始年做刻度 */
+.minimap { flex: 1; display: flex; align-items: stretch; height: 40px; overflow-x: auto; scrollbar-width: none; }
+.minimap::-webkit-scrollbar { display: none; }
+.mm-seg {
+  flex: 1 1 0; min-width: 36px; position: relative; cursor: pointer;
+  background: none; border: none; padding: 15px 0 0; overflow: visible;
+  display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start;
+  opacity: 0.5; transition: opacity 0.25s;
+}
+.mm-seg:hover { opacity: 0.82; }
+.mm-seg.active { opacity: 1; }
+.mm-year {
+  position: absolute; top: 0; left: 0; font-family: var(--font-en); font-size: 0.6rem;
+  color: var(--ink-light); letter-spacing: 0.02em; white-space: nowrap; padding-left: 3px;
+  border-left: 1px solid rgba(42,38,32,0.3); line-height: 1.1;
+}
+.mm-band { width: 100%; height: 8px; background: var(--era-color); }
+.mm-label {
+  font-size: 0.6rem; letter-spacing: 0.01em; color: var(--ink-light);
+  margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; line-height: 1.2; text-align: center;
+}
+.mm-seg.active .mm-label { color: var(--ink); font-weight: 600; }
+.mm-end { flex: 0 0 auto; position: relative; width: 1px; padding-top: 15px; }
+.mm-year-end { color: var(--red); }
+
+/* 详略切换 */
+.detail-switch { display: flex; flex-shrink: 0; border: 1px solid rgba(42,38,32,0.25); overflow: hidden; align-self: flex-start; margin-top: 12px; }
+.ds-opt {
+  font-family: var(--font-serif); font-size: 0.72rem; letter-spacing: 0.05em;
+  background: none; border: none; padding: 0.28rem 0.65rem; color: var(--ink-light); cursor: pointer; white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+.ds-opt + .ds-opt { border-left: 1px solid rgba(42,38,32,0.2); }
+.ds-opt.active { background: var(--ink); color: var(--bg); }
 
 /* 时间轴 */
-.timeline-section { padding: 0.25rem 0 3rem; }
-.dynasty-tabs {
-  display: flex; flex-wrap: nowrap; justify-content: space-between;
-  border-bottom: 1px solid rgba(42,38,32,0.13); margin-bottom: 2rem;
-  overflow-x: auto; scrollbar-width: none;
-}
-.dynasty-tabs::-webkit-scrollbar { display: none; }
-.dynasty-tab {
-  flex: 0 0 auto;
-  font-family: var(--font-serif); font-size: 0.8rem; letter-spacing: 0.02em;
-  background: none; border: none; border-bottom: 2px solid transparent;
-  margin-bottom: -1px; padding: 0.55rem 0.4rem; white-space: nowrap;
-  color: var(--ink-light); cursor: pointer; transition: color 0.2s, border-color 0.2s;
-}
-.dynasty-tab:hover { color: var(--ink); }
-.dynasty-tab.active { color: var(--ink); border-bottom-color: var(--ink); }
-
-/* 时代分段 */
-.era-block { margin-bottom: 3.5rem; animation: fadeIn 0.35s ease; }
+.timeline-section { padding: 1.75rem 0 3rem; }
+.era-block { margin-bottom: 3.5rem; scroll-margin-top: 92px; animation: fadeIn 0.35s ease; }
 .era-block:last-child { margin-bottom: 0; }
 .era-head { margin-bottom: 1.6rem; }
-.era-headline { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap; }
-.era-name {
-  font-family: var(--font-serif); font-size: 1.5rem; font-weight: 700;
-  letter-spacing: 0.2em; color: var(--ink);
-}
+.era-headline { display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap; }
+.era-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--era-color); align-self: center; }
+.era-name { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 700; letter-spacing: 0.2em; color: var(--ink); }
 .era-span { font-family: var(--font-en); font-size: 0.82rem; color: var(--red); letter-spacing: 0.04em; }
 .era-overview { margin-top: 0.7rem; font-size: 0.82rem; line-height: 2; color: var(--ink-light); letter-spacing: 0.02em; }
 
-/* ===== 双层时间轴：主线(大事件) + 缩进次线(小事件) ===== */
 .timeline { position: relative; }
-
-/* 主时间线：贯穿整段时代，挂大事件 */
 .timeline::before {
   content: ''; position: absolute; left: 4px; top: 10px; bottom: 10px; width: 1px;
-  background: linear-gradient(to bottom, rgba(42,38,32,0.3), rgba(42,38,32,0.12));
+  background: linear-gradient(to bottom, var(--era-color), rgba(42,38,32,0.12)); opacity: 0.55;
 }
-
 .tl-group { position: relative; }
 .timeline-item { position: relative; display: block; animation: fadeIn 0.35s ease; }
 .tl-node { position: absolute; border-radius: 50%; transition: background 0.2s, border-color 0.2s; }
-
-/* 大事件：主线上的醒目实心点 + 完整卡片 */
 .timeline-item.is-major { padding-left: 26px; }
-.is-major .tl-node {
-  left: 0; top: 0.7rem; width: 9px; height: 9px;
-  background: var(--ink); border: 1.5px solid var(--ink);
-}
+.is-major .tl-node { left: 0; top: 0.7rem; width: 9px; height: 9px; background: var(--era-color); border: 1.5px solid var(--era-color); }
 .is-major:hover .tl-node { background: var(--red); border-color: var(--red); }
-
-/* 小事件：整体右缩一格，挂在自己的次时间线上 */
 .minor-track { position: relative; margin-left: 30px; margin-top: 0.1rem; }
-.minor-track::before {
-  content: ''; position: absolute; left: 4px; top: 4px; bottom: 8px; width: 1px;
-  background: rgba(42,38,32,0.18);
-}
+.minor-track::before { content: ''; position: absolute; left: 4px; top: 4px; bottom: 8px; width: 1px; background: rgba(42,38,32,0.18); }
 .timeline-item.is-minor { padding-left: 24px; }
-.is-minor .tl-node {
-  left: 1px; top: 0.6rem; width: 6px; height: 6px;
-  background: var(--bg); border: 1.5px solid rgba(42,38,32,0.42);
-}
+.is-minor .tl-node { left: 1px; top: 0.6rem; width: 6px; height: 6px; background: var(--bg); border: 1.5px solid rgba(42,38,32,0.42); }
 .is-minor:hover .tl-node { border-color: var(--red); }
 
 .tl-card { display: block; padding: 1rem 1rem 1.3rem; color: var(--ink); }
-
 .tl-meta { display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
 .tl-year { font-family: var(--font-en); font-size: 0.8rem; color: var(--ink-light); letter-spacing: 0.04em; }
-.tag-red {
-  display: inline-block; font-size: 0.67rem; color: var(--red);
-  border: 1px solid var(--red); padding: 0.05em 0.4em; letter-spacing: 0.07em; line-height: 1.7;
-}
+.tag-red { display: inline-block; font-size: 0.67rem; color: var(--red); border: 1px solid var(--red); padding: 0.05em 0.4em; letter-spacing: 0.07em; line-height: 1.7; }
 .tl-cat { font-size: 0.68rem; color: var(--ink-light); opacity: 0.65; }
-
 .tl-title { font-family: var(--font-serif); font-size: 1.15rem; font-weight: normal; letter-spacing: 0.08em; line-height: 1.45; margin-bottom: 0.45rem; transition: color 0.2s; color: var(--ink); }
 .tl-summary { font-size: 0.83rem; color: var(--ink-light); line-height: 1.85; letter-spacing: 0.03em; }
-
 .tl-tags { margin-top: 0.65rem; display: flex; gap: 0.45rem; flex-wrap: wrap; }
 .tl-tag { font-size: 0.68rem; color: var(--ink-light); opacity: 0.55; letter-spacing: 0.04em; }
-
-.tl-arrow { display: block; margin-top: 0.75rem; font-size: 0.76rem; color: var(--ink-light); letter-spacing: 0.06em; opacity: 0; transition: opacity 0.2s; }
-
-/* 小事件紧凑卡片 */
 .tl-card.minor { padding: 0.7rem 1rem 0.85rem; }
 .tl-card.minor .tl-minor-row { display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap; }
 .tl-card.minor .tl-year { font-size: 0.74rem; flex-shrink: 0; }
-.tl-card.minor .tl-title {
-  font-size: 0.95rem; font-weight: normal; letter-spacing: 0.05em;
-  margin-bottom: 0; line-height: 1.5; color: var(--ink-light);
-}
+.tl-card.minor .tl-title { font-size: 0.95rem; font-weight: normal; letter-spacing: 0.05em; margin-bottom: 0; line-height: 1.5; color: var(--ink-light); }
 .tl-card.minor:hover .tl-title { color: var(--red); }
 .tl-card.minor .tl-summary { margin-top: 0.2rem; font-size: 0.76rem; opacity: 0.8; line-height: 1.7; }
+
+/* 骨架模式：隐藏次线小事件 */
+#timeline.skeleton .minor-track { display: none; }
 
 /* 页脚 */
 .site-footer { padding: 2rem 0; border-top: 1px solid rgba(42,38,32,0.1); }
@@ -440,6 +425,10 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 @media (max-width: 600px) {
   .header-inner { flex-wrap: wrap; }
   .top-nav { flex-direction: row; }
-  .gates-grid { grid-template-columns: 1fr; }
+  .navbar-inner { flex-direction: column; gap: 0.5rem; align-items: stretch; }
+  .detail-switch { align-self: flex-end; margin-top: 0; }
+  .mm-seg { min-width: 30px; }
+  .mm-label { font-size: 0.52rem; }
+  .mm-year { font-size: 0.52rem; }
 }
 </style>

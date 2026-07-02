@@ -109,7 +109,7 @@
     "category": ["外交", "文化"],
     "location": "西域",
     "summary": "汉武帝派张骞两次出使西域，开辟了连接东西方的丝绸之路，促进了中西文明的交流与融合。",
-    "related_people": ["zhang-qian", "han-wudi"],
+    "related_people": ["zhang-qian", "han-wudi", "wei-qing", "huo-qubing"],
     "related_poems": [],
     "tags": ["丝绸之路", "西域", "外交"],
     "detail": {
@@ -142,7 +142,7 @@
     "category": ["政治"],
     "location": "长安",
     "summary": "外戚王莽以禅让名义取代西汉，建立新朝，推行改制，后因政策失败与天灾引发绿林、赤眉起义。",
-    "related_people": ["wang-mang"],
+    "related_people": ["wang-mang", "liu-xiu"],
     "related_poems": [],
     "tags": ["外戚", "改制", "新朝"],
     "detail": {
@@ -165,7 +165,7 @@
     "category": ["战争", "政治"],
     "location": "中原、江东、蜀地",
     "summary": "曹魏、蜀汉、东吴三足鼎立，英雄辈出，赤壁之战、官渡之战奠定三分格局，留下无数历史传奇。",
-    "related_people": ["cao-cao", "liu-bei", "sun-quan", "zhuge-liang", "guan-yu"],
+    "related_people": ["cao-cao", "liu-bei", "sun-quan", "zhuge-liang", "guan-yu", "sima-yi"],
     "related_poems": ["duan-ge-xing", "nian-nu-jiao-chibi", "chi-bi-dumu"],
     "tags": ["赤壁", "官渡", "三顾茅庐"],
     "detail": {
@@ -378,7 +378,7 @@
     "category": ["政治"],
     "location": "应天府（南京）",
     "summary": "布衣出身的朱元璋领导农民起义推翻元朝，建立明朝，废除宰相制度，皇权高度集中。",
-    "related_people": ["zhu-yuanzhang"],
+    "related_people": ["zhu-yuanzhang", "chen-youliang", "ming-chengzu", "jianwen-emperor"],
     "related_poems": [],
     "tags": ["布衣天子", "废相", "锦衣卫"],
     "detail": {
@@ -574,7 +574,7 @@
     "title": "商鞅变法", "year_start": -356, "year_end": -350, "dynasty": "战国",
     "category": ["政治", "改革"], "location": "秦国",
     "summary": "商鞅在秦孝公支持下两次变法，奖励耕战、废井田、行县制、立军功爵，使秦国迅速崛起为战国最强，为日后统一奠定基础。",
-    "related_people": ["shang-yang"], "related_poems": [], "tags": ["法家", "变法", "富国强兵"],
+    "related_people": ["shang-yang", "qin-xiaogong"], "related_poems": [], "tags": ["法家", "变法", "富国强兵"],
     "detail": {
       "background": "战国初年，秦地处西陲，被东方诸国视为落后的「夷狄之邦」。秦孝公即位，痛感国弱受辱，遂下「求贤令」广招天下能人。卫国人商鞅（公孙鞅）入秦，以法家富国强兵之术说动孝公，一场彻底而酷烈的变法就此展开。",
       "process": [
@@ -591,7 +591,7 @@
     "title": "长平之战", "year_start": -262, "year_end": -260, "dynasty": "战国",
     "category": ["战争"], "location": "长平",
     "summary": "秦赵倾国相争，赵以纸上谈兵的赵括代廉颇，中白起诱敌之计，四十余万赵军被坑杀，东方六国再无力抗秦。",
-    "related_people": [], "related_poems": [], "tags": ["纸上谈兵", "白起", "战国"],
+    "related_people": ["bai-qi", "zhao-kuo"], "related_poems": [], "tags": ["纸上谈兵", "白起", "战国"],
     "detail": {
       "background": "战国后期，秦、赵已是仅存的两大强国。秦攻韩，韩之上党郡走投无路，转而献城降赵。赵接收上党，秦赵遂在长平一线展开对峙——这将是整个战国规模最大、最惨烈的一场决战。",
       "process": [
@@ -632,7 +632,7 @@
     "title": "陈胜吴广起义", "year_start": -209, "year_end": -209, "dynasty": "秦",
     "category": ["战争"], "location": "大泽乡",
     "summary": "戍卒陈胜、吴广在大泽乡揭竿而起，高呼「王侯将相宁有种乎」，点燃中国历史上第一次大规模农民起义，秦廷由此动摇。",
-    "related_people": [], "related_poems": [], "tags": ["农民起义", "大泽乡"],
+    "related_people": ["chen-sheng"], "related_poems": [], "tags": ["农民起义", "大泽乡"],
     "detail": {
       "background": "秦的暴政与严刑峻法，使天下苦秦久矣。一群被征发前往渔阳戍边的贫苦农民，行至大泽乡遇大雨阻路、误了期限——而按秦法，戍卒误期当斩。走投无路之下，他们做出了惊天动地的抉择。",
       "process": [
@@ -655,7 +655,7 @@
     "title": "罢黜百家，独尊儒术", "year_start": -134, "year_end": -134, "dynasty": "西汉",
     "category": ["思想", "政治"], "location": "长安",
     "summary": "汉武帝采董仲舒之策，独尊儒术、设五经博士，使儒学成为此后两千年的官方正统思想。",
-    "related_people": ["han-wudi"], "related_poems": [], "tags": ["董仲舒", "儒术", "正统"],
+    "related_people": ["han-wudi", "dong-zhongshu"], "related_poems": [], "tags": ["董仲舒", "儒术", "正统"],
     "detail": {
       "background": "汉初奉行黄老之学、无为而治，与民休息，造就了「文景之治」。至汉武帝时，国力强盛、四方开拓，松散的黄老思想已难以适应大一统帝国的需要，一种能够统一思想、巩固皇权的学说呼之欲出。",
       "process": [
@@ -696,7 +696,7 @@
     "title": "淝水之战", "year_start": 383, "year_end": 383, "dynasty": "东晋",
     "category": ["战争"], "location": "淝水",
     "summary": "前秦苻坚率大军南下，东晋八万北府兵以寡敌众，大败前秦，留下「投鞭断流」「草木皆兵」「风声鹤唳」之典，南北对峙得以延续。",
-    "related_people": [], "related_poems": [], "tags": ["以少胜多", "草木皆兵", "南北朝"],
+    "related_people": ["fu-jian", "xie-an"], "related_poems": [], "tags": ["以少胜多", "草木皆兵", "南北朝"],
     "detail": {
       "background": "五胡十六国时期，氐族首领苻坚统一北方，建立前秦，国势鼎盛。苻坚不顾群臣劝阻，倾全国之力南征偏安江左的东晋，意图一举混一南北。一场决定南北命运的大战迫在眉睫。",
       "process": [
@@ -753,7 +753,7 @@
     "title": "土木堡之变", "year_start": 1449, "year_end": 1449, "dynasty": "明",
     "category": ["战争", "政治"], "location": "土木堡",
     "summary": "明英宗受宦官王振怂恿亲征瓦剌，于土木堡大败被俘，京师震动，于谦力主抗战，取得北京保卫战之胜。",
-    "related_people": [], "related_poems": [], "tags": ["瓦剌", "于谦", "宦官专权"],
+    "related_people": ["yu-qian", "ming-yingzong"], "related_poems": [], "tags": ["瓦剌", "于谦", "宦官专权"],
     "detail": {
       "background": "明朝中期，北方蒙古瓦剌部日益强盛，屡犯边境。明英宗宠信宦官王振，朝政日非。瓦剌大举入侵之际，王振怂恿英宗御驾亲征，一场草率的远征酿成了惊天大祸。",
       "process": [
@@ -842,7 +842,7 @@
     "title": "五四运动", "year_start": 1919, "year_end": 1919, "dynasty": "民国",
     "category": ["思想", "社会"], "location": "北京",
     "summary": "巴黎和会外交失败，北京学生上街抗议，掀起反帝爱国与思想启蒙的五四运动，新文化、新思想由此奔涌。",
-    "related_people": [], "related_poems": [], "tags": ["反帝爱国", "新文化", "思想启蒙"],
+    "related_people": ["chen-duxiu", "li-dazhao"], "related_poems": [], "tags": ["反帝爱国", "新文化", "思想启蒙"],
     "detail": {
       "background": "第一次世界大战后，中国虽为战胜国，却在巴黎和会上备受欺凌。列强竟决定将德国在山东的权益转交日本，消息传回国内，群情激愤，积压已久的民族屈辱与思想变革的浪潮，骤然迸发。",
       "process": [
@@ -858,7 +858,7 @@
     "title": "朱温代唐，五代肇始", "year_start": 907, "year_end": 907, "dynasty": "五代十国",
     "category": ["政治"], "location": "汴梁",
     "summary": "宣武节度使朱温废唐哀帝自立，建立后梁，盛极一时的大唐就此覆灭，中原进入五代更替、十国割据的乱世。",
-    "related_people": ["zhu-wen"], "related_poems": [], "tags": ["藩镇", "后梁", "唐亡"],
+    "related_people": ["zhu-wen", "huang-chao"], "related_poems": [], "tags": ["藩镇", "后梁", "唐亡"],
     "detail": {
       "background": "安史之乱后，唐朝藩镇割据、宦官专权、朋党倾轧，国势江河日下。黄巢起义更给了它致命一击。出身黄巢部将、后降唐的宣武节度使朱温，趁势坐大，成为左右朝局的最强藩镇。",
       "process": [
@@ -890,7 +890,7 @@
     "title": "夏朝建立", "year_start": -2070, "year_end": -2070, "dynasty": "夏",
     "category": ["政治"], "location": "中原",
     "summary": "大禹因治水之功受禅，其子启继位，「家天下」的世袭王朝由此肇始，夏是中国传统史书记载的第一个朝代。",
-    "related_people": [], "related_poems": [], "tags": ["大禹", "家天下", "世袭"],
+    "related_people": ["da-yu"], "related_poems": [], "tags": ["大禹", "家天下", "世袭"],
     "detail": {
       "background": "上古之世，洪水滔天，泛滥为患。部落联盟先后推举鲧、禹治水。鲧以堵塞之法失败被诛，其子禹临危受命，开启了一段既治洪水、也改写制度的传奇。",
       "process": [
@@ -906,7 +906,7 @@
     "title": "商朝建立", "year_start": -1600, "year_end": -1600, "dynasty": "商",
     "category": ["政治"], "location": "亳",
     "summary": "商汤起兵灭夏，建立商朝。商代青铜器与甲骨文高度发达，是中国信史的开端。",
-    "related_people": [], "related_poems": [], "tags": ["商汤", "青铜", "甲骨文"],
+    "related_people": ["shang-tang"], "related_poems": [], "tags": ["商汤", "青铜", "甲骨文"],
     "detail": {
       "background": "夏朝传至末代君主夏桀，暴虐无道、荒淫奢靡，民怨沸腾。与此同时，东方的商部落在首领汤的经营下日益强盛，一场改朝换代正在酝酿。",
       "process": [
@@ -954,7 +954,7 @@
     "title": "西晋建立", "year_start": 266, "year_end": 266, "dynasty": "西晋",
     "category": ["政治"], "location": "洛阳",
     "summary": "司马炎逼魏元帝禅位，建立西晋；公元280年灭吴，结束三国分裂，短暂一统天下。",
-    "related_people": ["sima-yan"], "related_poems": [], "tags": ["代魏", "灭吴", "统一"],
+    "related_people": ["sima-yan", "sima-yi"], "related_poems": [], "tags": ["代魏", "灭吴", "统一"],
     "detail": {
       "background": "三国后期，曹魏的军政大权逐渐落入司马氏之手。司马懿、司马师、司马昭父子三代经营，权倾朝野。司马昭之子司马炎，终于走出了改朝换代的最后一步。",
       "process": [
@@ -970,7 +970,7 @@
     "title": "东晋建立", "year_start": 317, "year_end": 317, "dynasty": "东晋",
     "category": ["政治"], "location": "建康",
     "summary": "西晋亡于永嘉之乱后，琅琊王司马睿在士族拥戴下于建康重建晋室，是为东晋，开启南北对峙的偏安局面。",
-    "related_people": ["sima-rui"], "related_poems": [], "tags": ["衣冠南渡", "门阀", "偏安"],
+    "related_people": ["sima-rui", "wang-dao", "xie-an"], "related_poems": [], "tags": ["衣冠南渡", "门阀", "偏安"],
     "detail": {
       "background": "西晋末年，八王之乱耗尽国力，匈奴等族趁势而起，攻陷洛阳、长安，掳走二帝，史称「永嘉之乱」，西晋灭亡。中原板荡，大批士族百姓纷纷南渡避难。",
       "process": [
@@ -1002,7 +1002,7 @@
     "title": "南宋建立", "year_start": 1127, "year_end": 1127, "dynasty": "南宋",
     "category": ["政治"], "location": "应天 · 临安",
     "summary": "靖康之变北宋覆灭后，康王赵构于南方即位，重建宋室，后定都临安，是为南宋，与金隔淮对峙。",
-    "related_people": ["song-gaozong"], "related_poems": ["yong-yu-le-jingkou"], "tags": ["赵构", "南渡", "临安"],
+    "related_people": ["song-gaozong", "yue-fei", "qin-hui"], "related_poems": ["yong-yu-le-jingkou"], "tags": ["赵构", "南渡", "临安"],
     "detail": {
       "background": "靖康之变，金军攻破汴京，掳走徽、钦二帝，北宋灭亡。中原板荡、皇室倾覆之际，侥幸在外的康王赵构，成为延续赵宋国祚的唯一希望。",
       "process": [
@@ -1018,7 +1018,7 @@
     "title": "太平天国运动", "year_start": 1851, "year_end": 1864, "dynasty": "晚清",
     "category": ["战争", "社会"], "location": "广西 — 南京",
     "summary": "洪秀全借拜上帝会发动起义，从广西金田一路打到南京、定都天京，建立太平天国，与清廷对峙十余年，是中国历史上规模最大的农民战争，沉重动摇了清王朝的统治。",
-    "related_people": ["hong-xiuquan", "zeng-guofan"], "related_poems": [], "tags": ["拜上帝会", "天京", "湘军"],
+    "related_people": ["hong-xiuquan", "zeng-guofan", "li-hongzhang"], "related_poems": [], "tags": ["拜上帝会", "天京", "湘军"],
     "detail": {
       "background": "鸦片战争后，巨额赔款转嫁百姓，加之天灾连年、土地兼并，社会矛盾空前激化。落第书生洪秀全杂糅基督教教义创立「拜上帝会」，在广西聚众，一场席卷半个中国的农民大起义就此爆发。",
       "process": [
@@ -1044,7 +1044,7 @@
     "title": "第二次鸦片战争", "year_start": 1856, "year_end": 1860, "dynasty": "晚清",
     "category": ["战争", "外交"], "location": "广州 — 北京",
     "summary": "英法以「亚罗号事件」等为借口再度发动侵华战争，一路北上攻入北京，火烧圆明园。清廷被迫签订《天津条约》《北京条约》，丧失更多主权，半殖民地化进一步加深。",
-    "related_people": [], "related_poems": [], "tags": ["火烧圆明园", "北京条约", "英法联军"],
+    "related_people": ["xianfeng-emperor", "yixin"], "related_poems": [], "tags": ["火烧圆明园", "北京条约", "英法联军"],
     "detail": {
       "background": "第一次鸦片战争后，列强不满既得利益，企图进一步打开中国市场、扩大特权。英法遂借故再启战端，史称第二次鸦片战争，是第一次鸦片战争的延续与扩大。",
       "process": [
@@ -1070,7 +1070,7 @@
     "title": "洋务运动", "year_start": 1861, "year_end": 1895, "dynasty": "晚清",
     "category": ["经济", "军事"], "location": "全国",
     "summary": "两次鸦片战争惨败后，奕䜣、曾国藩、李鸿章、张之洞等洋务派主张「师夷长技以自强」，兴办近代军工与民用企业、建立新式海军，开启了中国近代化的第一步。",
-    "related_people": ["zeng-guofan", "li-hongzhang", "zhang-zhidong"], "related_poems": [], "tags": ["自强求富", "北洋水师", "中体西用"],
+    "related_people": ["zeng-guofan", "li-hongzhang", "zhang-zhidong", "yixin"], "related_poems": [], "tags": ["自强求富", "北洋水师", "中体西用"],
     "detail": {
       "background": "在内有太平天国、外有列强侵逼的双重压力下，清廷一批务实官僚痛感「数千年未有之变局」，认识到必须学习西方的先进技术以图自强，洋务运动应运而生。",
       "process": [
@@ -1125,27 +1125,42 @@
   },
   {
     "id": "shi-jingtang-yanyun",
-    "title": "石敬瑭割让燕云十六州", "year_start": 936, "year_end": 936, "dynasty": "五代十国",
-    "category": ["政治", "外交"], "location": "太原 · 燕云",
-    "summary": "后唐河东节度使石敬瑭为夺帝位，向契丹称臣称子、割让燕云十六州为代价，借契丹兵灭后唐、建立后晋。燕云既失，中原门户洞开，贻祸宋辽数百年。",
+    "title": "石敬瑭灭后唐，建后晋", "year_start": 936, "year_end": 936, "dynasty": "五代十国",
+    "category": ["战争", "政治"], "location": "太原 · 开封",
+    "summary": "后唐河东节度使石敬瑭起兵反唐，为借契丹之力，甘向契丹主耶律德光称臣称子，终灭后唐、建立后晋。这个依附契丹而立的政权，从一开始便先天不足、内外积弱。",
+    "related_people": ["shi-jingtang"], "related_poems": [], "tags": ["后晋", "儿皇帝", "契丹"],
+    "detail": {
+      "background": "后唐末年，末帝李从珂与手握重兵的河东节度使石敬瑭相互猜忌、终至反目。石敬瑭势孤，眼见难以自保，遂将求援的目光投向了北方新兴的强敌——契丹。",
+      "process": [
+        { "phase": "起兵反唐", "date": "936年", "place": "太原", "text": "后唐末帝欲削夺石敬瑭兵权，石敬瑭遂在太原起兵反唐，然兵力不敌，情势危殆，急谋外援。" },
+        { "phase": "称臣称子", "date": "936年", "place": "太原", "text": "石敬瑭遣使向契丹主耶律德光求援，甘愿称臣，并对小自己十余岁的耶律德光自称「儿皇帝」，许以割地与岁贡绢帛三十万匹，换取契丹出兵。" },
+        { "phase": "灭唐建晋", "date": "936年", "place": "洛阳 · 开封", "text": "契丹铁骑南下，助石敬瑭攻灭后唐。石敬瑭称帝，建立后晋，定都开封，成为五代第三个王朝。" }
+      ],
+      "significance": "后晋是一个依附契丹、先天不足的政权。石敬瑭以称臣、称子、割地为代价换来的帝位，使后晋国格尽丧、内外积弱，短短十余年便为契丹所灭。而他割让燕云十六州的祸患，更贻及此后数百年（详见其下二级条目「石敬瑭割让燕云十六州」）。石敬瑭本人，也因「儿皇帝」之名背负千古骂名。"
+    }
+  },
+  {
+    "id": "shijingtang-cede-yanyun",
+    "title": "石敬瑭割让燕云十六州", "tier": "minor", "year_start": 936, "year_end": 938, "dynasty": "五代十国",
+    "category": ["政治", "外交"], "location": "燕云十六州",
+    "summary": "作为向契丹借兵灭后唐的代价，石敬瑭将燕云十六州割让给契丹。长城险要尽失，中原门户从此洞开，成为贻祸宋、辽、金数百年的战略枢机。",
     "related_people": ["shi-jingtang"], "related_poems": [], "tags": ["燕云十六州", "儿皇帝", "契丹"],
     "detail": {
-      "background": "五代后期，藩镇与朝廷、藩镇与外族之间纵横捭阖。后唐末帝与手握重兵的河东节度使石敬瑭反目，石敬瑭势孤求援，将目光投向了北方新兴的强敌——契丹。",
+      "background": "石敬瑭为换取契丹出兵，除称臣、称子之外，还许下了一个影响中国数百年的沉重代价——割让燕云十六州。这片土地是中原北方的天然屏障与长城防线所在。",
       "process": [
-        { "phase": "起兵求援", "date": "936年", "place": "太原", "text": "石敬瑭在太原起兵反唐，兵力不敌，遂遣使向契丹主耶律德光求援，以重利相许。" },
-        { "phase": "称臣称子", "date": "936年", "place": "太原", "text": "石敬瑭甘愿向契丹称臣，并对小自己十余岁的耶律德光自称「儿皇帝」，许以割地、岁贡绢帛三十万匹，换取契丹出兵。" },
-        { "phase": "割燕云、建后晋", "date": "936年", "place": "燕云 · 开封", "text": "契丹出兵助其灭后唐，石敬瑭称帝建后晋，如约将燕云十六州（今京、津及晋北一带）割让给契丹。" },
-        { "phase": "贻祸数百年", "date": "此后", "place": "中原北疆", "text": "燕云一失，长城险要与北方屏障尽归契丹，中原王朝从此门户洞开，在与辽、金的对抗中长期被动，直至埋下靖康之祸的远因。" }
+        { "phase": "割地践约", "date": "936—938年", "place": "燕云", "text": "后晋建立后，石敬瑭如约将燕云十六州（幽、蓟、云、朔等十六州，今北京、天津及山西、河北北部一带）割予契丹，长城内外尽入契丹版图。" },
+        { "phase": "门户洞开", "date": "此后", "place": "中原北疆", "text": "燕云一失，中原王朝无险可守、无马可牧，在与辽、金铁骑的对抗中长期陷于战略被动，只能以血肉筑防。" },
+        { "phase": "贻祸数百年", "date": "后世", "place": "中原", "text": "北宋倾力北伐（如宋太宗两次伐辽）亦未能收复燕云，终酿靖康之变。直到四百余年后的明初，这片土地才重归中原。" }
       ],
       "geography": {
-        "note": "石敬瑭自太原起兵，借契丹之力南下灭后唐、建后晋于开封，代价是将北方的燕云十六州割予契丹。下图为相关地点。",
+        "note": "石敬瑭自太原起兵，借契丹之力南下建后晋于开封，代价是将北方的燕云十六州割予契丹。下图为相关地点。",
         "points": [
           { "name": "太原", "desc": "石敬瑭起兵", "order": 1, "lat": 37.87, "lng": 112.55 },
-          { "name": "燕云", "desc": "割予契丹", "order": 2, "lat": 39.90, "lng": 116.40 },
-          { "name": "开封", "desc": "后晋立国", "order": 3, "lat": 34.80, "lng": 114.31 }
+          { "name": "开封", "desc": "后晋立国", "order": 2, "lat": 34.80, "lng": 114.31 },
+          { "name": "燕云", "desc": "割予契丹", "order": 3, "lat": 39.90, "lng": 116.40 }
         ]
       },
-      "significance": "割让燕云十六州，是中国历史上影响最深远的事件之一。失去燕云这道屏障，中原王朝在此后三百余年间面对北方民族始终处于战略被动，北宋倾力北伐亦未能收复，终酿靖康之变。「儿皇帝」石敬瑭，也因此背负千古骂名。"
+      "significance": "割让燕云十六州，是中国历史上影响最深远的决策之一。失去这道屏障，中原王朝在此后四百余年间面对北方民族始终处于战略被动。它是理解宋朝积弱、澶渊之盟乃至靖康之难的一把钥匙——一个人的屈膝求荣，竟牵动了此后数百年的天下格局。"
     }
   },
   {
