@@ -1,0 +1,364 @@
+---
+import events from '../data/events.json';
+import people from '../data/people.json';
+import poems from '../data/poems.json';
+import threads from '../data/threads.json';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+// ===== 构建全站关系图：节点(事件/人物/诗词/脉络) + 边 =====
+const nodeMap = new Map();
+const add = (id, label, type, url) => {
+  if (!nodeMap.has(id)) nodeMap.set(id, { id, label, type, url, deg: 0 });
+};
+events.forEach((e) => add('e:' + e.id, e.title, 'event', `${base}event/${e.id}`));
+people.forEach((p) => add('p:' + p.id, p.name, 'person', `${base}person/${p.id}`));
+poems.forEach((m) => add('m:' + m.id, m.title, 'poem', `${base}poem/${m.id}`));
+threads.forEach((t) => add('t:' + t.id, t.title, 'thread', `${base}thread/${t.id}`));
+
+const seen = new Set();
+const edges = [];
+const addE = (a, b) => {
+  if (!nodeMap.has(a) || !nodeMap.has(b) || a === b) return;
+  const k = a < b ? a + '|' + b : b + '|' + a;
+  if (seen.has(k)) return;
+  seen.add(k);
+  edges.push([a, b]);
+  nodeMap.get(a).deg++; nodeMap.get(b).deg++;
+};
+events.forEach((e) => {
+  (e.related_people || []).forEach((p) => addE('e:' + e.id, 'p:' + p));
+  (e.related_poems || []).forEach((m) => addE('e:' + e.id, 'm:' + m));
+});
+poems.forEach((m) => {
+  if (m.author_id) addE('m:' + m.id, 'p:' + m.author_id);
+  (m.related_events || []).forEach((e) => addE('m:' + m.id, 'e:' + e));
+});
+threads.forEach((t) => {
+  (t.related_events || []).forEach((e) => addE('t:' + t.id, 'e:' + e));
+  (t.related_people || []).forEach((p) => addE('t:' + t.id, 'p:' + p));
+  (t.related_poems || []).forEach((m) => addE('t:' + t.id, 'm:' + m));
+});
+const graphData = { nodes: [...nodeMap.values()], edges };
+---
+
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>关系星图 · 观复</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="texture-overlay" aria-hidden="true"></div>
+
+<header class="g-header">
+  <a href={base} class="g-back">← 观复</a>
+  <div class="g-title">关系星图 <span class="g-sub">All threads, one web.</span></div>
+  <div class="g-legend" id="legend">
+    <button class="lg lg-thread active" data-type="thread"><span class="lg-dot"></span>脉络</button>
+    <button class="lg lg-event active" data-type="event"><span class="lg-dot"></span>事件</button>
+    <button class="lg lg-person active" data-type="person"><span class="lg-dot"></span>人物</button>
+    <button class="lg lg-poem active" data-type="poem"><span class="lg-dot"></span>诗词</button>
+  </div>
+</header>
+
+<div class="g-stage" id="stage">
+  <canvas id="graph"></canvas>
+  <div class="g-tip" id="tip" hidden></div>
+  <button class="g-reset" id="reset">复位</button>
+  <p class="g-hint">拖动平移 · 滚轮缩放 · 悬停看关联 · 点击进入词条</p>
+</div>
+
+</body>
+</html>
+
+<script is:inline define:vars={{ graphData }}>
+  const DATA = graphData;
+  const TYPE = {
+    thread: { color: '#B0873E', name: '脉络' },
+    event:  { color: '#4A4640', name: '事件' },
+    person: { color: '#B0503E', name: '人物' },
+    poem:   { color: '#3F6F8F', name: '诗词' },
+  };
+
+  const canvas = document.getElementById('graph');
+  const ctx = canvas.getContext('2d');
+  const stage = document.getElementById('stage');
+  const tip = document.getElementById('tip');
+
+  const nodes = DATA.nodes.map((n) => Object.assign({}, n, { x: (Math.random() - 0.5) * 700, y: (Math.random() - 0.5) * 700, vx: 0, vy: 0 }));
+  const byId = {};
+  nodes.forEach((n) => { byId[n.id] = n; });
+  const edges = DATA.edges.map((pair) => ({ a: byId[pair[0]], b: byId[pair[1]] }));
+  const nbr = {};
+  nodes.forEach((n) => { nbr[n.id] = new Set(); });
+  edges.forEach((e) => { nbr[e.a.id].add(e.b.id); nbr[e.b.id].add(e.a.id); });
+
+  const radius = (n) => 3.2 + Math.sqrt(n.deg) * 1.7;
+
+  const view = { x: 0, y: 0, scale: 1 };
+  let baseScale = 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const hidden = new Set();
+  let hover = null, alpha = 1;
+  let dragNode = null, panning = false, moved = false;
+  let last = { x: 0, y: 0 };
+
+  function resize() {
+    const r = stage.getBoundingClientRect();
+    canvas.width = r.width * dpr; canvas.height = r.height * dpr;
+    canvas.style.width = r.width + 'px'; canvas.style.height = r.height + 'px';
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function simulate(a) {
+    const N = nodes.length;
+    for (let i = 0; i < N; i++) {
+      const ni = nodes[i];
+      for (let j = i + 1; j < N; j++) {
+        const nj = nodes[j];
+        let dx = ni.x - nj.x, dy = ni.y - nj.y;
+        let d2 = dx * dx + dy * dy;
+        if (d2 < 0.01) { d2 = 0.01; dx = Math.random() - 0.5; dy = Math.random() - 0.5; }
+        const d = Math.sqrt(d2);
+        const f = (9000 / d2) * a;
+        const fx = (dx / d) * f, fy = (dy / d) * f;
+        ni.vx += fx; ni.vy += fy; nj.vx -= fx; nj.vy -= fy;
+      }
+    }
+    for (const e of edges) {
+      let dx = e.b.x - e.a.x, dy = e.b.y - e.a.y;
+      const d = Math.sqrt(dx * dx + dy * dy) || 0.01;
+      const f = (d - 70) * 0.02 * a;
+      const fx = (dx / d) * f, fy = (dy / d) * f;
+      e.a.vx += fx; e.a.vy += fy; e.b.vx -= fx; e.b.vy -= fy;
+    }
+    for (const n of nodes) {
+      n.vx += -n.x * 0.012 * a; n.vy += -n.y * 0.012 * a;
+      n.vx *= 0.86; n.vy *= 0.86;
+      if (n !== dragNode) { n.x += n.vx; n.y += n.vy; }
+    }
+  }
+
+  function fit() {
+    let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
+    for (const n of nodes) { minX = Math.min(minX, n.x); minY = Math.min(minY, n.y); maxX = Math.max(maxX, n.x); maxY = Math.max(maxY, n.y); }
+    const r = stage.getBoundingClientRect();
+    const w = maxX - minX || 1, h = maxY - minY || 1;
+    view.scale = Math.min(r.width / (w + 120), r.height / (h + 120), 2.2);
+    view.x = r.width / 2 - ((minX + maxX) / 2) * view.scale;
+    view.y = r.height / 2 - ((minY + maxY) / 2) * view.scale;
+    baseScale = view.scale;
+  }
+
+  const sx = (wx) => wx * view.scale + view.x;
+  const sy = (wy) => wy * view.scale + view.y;
+
+  function render() {
+    const r = stage.getBoundingClientRect();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, r.width, r.height);
+
+    const hi = hover ? nbr[hover.id] : null;
+    ctx.lineWidth = 1;
+    for (const e of edges) {
+      if (hidden.has(e.a.type) || hidden.has(e.b.type)) continue;
+      const on = hover && (e.a === hover || e.b === hover);
+      ctx.strokeStyle = on ? 'rgba(176,80,62,0.5)' : (hover ? 'rgba(60,52,44,0.05)' : 'rgba(60,52,44,0.11)');
+      ctx.beginPath();
+      ctx.moveTo(sx(e.a.x), sy(e.a.y));
+      ctx.lineTo(sx(e.b.x), sy(e.b.y));
+      ctx.stroke();
+    }
+    for (const n of nodes) {
+      if (hidden.has(n.type)) continue;
+      const faded = hover && n !== hover && !(hi && hi.has(n.id));
+      const rad = radius(n) * view.scale;
+      ctx.beginPath();
+      ctx.arc(sx(n.x), sy(n.y), rad, 0, Math.PI * 2);
+      ctx.globalAlpha = faded ? 0.22 : 1;
+      ctx.fillStyle = TYPE[n.type].color;
+      ctx.fill();
+      if (n === hover) { ctx.lineWidth = 2; ctx.strokeStyle = '#1A1814'; ctx.stroke(); }
+      ctx.globalAlpha = 1;
+    }
+    // 标签：优先级 + 避让。全览只显枢纽；放大到基准 1.35 倍后显示视野内全部
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const placed = [];
+    function label(n, fs, strong) {
+      if (hidden.has(n.type)) return;
+      ctx.font = fs + "px 'Noto Serif SC', serif";
+      const w = ctx.measureText(n.label).width;
+      const tx = sx(n.x), ty = sy(n.y) + radius(n) * view.scale + 2;
+      const box = { x: tx - w / 2 - 2, y: ty - 1, w: w + 4, h: fs + 3 };
+      if (tx < -40 || tx > r.width + 40 || ty < -20 || ty > r.height + 20) return;
+      for (const b of placed) {
+        if (box.x < b.x + b.w && box.x + box.w > b.x && box.y < b.y + b.h && box.y + box.h > b.y) return;
+      }
+      placed.push(box);
+      ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(242,237,227,0.92)';
+      ctx.strokeText(n.label, tx, ty);
+      ctx.fillStyle = strong ? '#1A1814' : '#5B5346';
+      ctx.fillText(n.label, tx, ty);
+    }
+    if (hover) {
+      label(hover, 12.5, true);
+      if (hi) for (const n of nodes) if (hi.has(n.id)) label(n, 11, false);
+    } else {
+      const zoomed = view.scale > baseScale * 1.35;
+      // 枢纽优先占位
+      for (const n of nodes) if (n.deg >= 7) label(n, 11.5, true);
+      if (zoomed) for (const n of nodes) if (n.deg < 7) label(n, 10.5, false);
+    }
+  }
+
+  // 渲染按需触发：模拟激活时才跑 rAF，静止后停下（省 CPU，也让截图/页面不被占用）
+  let running = false, refitT = null;
+  function frame() {
+    simulate(alpha); alpha *= 0.985;
+    render();
+    if (alpha > 0.02 || dragNode) requestAnimationFrame(frame);
+    else running = false;
+  }
+  function start() { if (!running) { running = true; requestAnimationFrame(frame); } }
+  // 预先跑出布局（带冷却）后静态呈现
+  alpha = 1;
+  for (let i = 0; i < 240; i++) { simulate(alpha); alpha *= 0.985; }
+  alpha = 0;
+  fit();
+  render();
+
+  function toWorld(mx, my) { return { x: (mx - view.x) / view.scale, y: (my - view.y) / view.scale }; }
+  function pick(mx, my) {
+    const w = toWorld(mx, my);
+    let best = null, bd = 1e9;
+    for (const n of nodes) {
+      if (hidden.has(n.type)) continue;
+      const dx = n.x - w.x, dy = n.y - w.y, d = dx * dx + dy * dy;
+      const rr = radius(n) + 6 / view.scale;
+      if (d < rr * rr && d < bd) { bd = d; best = n; }
+    }
+    return best;
+  }
+  function relPos(ev) {
+    const r = canvas.getBoundingClientRect();
+    return { x: ev.clientX - r.left, y: ev.clientY - r.top };
+  }
+
+  canvas.addEventListener('pointerdown', (ev) => {
+    const p = relPos(ev); moved = false; last = p;
+    const n = pick(p.x, p.y);
+    if (n) dragNode = n; else panning = true;
+    canvas.setPointerCapture(ev.pointerId);
+  });
+  canvas.addEventListener('pointermove', (ev) => {
+    const p = relPos(ev);
+    if (dragNode) {
+      moved = true;
+      dragNode.x = (p.x - view.x) / view.scale; dragNode.y = (p.y - view.y) / view.scale;
+      dragNode.vx = 0; dragNode.vy = 0; alpha = Math.max(alpha, 0.25); start();
+    } else if (panning) {
+      moved = true; view.x += p.x - last.x; view.y += p.y - last.y; last = p; render();
+    } else {
+      const n = pick(p.x, p.y);
+      if (n !== hover) {
+        hover = n;
+        canvas.style.cursor = n ? 'pointer' : 'grab';
+        if (n) { tip.hidden = false; tip.textContent = TYPE[n.type].name + ' · ' + n.label; }
+        else tip.hidden = true;
+        render();
+      }
+      if (n) { tip.style.left = (p.x + 14) + 'px'; tip.style.top = (p.y + 14) + 'px'; }
+    }
+  });
+  canvas.addEventListener('pointerup', (ev) => {
+    if (dragNode && !moved) window.location.href = dragNode.url;
+    dragNode = null; panning = false;
+  });
+  canvas.addEventListener('wheel', (ev) => {
+    ev.preventDefault();
+    const p = relPos(ev);
+    const f = ev.deltaY < 0 ? 1.12 : 1 / 1.12;
+    const wx = (p.x - view.x) / view.scale, wy = (p.y - view.y) / view.scale;
+    view.scale = Math.max(0.2, Math.min(5, view.scale * f));
+    view.x = p.x - wx * view.scale; view.y = p.y - wy * view.scale;
+    render();
+  }, { passive: false });
+
+  document.querySelectorAll('.lg').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const t = btn.dataset.type;
+      if (hidden.has(t)) { hidden.delete(t); btn.classList.add('active'); }
+      else { hidden.add(t); btn.classList.remove('active'); }
+      render();
+    });
+  });
+  document.getElementById('reset').addEventListener('click', () => {
+    alpha = 0.6; start();
+    clearTimeout(refitT); refitT = setTimeout(() => { fit(); render(); }, 1300);
+  });
+</script>
+
+<style>
+.texture-overlay {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 250px;
+}
+:root {
+  --bg: #F2EDE3; --ink: #1A1814; --ink-light: #6B6458; --red: #B83232;
+  --font-serif: 'Noto Serif SC', 'Songti SC', serif; --font-en: 'EB Garamond', Georgia, serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body { font-family: var(--font-serif); background: var(--bg); color: var(--ink); overflow: hidden; }
+
+.g-header {
+  position: relative; z-index: 2; display: flex; align-items: center; gap: 1.2rem;
+  padding: 0.9rem 1.6rem; border-bottom: 1px solid rgba(42,38,32,0.12);
+}
+.g-back { font-size: 0.9rem; letter-spacing: 0.1em; color: var(--ink-light); text-decoration: none; }
+.g-back:hover { color: var(--ink); }
+.g-title { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.18em; }
+.g-sub { font-family: var(--font-en); font-style: italic; font-weight: 400; font-size: 0.78rem; color: var(--red); letter-spacing: 0.04em; margin-left: 0.4rem; }
+.g-legend { margin-left: auto; display: flex; gap: 0.5rem; }
+.lg {
+  display: flex; align-items: center; gap: 0.35rem; font-family: var(--font-serif);
+  font-size: 0.78rem; letter-spacing: 0.05em; color: var(--ink-light); cursor: pointer;
+  background: none; border: 1px solid rgba(42,38,32,0.18); padding: 0.25rem 0.6rem; transition: opacity 0.2s;
+}
+.lg:not(.active) { opacity: 0.4; }
+.lg-dot { width: 9px; height: 9px; display: inline-block; }
+.lg-thread .lg-dot { background: #B0873E; }
+.lg-event .lg-dot { background: #4A4640; }
+.lg-person .lg-dot { background: #B0503E; }
+.lg-poem .lg-dot { background: #3F6F8F; }
+
+.g-stage { position: absolute; top: 3.4rem; left: 0; right: 0; bottom: 0; z-index: 1; }
+#graph { display: block; cursor: grab; }
+
+.g-tip {
+  position: absolute; z-index: 3; pointer-events: none; background: rgba(26,24,20,0.9); color: #F2EDE3;
+  font-size: 0.76rem; letter-spacing: 0.04em; padding: 0.25rem 0.55rem; white-space: nowrap;
+}
+.g-reset {
+  position: absolute; right: 1.2rem; bottom: 2.6rem; z-index: 3;
+  font-family: var(--font-serif); font-size: 0.76rem; letter-spacing: 0.08em; color: var(--ink-light);
+  background: rgba(250,247,240,0.85); border: 1px solid rgba(42,38,32,0.22); padding: 0.3rem 0.7rem; cursor: pointer;
+}
+.g-reset:hover { color: var(--ink); border-color: var(--ink); }
+.g-hint {
+  position: absolute; left: 0; right: 0; bottom: 0.9rem; z-index: 2; text-align: center;
+  font-size: 0.72rem; color: var(--ink-light); opacity: 0.6; letter-spacing: 0.06em; pointer-events: none;
+}
+@media (max-width: 600px) {
+  .g-header { flex-wrap: wrap; gap: 0.6rem; }
+  .g-legend { margin-left: 0; }
+  .g-stage { top: 5.4rem; }
+}
+</style>
