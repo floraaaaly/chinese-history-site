@@ -32,6 +32,17 @@ const kinPoems = poems.filter(
   (p) => p.id !== poem.id && (p.imagery || []).some((im) => imagerySet.has(im))
 );
 
+// 底部「顺着网继续逛」：同一诗人的作品 + 同境之诗（共母题或共意象）
+const samePoet = author ? poems.filter((p) => p.author_id === author.id && p.id !== poem.id) : [];
+const motifSet = new Set(poem.motif || []);
+const kinBottom = poems
+  .filter((p) =>
+    p.id !== poem.id &&
+    p.author_id !== poem.author_id &&
+    ((p.motif || []).some((m) => motifSet.has(m)) || (p.imagery || []).some((im) => imagerySet.has(im)))
+  )
+  .slice(0, 8);
+
 // 关联图谱：诗 ↔ 作者 ↔ 所属脉络 ↔ 相关事件 ↔ 同境之诗
 const graphNodes = [
   { id: 'po:' + poem.id, label: poem.title, type: 'poem', current: true, url: `${base}poem/${poem.id}` },
@@ -176,6 +187,35 @@ const graphLinks = [
     </section>
   )}
 
+  {samePoet.length > 0 && (
+    <section class="module">
+      <h2 class="module-title">{author.name}的其他作品</h2>
+      <div class="rel-events">
+        {samePoet.map((p) => (
+          <a href={`${base}poem/${p.id}`} class="rel-event">
+            <span class="rel-event-year">{p.form}</span>
+            <span class="rel-event-title">{p.title}</span>
+            <span class="rel-event-arrow">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+  {kinBottom.length > 0 && (
+    <section class="module">
+      <h2 class="module-title">同境之诗</h2>
+      <div class="rel-events">
+        {kinBottom.map((p) => (
+          <a href={`${base}poem/${p.id}`} class="rel-event">
+            <span class="rel-event-year">{p.author}</span>
+            <span class="rel-event-title">{p.title}</span>
+            <span class="rel-event-arrow">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
   <RelationGraph nodes={graphNodes} links={graphLinks} />
 
 </main>
@@ -297,7 +337,7 @@ a.poem-author-link:hover { opacity: 0.7; }
   padding: 0.95rem 0.5rem; border-bottom: 1px solid rgba(42,38,32,0.1);
   transition: padding-left 0.2s, color 0.2s;
 }
-.rel-event:hover { padding-left: 1.1rem; color: var(--red); }
+.rel-event:hover { color: var(--red); }
 .rel-event-year { font-family: var(--font-en); font-size: 0.82rem; color: var(--ink-light); flex-shrink: 0; min-width: 5.5em; }
 .rel-event:hover .rel-event-year { color: var(--red); }
 .rel-event-title { flex: 1; font-size: 0.98rem; letter-spacing: 0.04em; }

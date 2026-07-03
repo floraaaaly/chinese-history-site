@@ -3,6 +3,7 @@ import events from '../../data/events.json';
 import poems from '../../data/poems.json';
 import people from '../../data/people.json';
 import threads from '../../data/threads.json';
+import eras from '../../data/eras.json';
 import RelationGraph from '../../components/RelationGraph.astro';
 import { autolink } from '../../lib/links';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
@@ -13,6 +14,28 @@ export function getStaticPaths() {
 }
 
 const { event } = Astro.props;
+
+// 上一/下一事件：按时间轴（时代分段 + 段内按年份）的顺序，即首页从上往下的次序
+function eventGroup(dynasty: string) {
+  if (['先秦','夏','商','西周','春秋','战国','春秋战国'].includes(dynasty)) return '先秦';
+  if (['秦','秦末汉初','西汉','新','东汉','东汉末'].includes(dynasty)) return '秦汉';
+  if (['三国'].includes(dynasty)) return '三国';
+  if (['西晋','东晋','晋','十六国','南北朝'].includes(dynasty)) return '两晋南北朝';
+  if (['隋','唐'].includes(dynasty)) return '隋唐';
+  if (['五代十国','五代','十国'].includes(dynasty)) return '五代十国';
+  if (['宋','北宋','南宋','辽','金','西夏'].includes(dynasty)) return '宋';
+  if (['元'].includes(dynasty)) return '元';
+  if (['明','明末清初'].includes(dynasty)) return '明';
+  if (['清','清初'].includes(dynasty)) return '清';
+  if (['晚清','清末','清末民初','民国','近代','现代'].includes(dynasty)) return '近现代';
+  return '其他';
+}
+const orderedEvents = eras.flatMap((era: any) =>
+  events.filter((e: any) => eventGroup(e.dynasty) === era.group).sort((a: any, b: any) => a.year_start - b.year_start)
+);
+const curIdx = orderedEvents.findIndex((e: any) => e.id === event.id);
+const prevEvent = curIdx > 0 ? orderedEvents[curIdx - 1] : null;
+const nextEvent = curIdx >= 0 && curIdx < orderedEvents.length - 1 ? orderedEvents[curIdx + 1] : null;
 
 function formatYear(y: number) {
   return y < 0 ? `前${Math.abs(y)}年` : `${y}年`;
@@ -47,7 +70,20 @@ const relEvents = events
       e.id !== event.id &&
       ((e.related_people || []).some((p) => peopleSet.has(p)) || threadSiblingIds.has(e.id))
   )
-  .slice(0, 6);
+  .map((e) => ({ e, shared: (e.related_people || []).filter((p) => peopleSet.has(p)) }))
+  .sort((a, b) => b.shared.length - a.shared.length) // 共享人物的更相关，排前面
+  .slice(0, 6)
+  .map(({ e, shared }) => {
+    // 标注「为什么相关」：优先共享人物，其次同属脉络
+    let reason = '';
+    if (shared.length) {
+      reason = '同涉 ' + shared.slice(0, 2).map((pid) => peopleMap[pid]?.name).filter(Boolean).join('、');
+    } else {
+      const t = relThreads.find((th) => (th.related_events || []).includes(e.id));
+      if (t) reason = '同属「' + t.title + '」';
+    }
+    return { ...e, reason };
+  });
 
 // 精细化事件的扩展内容
 const detail = event.detail;
@@ -274,6 +310,7 @@ relThreads.forEach((t) => {
               {e.year_start === e.year_end ? formatYear(e.year_start) : `${formatYear(e.year_start)}—`}
             </span>
             <span class="rel-event-title">{e.title}</span>
+            {e.reason && <span class="rel-event-why">{e.reason}</span>}
             <span class="rel-event-arrow">→</span>
           </a>
         ))}
@@ -282,6 +319,21 @@ relThreads.forEach((t) => {
   )}
 
   <RelationGraph nodes={graphNodes} links={graphLinks} />
+
+  <nav class="ev-nav">
+    {prevEvent ? (
+      <a href={`${base}event/${prevEvent.id}`} class="ev-nav-btn prev">
+        <span class="ev-nav-dir">← 上一事件</span>
+        <span class="ev-nav-title">{prevEvent.title}</span>
+      </a>
+    ) : <span class="ev-nav-spacer"></span>}
+    {nextEvent ? (
+      <a href={`${base}event/${nextEvent.id}`} class="ev-nav-btn next">
+        <span class="ev-nav-dir">下一事件 →</span>
+        <span class="ev-nav-title">{nextEvent.title}</span>
+      </a>
+    ) : <span class="ev-nav-spacer"></span>}
+  </nav>
 
 </main>
 
@@ -483,15 +535,29 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
   padding: 0.95rem 0.5rem; border-bottom: 1px solid rgba(42,38,32,0.1);
   transition: padding-left 0.2s, color 0.2s;
 }
-.rel-event:hover { padding-left: 1.1rem; color: var(--red); }
+.rel-event:hover { color: var(--red); }
 .rel-event-year { font-family: var(--font-en); font-size: 0.82rem; color: var(--ink-light); flex-shrink: 0; min-width: 5.5em; }
 .rel-event:hover .rel-event-year { color: var(--red); }
-.rel-event-title { flex: 1; font-size: 0.98rem; letter-spacing: 0.04em; }
+.rel-event-title { flex: 0 1 auto; min-width: 0; font-size: 0.98rem; letter-spacing: 0.04em; white-space: nowrap; }
+.rel-event-why { flex: 1 1 auto; font-size: 0.74rem; color: var(--ink-light); opacity: 0.66; letter-spacing: 0.03em; white-space: nowrap; }
+.rel-event-why::before { content: '·'; margin: 0 0.5rem; opacity: 0.55; }
+.rel-event:hover .rel-event-why { color: var(--red); opacity: 0.9; }
 .rel-cat { font-size: 0.68rem; color: var(--blue, #3F6F8F); border: 1px solid var(--blue, #3F6F8F); padding: 0.02em 0.35em; letter-spacing: 0.08em; }
 .rel-event-arrow { opacity: 0; transition: opacity 0.2s; }
 .rel-event:hover .rel-event-arrow { opacity: 1; }
 
 /* 页脚 */
+/* 上一/下一事件导航：默认淡出、hover 加深（同首页缩览条） */
+.ev-nav { display: flex; justify-content: space-between; gap: 2rem; margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(42,38,32,0.12); }
+.ev-nav-btn { display: flex; flex-direction: column; gap: 0.45rem; max-width: 47%; text-decoration: none; opacity: 0.5; transition: opacity 0.2s ease; }
+.ev-nav-btn:hover { opacity: 1; }
+.ev-nav-btn.prev { align-items: flex-start; text-align: left; }
+.ev-nav-btn.next { align-items: flex-end; text-align: right; margin-left: auto; }
+.ev-nav-dir { font-size: 0.7rem; letter-spacing: 0.22em; color: #6B6458; }
+.ev-nav-title { font-family: 'Noto Serif SC', serif; font-size: 1.08rem; letter-spacing: 0.06em; color: #1A1814; line-height: 1.4; }
+.ev-nav-spacer { max-width: 47%; }
+@media (max-width: 560px) { .ev-nav-title { font-size: 0.92rem; } .ev-nav { gap: 1rem; } }
+
 .site-footer { padding: 4rem 0 2.5rem; margin-top: 4rem; border-top: 1px solid rgba(42,38,32,0.1); }
 .footer-inner { text-align: center; }
 .footer-name { font-family: var(--font-serif); font-size: 1.1rem; font-weight: normal; letter-spacing: 0.22em; margin-bottom: 0.25rem; color: var(--ink); }
