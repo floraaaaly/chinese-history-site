@@ -5,20 +5,56 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 // 身份 → 类别
 function roleCategory(role: string) {
-  if (['君主', '大汗', '太后'].includes(role)) return '君主';
-  if (['丞相', '宰相', '谋臣', '谏臣', '钦差大臣', '改革家', '重臣', '大臣'].includes(role)) return '文臣';
-  if (['名将', '霸王', '将领', '起义领袖', '节度使'].includes(role)) return '武将';
+  if (['君主', '大汗', '太后', '贵妃', '摄政王'].includes(role)) return '君主';
+  if (['丞相', '宰相', '名相', '谋臣', '谏臣', '重臣', '大臣', '名臣', '钦差大臣', '权臣', '亲王', '外交家', '改革家', '军政首领', '革命家', '宦官'].includes(role)) return '文臣';
+  if (['名将', '霸王', '将领', '起义领袖', '节度使', '军事家', '军人', '群雄', '藩镇', '蒙古首领', '刺客'].includes(role)) return '武将';
   if (['思想家'].includes(role)) return '思想';
-  if (['诗人', '词人'].includes(role)) return '文人';
+  if (['诗人', '词人', '文学家', '史学家', '书法家', '高僧'].includes(role)) return '文人';
+  if (['发明家', '科学家', '数学家', '医药学家', '航海家'].includes(role)) return '科技';
   return '其他';
 }
-const catOrder = ['君主', '文臣', '武将', '思想', '文人', '其他'];
+const catOrder = ['君主', '文臣', '武将', '思想', '文人', '科技', '其他'];
 const counts: Record<string, number> = {};
 people.forEach((p) => {
   const c = roleCategory(p.role);
   counts[c] = (counts[c] || 0) + 1;
 });
 const cats = catOrder.filter((c) => counts[c] > 0);
+
+// 按年代排序：浏览时从上古顺到近代
+const eraYear: Record<string, number> = {
+  '夏': -2070, '商': -1600, '西周': -1046, '春秋': -770, '战国': -475,
+  '秦': -221, '秦末': -210, '西汉': -202, '新': 9, '东汉': 25, '东汉末': 189, '三国': 220,
+  '西晋': 266, '十六国': 304, '东晋': 317, '南北朝': 420,
+  '隋': 581, '唐': 618, '唐末': 875, '五代十国': 907, '辽': 916, '南唐': 937,
+  '北宋': 960, '宋': 1000, '南宋': 1127, '蒙古': 1206, '元': 1271, '元末': 1351,
+  '明': 1368, '明末': 1600, '明末清初': 1636, '清': 1644, '晚清': 1840, '近代': 1912, '现代': 1949,
+};
+const sortedPeople = [...people].sort((a, b) => (eraYear[a.dynasty] ?? 9999) - (eraYear[b.dynasty] ?? 9999));
+
+// 朝代 → 时代大段（与首页时间轴一致）+ 段色
+const dynGroup: Record<string, string> = {
+  '夏': '先秦', '商': '先秦', '西周': '先秦', '春秋': '先秦', '战国': '先秦',
+  '秦': '秦汉', '秦末': '秦汉', '西汉': '秦汉', '新': '秦汉', '东汉': '秦汉', '东汉末': '秦汉',
+  '三国': '三国',
+  '西晋': '两晋南北朝', '东晋': '两晋南北朝', '十六国': '两晋南北朝', '南北朝': '两晋南北朝',
+  '隋': '隋唐', '唐': '隋唐', '唐末': '隋唐',
+  '五代十国': '五代十国', '南唐': '五代十国',
+  '辽': '宋', '北宋': '宋', '宋': '宋', '南宋': '宋',
+  '蒙古': '元', '元': '元', '元末': '元',
+  '明': '明', '明末': '明', '明末清初': '明',
+  '清': '清',
+  '晚清': '近现代', '近代': '近现代', '现代': '近现代',
+};
+const eraColor: Record<string, string> = {
+  '先秦': '#6E7B5B', '秦汉': '#A6603A', '三国': '#8C5A4E', '两晋南北朝': '#5F6E7A',
+  '隋唐': '#B8542F', '五代十国': '#8A7355', '宋': '#4E7A6E', '元': '#4A5468',
+  '明': '#9C4A3C', '清': '#6B5B45', '近现代': '#3F6F8F',
+};
+const groupOrder = ['先秦', '秦汉', '三国', '两晋南北朝', '隋唐', '五代十国', '宋', '元', '明', '清', '近现代'];
+const grouped: Record<string, any[]> = {};
+sortedPeople.forEach((p) => { const g = dynGroup[p.dynasty] || '其他'; (grouped[g] = grouped[g] || []).push(p); });
+const eraSecs = groupOrder.filter((g) => grouped[g]?.length).map((g) => ({ name: g, color: eraColor[g], list: grouped[g] }));
 ---
 
 <!doctype html>
@@ -69,28 +105,46 @@ const cats = catOrder.filter((c) => counts[c] > 0);
 
   <div class="page-search"><SiteSearch placeholder="搜索人物，或任意事件 / 诗词 / 脉络……" /></div>
 
-  <section class="cat-bar" id="cat-bar">
-    <button class="cat-chip active" data-cat="__all__">全部<span class="cat-count">{people.length}</span></button>
-    {cats.map((c) => (
-      <button class="cat-chip" data-cat={c}>{c}<span class="cat-count">{counts[c]}</span></button>
-    ))}
-  </section>
+  <div class="people-nav" id="people-nav">
+    <nav class="era-jump" id="era-jump">
+      {eraSecs.map((s) => (
+        <a href={`#era-${s.name}`} class="era-jump-chip" data-era={s.name} style={`--ec:${s.color}`}>
+          <span class="ejc-dot"></span>{s.name}
+        </a>
+      ))}
+    </nav>
+    <div class="cat-select-wrap">
+      <select class="cat-select" id="cat-select" aria-label="按身份筛选">
+        <option value="__all__">全部 · {people.length}</option>
+        {cats.map((c) => (<option value={c}>{c} · {counts[c]}</option>))}
+      </select>
+    </div>
+    <button class="to-top" id="to-top" title="回到顶部">↑ 顶部</button>
+  </div>
 
-  <section class="people-grid">
-    {people.map((p) => (
-      <a href={`${base}person/${p.id}`} class="personcard" data-cat={roleCategory(p.role)}>
-        <div class="pcc-top">
-          <span class="pcc-name">{p.name}</span>
-          <span class="pcc-role">{p.role}</span>
-        </div>
-        <span class="pcc-dyn">{p.dynasty}</span>
-        <p class="pcc-sum">{p.summary}</p>
-      </a>
-    ))}
-  </section>
+  {eraSecs.map((s) => (
+    <section class="era-sec" id={`era-${s.name}`} data-era={s.name} style={`--ec:${s.color}`}>
+      <div class="era-sec-head">
+        <span class="era-sec-dot"></span>
+        <h2 class="era-sec-name">{s.name}</h2>
+        <span class="era-sec-count">{s.list.length}</span>
+      </div>
+      <div class="people-grid">
+        {s.list.map((p) => (
+          <a href={`${base}person/${p.id}`} class="personcard" data-cat={roleCategory(p.role)}>
+            <div class="pcc-top">
+              <span class="pcc-name">{p.name}</span>
+              <span class="pcc-role">{p.role}</span>
+            </div>
+            <span class="pcc-dyn">{p.dynasty}</span>
+            <p class="pcc-sum">{p.summary}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
 
   <p class="empty-hint" id="empty-hint" hidden>暂无此类人物。</p>
-  <div class="more-wrap"><button class="load-more" id="load-more" hidden>加载更多</button></div>
 
 </main>
 
@@ -108,34 +162,49 @@ const cats = catOrder.filter((c) => counts[c] > 0);
 </html>
 
 <script>
-  const chips = document.querySelectorAll<HTMLElement>('.cat-chip');
-  const cards = Array.from(document.querySelectorAll<HTMLElement>('.personcard'));
+  const sel = document.getElementById('cat-select') as HTMLSelectElement | null;
+  const secs = Array.from(document.querySelectorAll<HTMLElement>('.era-sec'));
+  const jumpChips = Array.from(document.querySelectorAll<HTMLElement>('.era-jump-chip'));
   const emptyHint = document.getElementById('empty-hint');
-  const loadMore = document.getElementById('load-more') as HTMLButtonElement | null;
-
-  const BATCH = 12;
   let cat = '__all__';
-  let shown = BATCH;
 
   function update() {
-    const matched = cards.filter((c) => cat === '__all__' || c.dataset.cat === cat);
-    cards.forEach((c) => (c.style.display = 'none'));
-    matched.slice(0, shown).forEach((c) => (c.style.display = ''));
-    if (emptyHint) emptyHint.hidden = matched.length > 0;
-    if (loadMore) loadMore.hidden = matched.length <= shown;
+    let total = 0;
+    secs.forEach((sec) => {
+      const cards = Array.from(sec.querySelectorAll<HTMLElement>('.personcard'));
+      let vis = 0;
+      cards.forEach((c) => {
+        const show = cat === '__all__' || c.dataset.cat === cat;
+        c.style.display = show ? '' : 'none';
+        if (show) vis++;
+      });
+      sec.style.display = vis ? '' : 'none';
+      total += vis;
+      const jc = jumpChips.find((j) => j.dataset.era === sec.dataset.era);
+      if (jc) jc.style.display = vis ? '' : 'none';
+    });
+    if (emptyHint) emptyHint.hidden = total > 0;
+    highlight();
   }
 
-  chips.forEach((chip) => {
-    chip.addEventListener('click', () => {
-      chips.forEach((c) => c.classList.remove('active'));
-      chip.classList.add('active');
-      cat = chip.dataset.cat || '__all__';
-      shown = BATCH;
-      update();
-    });
-  });
+  sel?.addEventListener('change', () => { cat = sel.value; update(); });
 
-  loadMore?.addEventListener('click', () => { shown += BATCH; update(); });
+  // 滚动时高亮当前所在时代的跳转 chip
+  function highlight() {
+    let cur = '';
+    for (const sec of secs) {
+      if (sec.style.display === 'none') continue;
+      if (sec.getBoundingClientRect().top <= 120) cur = sec.dataset.era || '';
+      else break;
+    }
+    jumpChips.forEach((j) => j.classList.toggle('cur', j.dataset.era === cur));
+  }
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(() => { highlight(); ticking = false; }); ticking = true; }
+  }, { passive: true });
+
+  document.getElementById('to-top')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   update();
 
@@ -202,19 +271,47 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 .intro-text { max-width: 560px; margin: 1.4rem auto 0; font-size: 0.88rem; line-height: 2; color: var(--ink-light); letter-spacing: 0.02em; }
 .page-search { margin-top: 1.8rem; }
 
-.cat-bar { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(42,38,32,0.12); }
-.cat-chip {
-  font-family: var(--font-serif); font-size: 0.84rem; letter-spacing: 0.1em;
-  color: var(--ink-light); background: transparent; cursor: pointer;
-  border: 1px solid rgba(184,50,50,0.3); padding: 0.3em 0.95em;
-  transition: all 0.18s; display: inline-flex; align-items: center; gap: 0.4em;
+/* 吸顶导航：左朝代跳转 + 右身份下拉 */
+.people-nav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 1rem;
+  margin-top: 2rem; padding: 0.6rem 0;
+  background: rgba(242,237,227,0.97);
+  border-top: 1px solid rgba(42,38,32,0.1); border-bottom: 1px solid rgba(42,38,32,0.14);
 }
-.cat-chip:hover { color: var(--red); border-color: var(--red); }
-.cat-chip.active { color: #fff; background: var(--red); border-color: var(--red); }
-.cat-count { font-family: var(--font-en); font-size: 0.66rem; opacity: 0.7; }
-.cat-chip.active .cat-count { opacity: 0.85; }
+.era-jump { flex: 1; display: flex; flex-wrap: nowrap; gap: 0.4rem 0.9rem; overflow-x: auto; scrollbar-width: none; }
+.era-jump::-webkit-scrollbar { display: none; }
+.era-jump-chip { display: inline-flex; align-items: center; gap: 0.35em; font-size: 0.8rem; letter-spacing: 0.05em; color: var(--ink-light); text-decoration: none; white-space: nowrap; opacity: 0.5; transition: opacity 0.18s, color 0.18s; }
+.era-jump-chip:hover { opacity: 1; color: var(--ink); }
+.era-jump-chip.cur { opacity: 1; color: var(--ink); font-weight: 500; }
+.ejc-dot { width: 8px; height: 8px; background: var(--ec); flex-shrink: 0; }
 
-.people-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 2.5rem; }
+.cat-select-wrap { flex-shrink: 0; position: relative; }
+.cat-select {
+  font-family: var(--font-serif); font-size: 0.8rem; letter-spacing: 0.04em; color: var(--ink);
+  background: transparent; border: 1px solid rgba(42,38,32,0.28); border-radius: 0;
+  padding: 0.32rem 1.8rem 0.32rem 0.7rem; cursor: pointer; -webkit-appearance: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B6458'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 0.6rem center;
+}
+.cat-select:hover { border-color: var(--ink); }
+.cat-select:focus { outline: none; border-color: var(--ink); }
+.to-top {
+  flex-shrink: 0; font-family: var(--font-serif); font-size: 0.76rem; letter-spacing: 0.06em;
+  color: var(--ink-light); background: transparent; border: 1px solid rgba(42,38,32,0.25);
+  padding: 0.32rem 0.7rem; cursor: pointer; white-space: nowrap; transition: color 0.18s, border-color 0.18s;
+}
+.to-top:hover { color: var(--ink); border-color: var(--ink); }
+
+/* 时代分段 */
+.era-sec { margin-top: 2.6rem; scroll-margin-top: 3.4rem; }
+.era-sec-head { display: flex; align-items: baseline; gap: 0.7rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--ec); }
+.era-sec-dot { width: 11px; height: 11px; background: var(--ec); align-self: center; flex-shrink: 0; }
+.era-sec-name { font-family: var(--font-serif); font-size: 1.35rem; font-weight: 700; letter-spacing: 0.16em; color: var(--ink); }
+.era-sec-count { font-family: var(--font-en); font-size: 0.82rem; color: var(--ink-light); opacity: 0.7; }
+
+
+.people-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 1.4rem; }
 .personcard {
   display: block; position: relative; padding: 1.2rem 1.35rem; background: var(--bg-card);
   border: 1px solid rgba(42,38,32,0.12); transition: border-color 0.2s;

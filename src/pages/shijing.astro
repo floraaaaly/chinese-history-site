@@ -3,19 +3,29 @@ import poems from '../data/poems.json';
 import SiteSearch from '../components/SiteSearch.astro';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
-// 母题 → 典型意象（参照中国古典诗歌的意象母题）
-const motifs = [
-  { name: '思乡', imagery: ['月', '雁', '秋风'], note: '天涯羁旅，月是故乡明' },
-  { name: '离别', imagery: ['柳', '长亭', '酒'], note: '折柳沽酒，黯然销魂' },
-  { name: '孤独', imagery: ['夜', '孤舟', '寒江'], note: '寒江独钓，万径无人' },
-  { name: '隐逸', imagery: ['菊', '山', '水', '竹'], note: '采菊东篱，悠然见南山' },
-  { name: '高洁', imagery: ['梅', '松', '兰'], note: '凌寒独开，暗香自远' },
-  { name: '时间流逝', imagery: ['流水', '夕阳', '落花'], note: '逝者如斯，朱颜辞镜' },
-  { name: '功业理想', imagery: ['剑', '马', '关山'], note: '金戈铁马，万里封侯' },
-  { name: '爱情相思', imagery: ['红豆', '春水', '梧桐'], note: '红豆寄情，春水载思' },
+// 意象之网：人工提炼的核心意象词汇 → 诗（一首诗归属其含有的多个意象）
+const xiangGroups = [
+  { name: '山', ids: ['duan-ge-xing', 'chun-wang', 'man-jiang-hong', 'jiang-xue', 'yin-jiu-wu', 'shan-ju-qiu-ming', 'chu-sai', 'yong-yu-le-jingkou', 'zuoqian-languan', 'guo-guren-zhuang'] },
+  { name: '江河', ids: ['duan-ge-xing', 'jiang-xue', 'yu-mei-ren', 'nian-nu-jiao-chibi', 'yong-yu-le-jingkou', 'zuoqian-languan', 'guo-ling-tan', 'jiang-jin-jiu', 'deng-gao'] },
+  { name: '月', ids: ['jing-ye-si', 'shan-ju-qiu-ming', 'chu-sai', 'yu-mei-ren', 'nian-nu-jiao-chibi', 'sheng-cha-zi-yuanxi', 'shui-diao-getou'] },
+  { name: '草木', ids: ['sheng-sheng-man', 'yi-shandong-xiongdi', 'shan-ju-qiu-ming', 'guo-guren-zhuang', 'guo-ling-tan', 'li-sao', 'deng-gao'] },
+  { name: '花', ids: ['sheng-sheng-man', 'yin-jiu-wu', 'mei-hua', 'yu-mei-ren', 'sheng-cha-zi-yuanxi', 'guo-guren-zhuang'] },
+  { name: '关塞', ids: ['chun-wang', 'man-jiang-hong', 'song-yuan-er', 'chu-sai', 'zuoqian-languan', 'yu-jia-ao'] },
+  { name: '兵戈', ids: ['gai-xia-ge', 'man-jiang-hong', 'nian-nu-jiao-chibi', 'chi-bi-dumu', 'yong-yu-le-jingkou'] },
+  { name: '雪', ids: ['jing-ye-si', 'jiang-xue', 'mei-hua', 'zuoqian-languan', 'deng-gao'] },
+  { name: '相思', ids: ['xiang-si', 'jin-se', 'chang-hen-ge', 'li-sao'] },
+  { name: '酒', ids: ['duan-ge-xing', 'song-yuan-er', 'jiang-jin-jiu'] },
+  { name: '马', ids: ['gai-xia-ge', 'chu-sai', 'yong-yu-le-jingkou'] },
+  { name: '风', ids: ['yu-mei-ren', 'chi-bi-dumu', 'guo-ling-tan'] },
+  { name: '禽鸟', ids: ['yin-jiu-wu', 'jin-se', 'chang-hen-ge'] },
+  { name: '柳', ids: ['song-yuan-er', 'sheng-cha-zi-yuanxi'] },
+  { name: '雁', ids: ['sheng-sheng-man', 'yu-jia-ao'] },
 ];
-const poemsOf = (motif: string) => poems.filter((p) => (p.motif || []).includes(motif));
-const CAP = 3; // 每个母题默认显示的诗作数，余下可展开
+// 每首诗 → 它的核心意象（卡片展示 + 筛选用）
+const poemXiang: Record<string, string[]> = {};
+xiangGroups.forEach((g) => g.ids.forEach((id) => { (poemXiang[id] = poemXiang[id] || []).push(g.name); }));
+// 诗流：按年代排（流动中暗含诗史顺序）
+const flowPoems = [...poems].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
 ---
 
 <!doctype html>
@@ -60,55 +70,45 @@ const CAP = 3; // 每个母题默认显示的诗作数，余下可展开
 
   <section class="intro">
     <h1 class="intro-title">詩境</h1>
-    <p class="intro-sub">每一个意象，都是一道历史的回声</p>
-    <p class="intro-text">中国诗歌千年不绝，反复吟咏的意象，其实可以凝缩为几个母题——思乡、离别、孤独、隐逸、高洁……循着这些母题与意象，从一个个具体的物象，走进诗人的胸臆与时代的悲欢。</p>
+    <p class="intro-sub">循意象，入诗心</p>
+    <p class="intro-text">月、山、江河、柳、酒、雪……中国诗歌千年不绝，反复吟咏的意象，是通向诗人胸臆的门。点一个意象，看它如何在不同的诗、不同的时代里流转回响。</p>
   </section>
 
   <div class="page-search"><SiteSearch placeholder="搜索诗题、诗人、意象，或任意事件 / 人物……" /></div>
 
-  <!-- 母题导航 -->
-  <nav class="motif-nav">
-    {motifs.map((m) => (
-      <a href={`#m-${m.name}`} class="motif-pill">{m.name}</a>
-    ))}
+  <!-- 意象之网导航 -->
+  <nav class="xiang-nav">
+    <div class="xiang-pills">
+      <button class="xiang-pill cur" data-xiang="__all__">全部<span class="xp-count">{poems.length}</span></button>
+      {xiangGroups.map((g) => (
+        <button class="xiang-pill" data-xiang={g.name}>{g.name}<span class="xp-count">{g.ids.length}</span></button>
+      ))}
+    </div>
+    <button class="to-top" id="to-top" title="回到顶部">↑ 顶部</button>
   </nav>
 
-  {motifs.map((m) => {
-    const ps = poemsOf(m.name);
-    if (ps.length === 0) return null;
-    return (
-      <section class="motif-block" id={`m-${m.name}`}>
-        <div class="motif-head">
-          <h2 class="motif-name">{m.name}</h2>
-          <div class="motif-imagery">
-            {m.imagery.map((im) => <span class="mi-tag">{im}</span>)}
+  <p class="flow-hint" id="flow-hint">全 {poems.length} 首 · 点上方意象，看它在诗中的流转</p>
+
+  <div class="poem-flow" id="poem-flow">
+    {flowPoems.map((p) => (
+      <a href={`${base}poem/${p.id}`} class="poemcard" data-xiang={(poemXiang[p.id] || []).join(' ')}>
+        <div class="pc-head">
+          <h3 class="pc-title">{p.title}</h3>
+          <span class="pc-byline">{p.author} · {p.dynasty}</span>
+        </div>
+        <div class="pc-verse">
+          {(p.lines || []).filter((l) => l !== '……').map((line) => <p class="pc-line">{line}</p>)}
+          {(p.lines || []).includes('……') && <p class="pc-ellipsis">……</p>}
+        </div>
+        {(poemXiang[p.id] || []).length > 0 && (
+          <div class="pc-xiang">
+            {(poemXiang[p.id] || []).map((x) => <span class="pcx" data-x={x}>{x}</span>)}
           </div>
-          <p class="motif-note">{m.note}</p>
-        </div>
-        <div class="poem-grid">
-          {ps.map((p, idx) => (
-            <a href={`${base}poem/${p.id}`} class={`poemcard ${idx >= CAP ? 'pc-hidden' : ''}`}>
-              <div class="pc-head">
-                <h3 class="pc-title">{p.title}</h3>
-                <span class="pc-byline">{p.author} · {p.dynasty}</span>
-              </div>
-              <div class="pc-verse">
-                {p.lines.slice(0, 2).map((line) => <p class="pc-line">{line}</p>)}
-              </div>
-              {p.imagery?.length > 0 && (
-                <div class="pc-imagery">
-                  {p.imagery.slice(0, 5).map((im) => <span class="pc-im">{im}</span>)}
-                </div>
-              )}
-            </a>
-          ))}
-        </div>
-        {ps.length > CAP && (
-          <div class="more-wrap"><button class="motif-more">展开全部 {ps.length} 首 ↓</button></div>
         )}
-      </section>
-    );
-  })}
+      </a>
+    ))}
+  </div>
+  <p class="empty-hint" id="empty-hint" hidden>暂无此意象的诗作。</p>
 
 </main>
 
@@ -123,26 +123,52 @@ const CAP = 3; // 每个母题默认显示的诗作数，余下可展开
 </footer>
 
 <script>
-  document.querySelectorAll<HTMLElement>('.motif-more').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const section = btn.closest('.motif-block');
-      section?.querySelectorAll('.pc-hidden').forEach((c) => c.classList.remove('pc-hidden'));
-      btn.style.display = 'none';
-    });
-  });
-
   document.querySelectorAll<HTMLElement>('.poemcard').forEach((card) => {
     card.addEventListener('mouseenter', () => card.classList.add('is-hovered'));
     card.addEventListener('mouseleave', () => card.classList.remove('is-hovered'));
   });
+
+  // 意象筛选：点意象 → 只留含此意象的诗，并高亮其标签
+  const pills = Array.from(document.querySelectorAll<HTMLElement>('.xiang-pill'));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.poemcard'));
+  const hint = document.getElementById('flow-hint');
+  const emptyHint = document.getElementById('empty-hint');
+  let sel = '__all__';
+
+  function apply() {
+    let vis = 0;
+    cards.forEach((c) => {
+      const xs = (c.dataset.xiang || '').split(' ');
+      const show = sel === '__all__' || xs.includes(sel);
+      c.style.display = show ? '' : 'none';
+      if (show) vis++;
+      c.querySelectorAll<HTMLElement>('.pcx').forEach((t) => t.classList.toggle('on', sel !== '__all__' && t.dataset.x === sel));
+    });
+    if (emptyHint) emptyHint.hidden = vis > 0;
+    if (hint) hint.textContent = sel === '__all__'
+      ? `全 ${cards.length} 首 · 点上方意象，看它在诗中的流转`
+      : `意象「${sel}」· ${vis} 首`;
+  }
+
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      pills.forEach((p) => p.classList.remove('cur'));
+      pill.classList.add('cur');
+      sel = pill.dataset.xiang || '__all__';
+      apply();
+    });
+  });
+  apply();
+
+  document.getElementById('to-top')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 </script>
 
 <style is:global>
-.poemcard.is-hovered { border-color: transparent; border-left-color: #B83232; }
-.poemcard.is-hovered::before {
-  content: ''; position: absolute; inset: 4px; z-index: 0; pointer-events: none;
-  background: rgba(255,255,255,0.62); filter: url(#torn-edge);
+.poemcard::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: #FAF7F0; filter: url(#torn-edge); transition: background 0.2s;
 }
+.poemcard.is-hovered::before { background: rgba(255,255,255,0.94); }
 .poemcard.is-hovered .pc-title { color: #B83232; }
 </style>
 
@@ -196,53 +222,52 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 .intro-text { max-width: 580px; margin: 1.4rem auto 0; font-size: 0.88rem; line-height: 2; color: var(--ink-light); letter-spacing: 0.02em; }
 .page-search { margin-top: 1.8rem; }
 
-/* 母题导航 */
-.motif-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 2.2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(42,38,32,0.12); }
-.motif-pill {
-  font-size: 0.82rem; letter-spacing: 0.08em; color: var(--ink-light);
-  border: 1px solid rgba(63,111,143,0.35); padding: 0.28em 0.9em; transition: all 0.18s;
+/* 意象之网导航（吸顶） */
+.xiang-nav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 0.9rem;
+  margin-top: 2rem; padding: 0.6rem 0;
+  background: rgba(242,237,227,0.97);
+  border-top: 1px solid rgba(42,38,32,0.1); border-bottom: 1px solid rgba(42,38,32,0.14);
 }
-.motif-pill:hover { color: #fff; background: var(--blue); border-color: var(--blue); }
+.xiang-pills { flex: 1; display: flex; flex-wrap: nowrap; gap: 0.45rem; overflow-x: auto; scrollbar-width: none; }
+.xiang-pills::-webkit-scrollbar { display: none; }
+.xiang-pill {
+  display: inline-flex; align-items: baseline; gap: 0.3em; flex-shrink: 0; white-space: nowrap; cursor: pointer;
+  font-family: var(--font-serif); font-size: 0.86rem; letter-spacing: 0.08em; color: var(--ink-light);
+  background: transparent; border: 1px solid rgba(63,111,143,0.32); padding: 0.28em 0.85em; transition: all 0.18s;
+}
+.xiang-pill:hover { color: var(--blue); border-color: var(--blue); }
+.xiang-pill.cur { color: #fff; background: var(--blue); border-color: var(--blue); }
+.xp-count { font-family: var(--font-en); font-size: 0.64rem; opacity: 0.6; }
+.xiang-pill.cur .xp-count { opacity: 0.85; }
+.to-top {
+  flex-shrink: 0; font-family: var(--font-serif); font-size: 0.76rem; letter-spacing: 0.06em;
+  color: var(--ink-light); background: transparent; border: 1px solid rgba(42,38,32,0.25);
+  padding: 0.3rem 0.7rem; cursor: pointer; white-space: nowrap; transition: color 0.18s, border-color 0.18s;
+}
+.to-top:hover { color: var(--ink); border-color: var(--ink); }
 
-/* 母题分段 */
-.motif-block { margin-top: 3rem; scroll-margin-top: 1.5rem; }
-.motif-head { margin-bottom: 1.5rem; }
-.motif-name {
-  font-family: var(--font-serif); font-size: 1.6rem; font-weight: 700;
-  letter-spacing: 0.2em; color: var(--ink); display: inline-block;
-}
-.motif-imagery { display: inline-flex; gap: 0.45rem; flex-wrap: wrap; margin-left: 1rem; vertical-align: middle; }
-.mi-tag {
-  font-size: 0.72rem; color: var(--blue); border: 1px solid rgba(63,111,143,0.5);
-  padding: 0.1em 0.55em; letter-spacing: 0.06em; line-height: 1.6;
-}
-.motif-note { margin-top: 0.7rem; font-size: 0.82rem; color: var(--ink-light); letter-spacing: 0.06em; opacity: 0.85; }
+.flow-hint { text-align: center; margin-top: 1.4rem; font-size: 0.78rem; color: var(--ink-light); opacity: 0.7; letter-spacing: 0.04em; }
+.empty-hint { text-align: center; margin-top: 2rem; color: var(--ink-light); }
 
-.poem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+/* 诗流：每首诗坐在一张毛边诗笺上（米白纸底 + 撕纸毛边，非硬矩形） */
+.poem-flow { margin-top: 1.8rem; column-count: 2; column-gap: 1.5rem; }
 .poemcard {
-  display: block; position: relative; padding: 1.3rem 1.4rem; background: var(--bg-card);
-  border: 1px solid rgba(42,38,32,0.12); border-left: 3px solid var(--red);
-  transition: border-color 0.2s;
+  display: block; position: relative; break-inside: avoid; margin-bottom: 1.5rem;
+  padding: 1.4rem 1.6rem; background: transparent;
 }
 .poemcard > * { position: relative; z-index: 1; }
-.pc-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.85rem; }
-.pc-title { font-size: 1.2rem; font-weight: 500; letter-spacing: 0.06em; color: var(--ink); }
+.pc-head { display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.pc-title { font-size: 1.28rem; font-weight: 500; letter-spacing: 0.08em; color: var(--ink); transition: color 0.2s; }
 .poemcard:hover .pc-title { color: var(--red); }
-.pc-byline { font-size: 0.72rem; color: var(--ink-light); }
-.pc-verse { margin-bottom: 0.9rem; }
+.pc-byline { font-size: 0.74rem; color: var(--ink-light); letter-spacing: 0.03em; }
+.pc-verse { margin-bottom: 1rem; }
 .pc-line { font-size: 0.9rem; line-height: 1.95; letter-spacing: 0.05em; color: var(--ink); }
-.pc-imagery { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-.pc-im { font-size: 0.68rem; color: var(--blue); opacity: 0.85; letter-spacing: 0.04em; }
-.pc-im::before { content: '·'; margin-right: 0.3em; opacity: 0.5; }
-.pc-im:first-child::before { content: ''; margin: 0; }
-.pc-hidden { display: none; }
-.more-wrap { text-align: center; margin-top: 1.4rem; }
-.motif-more {
-  font-family: var(--font-serif); font-size: 0.8rem; letter-spacing: 0.1em; color: var(--blue);
-  background: transparent; border: 1px solid rgba(63,111,143,0.4); padding: 0.45em 1.6em; cursor: pointer;
-  transition: all 0.2s;
-}
-.motif-more:hover { color: #fff; background: var(--blue); border-color: var(--blue); }
+.pc-ellipsis { font-size: 0.85rem; color: var(--ink-light); opacity: 0.5; letter-spacing: 0.1em; line-height: 1.4; }
+.pc-xiang { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.pcx { font-size: 0.7rem; color: var(--blue); border: 1px solid rgba(63,111,143,0.35); padding: 0.05em 0.5em; letter-spacing: 0.06em; transition: all 0.18s; }
+.pcx.on { color: #fff; background: var(--blue); border-color: var(--blue); }
 
 .site-footer { padding: 4rem 0 2.5rem; margin-top: 4rem; border-top: 1px solid rgba(42,38,32,0.1); }
 .footer-inner { text-align: center; }
@@ -251,8 +276,7 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 .footer-note { font-size: 0.7rem; color: var(--ink-light); opacity: 0.55; letter-spacing: 0.04em; }
 
 @media (max-width: 640px) {
-  .poem-grid { grid-template-columns: 1fr; }
+  .poem-flow { column-count: 1; }
   .intro-title { font-size: 2rem; }
-  .motif-imagery { margin-left: 0; margin-top: 0.5rem; display: flex; }
 }
 </style>

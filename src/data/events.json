@@ -101,7 +101,7 @@
     }
   },
   {
-    "id": "silk-road",
+    "id": "silk-road", "tier": "minor",
     "title": "张骞出使西域，丝绸之路开通",
     "year_start": -138,
     "year_end": -126,
@@ -401,7 +401,7 @@
     }
   },
   {
-    "id": "zheng-he-voyages",
+    "id": "zheng-he-voyages", "tier": "minor",
     "title": "郑和七下西洋",
     "year_start": 1405,
     "year_end": 1433,
@@ -535,7 +535,7 @@
     }
   },
   {
-    "id": "crossing-chishui",
+    "id": "crossing-chishui", "tier": "minor",
     "title": "四渡赤水",
     "year_start": 1935,
     "year_end": 1935,
@@ -797,7 +797,7 @@
     }
   },
   {
-    "id": "sino-japanese-war", "tier": "minor",
+    "id": "sino-japanese-war",
     "title": "甲午战争", "year_start": 1894, "year_end": 1895, "dynasty": "晚清",
     "category": ["战争", "外交"], "location": "黄海 · 辽东 · 威海",
     "summary": "中日甲午之战，北洋水师全军覆没，清廷被迫签《马关条约》割台赔款，洋务运动宣告破产，民族危机空前加深。",
@@ -1196,7 +1196,7 @@
     }
   },
   {
-    "id": "ten-kingdoms", "tier": "minor",
+    "id": "ten-kingdoms",
     "title": "十国割据", "year_start": 902, "year_end": 979, "dynasty": "五代十国",
     "category": ["政治"], "location": "南方诸地",
     "summary": "与中原五代更替同时，南方及河东先后并立十个割据政权，史称十国：吴、南唐、吴越、楚、闽、南汉、前蜀、后蜀、南平、北汉。南方相对安定，经济文化得以延续发展，南唐后主李煜更以词名垂千古。",
@@ -1406,7 +1406,7 @@
   },
   {
     "id": "qihuan-hegemon",
-    "title": "管仲相齐，齐桓称霸", "tier": "minor", "year_start": -685, "year_end": -643, "dynasty": "春秋",
+    "title": "管仲相齐，齐桓称霸", "year_start": -685, "year_end": -643, "dynasty": "春秋",
     "category": ["政治"], "location": "临淄",
     "summary": "齐桓公不计前嫌任用管仲改革图强，「尊王攘夷」、九合诸侯，成为春秋时代第一个霸主。",
     "related_people": ["guan-zhong", "qi-huangong"], "related_poems": [], "tags": ["春秋首霸", "尊王攘夷", "九合诸侯"],
@@ -1770,6 +1770,22 @@
         { "phase": "泽被中外", "date": "此后", "place": "海内外", "text": "全书分类精详、纠讹补缺，问世后广为流传，并译成多国文字，影响遍及东亚与欧洲。" }
       ],
       "significance": "《本草纲目》是中国古代药物学的集大成之作，其科学的分类思想与翔实的记载，被誉为「中国古代的百科全书」。李时珍以毕生心血铸就这部东方药学巨典，泽被中外医林，是中华科技文明的又一高峰。"
+    }
+  },
+  {
+    "id": "northern-southern",
+    "title": "南北朝对峙", "year_start": 420, "year_end": 589, "dynasty": "南北朝",
+    "category": ["政治"], "location": "建康 · 平城 · 洛阳",
+    "summary": "东晋灭亡后，南方历宋、齐、梁、陈四朝更替，北方由北魏统一、后分裂为东西魏与北齐、北周，南北政权隔江对峙近一百七十年，是继魏晋之后又一民族大融合、南北文化交锋的时代。",
+    "related_people": ["xiaowen-emperor"], "related_poems": [], "tags": ["南朝", "北朝", "民族融合"],
+    "detail": {
+      "background": "西晋亡于永嘉之乱后，中国陷入长期分裂：北方历经十六国的混战，南方则由东晋偏安江左。420年刘裕代晋建宋，东晋覆灭，中国正式进入南北两大政权并立对峙的南北朝时期。",
+      "process": [
+        { "phase": "南朝更替", "date": "420—589年", "place": "建康", "text": "南方相继由宋、齐、梁、陈四朝统治，皆定都建康（今南京）。门阀士族与皇权此消彼长，江南经济文化在相对安定中持续发展。" },
+        { "phase": "北朝兴替", "date": "439—581年", "place": "平城 · 洛阳", "text": "北魏太武帝统一北方，孝文帝迁都洛阳、推行汉化；其后北魏分裂为东西魏，再演为北齐、北周，胡汉在冲突中深度融合。" },
+        { "phase": "重归一统", "date": "589年", "place": "建康", "text": "北周外戚杨坚代周建隋，继而挥师南下灭陈，结束了近三百年的分裂，南北重归一统，为隋唐盛世奠基。" }
+      ],
+      "significance": "南北朝是中国历史上一段承前启后的分裂时期。南方保存并发展了华夏衣冠文化，北方则完成了大规模的民族融合。南北在对峙中彼此交融，最终共同孕育出隋唐恢弘博大的统一帝国与灿烂文明。"
     }
   }
 ]

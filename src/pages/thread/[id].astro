@@ -15,6 +15,11 @@ export function getStaticPaths() {
 const { thread } = Astro.props;
 const detail = thread.detail;
 
+// 更多脉络：同类优先，其余随后，供「继续逛」
+const kinT = threads.filter((t) => t.category === thread.category && t.id !== thread.id);
+const otherT = threads.filter((t) => t.category !== thread.category && t.id !== thread.id);
+const moreThreads = [...kinT, ...otherT].slice(0, 8);
+
 const peopleMap = Object.fromEntries(people.map((p) => [p.id, p]));
 const eventMap = Object.fromEntries(events.map((e) => [e.id, e]));
 const poemMap = Object.fromEntries(poems.map((p) => [p.id, p]));
@@ -189,6 +194,21 @@ const graphLinks = [
     </section>
   )}
 
+  {moreThreads.length > 0 && (
+    <section class="module">
+      <h2 class="module-title">更多脉络</h2>
+      <div class="rel-events">
+        {moreThreads.map((t) => (
+          <a href={`${base}thread/${t.id}`} class="rel-event">
+            <span class="rel-event-year"><span class="rel-cat">{t.category}</span></span>
+            <span class="rel-event-title">{t.title}</span>
+            <span class="rel-event-arrow">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
   <RelationGraph nodes={graphNodes} links={graphLinks} />
 
 </main>
@@ -345,6 +365,7 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 .rel-event-year { font-family: var(--font-en); font-size: 0.82rem; color: var(--ink-light); flex-shrink: 0; min-width: 5.5em; }
 .rel-event:hover .rel-event-year { color: var(--red); }
 .rel-event-title { flex: 1; font-size: 0.98rem; letter-spacing: 0.04em; }
+.rel-cat { font-size: 0.68rem; color: var(--blue, #3F6F8F); border: 1px solid var(--blue, #3F6F8F); padding: 0.02em 0.35em; letter-spacing: 0.08em; }
 .rel-event-arrow { opacity: 0; transition: opacity 0.2s; }
 .rel-event:hover .rel-event-arrow { opacity: 1; }
 
