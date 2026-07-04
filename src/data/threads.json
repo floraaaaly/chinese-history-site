@@ -30,7 +30,7 @@
     "dynasty": "隋 — 清",
     "span_label": "605 — 1905",
     "summary": "科举制是中国独创的、以考试选拔官员的制度。它打破了门阀世族对仕途的垄断，让寒门子弟得以「朝为田舍郎，暮登天子堂」，深刻塑造了中国一千三百年的社会结构与文化心理。",
-    "related_people": ["sui-wendi", "tang-taizong", "zhu-yuanzhang"],
+    "related_people": ["sui-wendi", "tang-taizong", "zhu-yuanzhang", "zhu-xi"],
     "related_events": ["sui-unification", "tang-flourish"],
     "related_poems": [],
     "tags": ["选官", "寒门", "八股", "进士"],
@@ -238,7 +238,7 @@
     "span_label": "1840 — 1919",
     "summary": "鸦片战争惊破天朝迷梦，此后百年，仁人志士前赴后继地探寻救国之路——从学器物（洋务）到学制度（变法、革命）再到求思想（新文化），层层递进、屡败屡战，汇成近代中国救亡图存的悲壮长卷。",
     "related_people": ["lin-zexu", "sun-yat-sen", "kang-youwei", "liang-qichao", "li-hongzhang"],
-    "related_events": ["opium-war", "second-opium-war", "westernization-movement", "sino-japanese-war", "wuxu-reform", "boxer-rebellion", "xinhai-revolution", "may-fourth"],
+    "related_events": ["opium-war", "second-opium-war", "westernization-movement", "sino-japanese-war", "wuxu-reform", "boxer-rebellion", "xinhai-revolution", "may-fourth", "kangri-war"],
     "related_poems": [],
     "tags": ["师夷长技", "变法", "革命", "新文化"],
     "detail": {
@@ -273,6 +273,52 @@
         { "phase": "杯酒释兵权", "date": "960年后", "place": "开封", "text": "后周世宗整军初见成效，赵匡胤陈桥兵变后以「杯酒释兵权」收回大将兵柄，确立重文抑武之制，终结了武人乱政。" }
       ],
       "significance": "「武人当国」是中晚唐至五代的核心病灶。它揭示了军权一旦失控对王朝的颠覆性，也解释了宋朝为何矫枉过正、重文抑武——这一抉择造就了两宋的文盛武衰，影响极为深远。读懂这条主线，便理解了唐宋之变的关键所在。"
+    }
+  },
+  {
+    "id": "waiqi-huanguan",
+    "title": "外戚与宦官",
+    "category": "母题",
+    "era_group": "秦汉",
+    "dynasty": "秦 — 清",
+    "span_label": "前3世纪 — 20世纪",
+    "summary": "每当皇帝年幼、庸懦或深居宫中，两股力量便轮番窃据神器——皇帝的母族妻族（外戚），与朝夕侍奉的家奴（宦官）。从赵高指鹿为马到慈禧垂帘听政，外戚与宦官之祸，是皇权专制难以摆脱的痼疾。",
+    "related_people": ["zhao-gao", "wang-mang", "wang-zhen", "cixi", "wei-zhongxian"],
+    "related_events": ["wang-mang-usurp", "tumu-crisis", "wuxu-reform"],
+    "related_poems": [],
+    "tags": ["外戚", "宦官", "皇权旁落"],
+    "detail": {
+      "background": "中国的皇权高度集中于皇帝一人。然而一旦皇帝年幼即位、庸懦无能或深居宫中，权力便会流向离他最近的人——或是他所倚重的母族、妻族（外戚），或是朝夕侍奉的宦官。二者常此消彼长、又相互勾结，构成专制皇权与生俱来的两大隐患。",
+      "process": [
+        { "phase": "宦官乱秦", "date": "秦", "place": "咸阳", "text": "秦二世时，宦官赵高专权，指鹿为马、诛锄异己，逼死李斯、弑杀二世，加速了秦朝的覆亡。" },
+        { "phase": "外戚篡汉", "date": "两汉", "place": "长安 · 洛阳", "text": "西汉外戚王氏坐大，王莽终于篡汉自立；东汉则外戚与宦官交替专权、党锢之祸迭起，朝政糜烂，终致天下大乱。" },
+        { "phase": "阉宦之祸", "date": "唐 · 明", "place": "长安 · 北京", "text": "唐代后期宦官掌禁军、擅废立天子；明代王振、刘瑾、魏忠贤等权阉迭出，王振更怂恿亲征、酿成土木堡之变，明由盛转衰。" },
+        { "phase": "太后垂帘", "date": "晚清", "place": "北京", "text": "晚清慈禧太后以太后之尊垂帘听政近半世纪，扼杀戊戌变法、专权误国，成为这一痼疾的最后回响。" }
+      ],
+      "significance": "外戚与宦官之祸，表面是一个个奸佞小人的作乱，根子却在皇权专制本身——权力过度集中于一人，一旦此人年幼或失能，便必然旁落于其最亲近之人。它是贯穿两千年帝制的结构性顽疾，屡除屡生，直至帝制终结方休。"
+    }
+  },
+  {
+    "id": "shiren-fenggu",
+    "title": "士人风骨",
+    "category": "母题",
+    "era_group": "先秦",
+    "dynasty": "战国 — 近代",
+    "span_label": "先秦 — 近世",
+    "summary": "「富贵不能淫，贫贱不能移，威武不能屈。」自屈原沉江、陶潜归隐，到文天祥就义——一代代读书人以气节立身。他们或许无力回天，却以风骨为这个民族守住了精神的底线。",
+    "related_people": ["qu-yuan", "tao-yuanming", "han-yu", "fan-zhongyan", "su-shi", "wen-tianxiang", "hai-rui", "bao-zheng"],
+    "related_events": ["quyuan-death", "yashan-battle"],
+    "related_poems": ["li-sao", "yin-jiu-wu", "guo-ling-tan"],
+    "tags": ["气节", "风骨", "士大夫"],
+    "detail": {
+      "background": "「士」是中国古代掌握知识、以天下为己任的读书人。孔子立「杀身成仁」，孟子倡「舍生取义」，为士人立下了精神的标尺。此后两千余年，无论治世乱世，总有士人以气节自持，构成中华文明一条不绝的精神血脉。",
+      "process": [
+        { "phase": "忠而见放", "date": "战国", "place": "楚 · 汨罗", "text": "屈原忠而被谤、信而见疑，宁赴湘流、葬身鱼腹，也不肯与世同流合污，以死明志，开士人气节之先河。" },
+        { "phase": "不为五斗米折腰", "date": "东晋", "place": "彭泽 · 田园", "text": "陶渊明厌弃官场逢迎，挂冠归田、躬耕自守，「采菊东篱下」，以退隐守护人格的独立与自由。" },
+        { "phase": "先忧后乐", "date": "唐宋", "place": "庙堂 · 江湖", "text": "韩愈谏迎佛骨而不惜远谪，范仲淹「先天下之忧而忧」，苏轼历尽贬谪而旷达自适——唐宋士大夫以天下为己任，风节尤盛。" },
+        { "phase": "留取丹心", "date": "南宋", "place": "崖山 · 大都", "text": "宋亡之际，文天祥兵败被俘、宁死不屈，「人生自古谁无死，留取丹心照汗青」，将士人气节推向悲壮的顶点。" }
+      ],
+      "significance": "士人风骨，是中华文明最动人的精神底色之一。它未必能改变一时的成败兴亡，却在王朝更替、外侮频仍的漫长历史中，一次次挺起民族的脊梁。从屈原到文天祥，这条气节的血脉从未中断——「诗境」中那些千古传诵的名篇，多半正出自这样的胸襟。"
     }
   }
 ]

@@ -105,8 +105,11 @@ const records = [
 .ss-input {
   width: 100%; font-family: 'Noto Serif SC', serif; font-size: 0.9rem; color: #1A1814;
   background: rgba(250,247,240,0.6); border: 1px solid rgba(42,38,32,0.2); border-radius: 0;
+  -webkit-appearance: none; appearance: none;
   padding: 0.7rem 1rem 0.7rem 2.8rem; outline: none; transition: border-color 0.2s; letter-spacing: 0.03em;
 }
+.ss-input::-webkit-search-decoration,
+.ss-input::-webkit-search-cancel-button { -webkit-appearance: none; }
 .ss-input::placeholder { color: #6B6458; opacity: 0.65; }
 .ss-input:focus { border-color: #1A1814; }
 

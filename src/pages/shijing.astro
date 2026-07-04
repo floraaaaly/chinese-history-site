@@ -3,27 +3,7 @@ import poems from '../data/poems.json';
 import SiteSearch from '../components/SiteSearch.astro';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
-// 意象之网：人工提炼的核心意象词汇 → 诗（一首诗归属其含有的多个意象）
-const xiangGroups = [
-  { name: '山', ids: ['duan-ge-xing', 'chun-wang', 'man-jiang-hong', 'jiang-xue', 'yin-jiu-wu', 'shan-ju-qiu-ming', 'chu-sai', 'yong-yu-le-jingkou', 'zuoqian-languan', 'guo-guren-zhuang'] },
-  { name: '江河', ids: ['duan-ge-xing', 'jiang-xue', 'yu-mei-ren', 'nian-nu-jiao-chibi', 'yong-yu-le-jingkou', 'zuoqian-languan', 'guo-ling-tan', 'jiang-jin-jiu', 'deng-gao'] },
-  { name: '月', ids: ['jing-ye-si', 'shan-ju-qiu-ming', 'chu-sai', 'yu-mei-ren', 'nian-nu-jiao-chibi', 'sheng-cha-zi-yuanxi', 'shui-diao-getou'] },
-  { name: '草木', ids: ['sheng-sheng-man', 'yi-shandong-xiongdi', 'shan-ju-qiu-ming', 'guo-guren-zhuang', 'guo-ling-tan', 'li-sao', 'deng-gao'] },
-  { name: '花', ids: ['sheng-sheng-man', 'yin-jiu-wu', 'mei-hua', 'yu-mei-ren', 'sheng-cha-zi-yuanxi', 'guo-guren-zhuang'] },
-  { name: '关塞', ids: ['chun-wang', 'man-jiang-hong', 'song-yuan-er', 'chu-sai', 'zuoqian-languan', 'yu-jia-ao'] },
-  { name: '兵戈', ids: ['gai-xia-ge', 'man-jiang-hong', 'nian-nu-jiao-chibi', 'chi-bi-dumu', 'yong-yu-le-jingkou'] },
-  { name: '雪', ids: ['jing-ye-si', 'jiang-xue', 'mei-hua', 'zuoqian-languan', 'deng-gao'] },
-  { name: '相思', ids: ['xiang-si', 'jin-se', 'chang-hen-ge', 'li-sao'] },
-  { name: '酒', ids: ['duan-ge-xing', 'song-yuan-er', 'jiang-jin-jiu'] },
-  { name: '马', ids: ['gai-xia-ge', 'chu-sai', 'yong-yu-le-jingkou'] },
-  { name: '风', ids: ['yu-mei-ren', 'chi-bi-dumu', 'guo-ling-tan'] },
-  { name: '禽鸟', ids: ['yin-jiu-wu', 'jin-se', 'chang-hen-ge'] },
-  { name: '柳', ids: ['song-yuan-er', 'sheng-cha-zi-yuanxi'] },
-  { name: '雁', ids: ['sheng-sheng-man', 'yu-jia-ao'] },
-];
-// 每首诗 → 它的核心意象（卡片展示 + 筛选用）
-const poemXiang: Record<string, string[]> = {};
-xiangGroups.forEach((g) => g.ids.forEach((id) => { (poemXiang[id] = poemXiang[id] || []).push(g.name); }));
+import { xiangGroups, poemXiang } from '../lib/xiang';
 // 诗流：按年代排（流动中暗含诗史顺序）
 const flowPoems = [...poems].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
 ---
@@ -74,7 +54,7 @@ const flowPoems = [...poems].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
     <p class="intro-text">月、山、江河、柳、酒、雪……中国诗歌千年不绝，反复吟咏的意象，是通向诗人胸臆的门。点一个意象，看它如何在不同的诗、不同的时代里流转回响。</p>
   </section>
 
-  <div class="page-search"><SiteSearch placeholder="搜索诗题、诗人、意象，或任意事件 / 人物……" /></div>
+  <div class="page-search"><SiteSearch full placeholder="搜索诗题、诗人、意象，或任意事件 / 人物……" /></div>
 
   <!-- 意象之网导航 -->
   <nav class="xiang-nav">
@@ -158,6 +138,17 @@ const flowPoems = [...poems].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
       apply();
     });
   });
+
+  // 从详情页带 ?x=意象 进入时，自动选中该意象
+  const wantX = new URLSearchParams(location.search).get('x');
+  if (wantX) {
+    const target = pills.find((p) => p.dataset.xiang === wantX);
+    if (target) {
+      pills.forEach((p) => p.classList.remove('cur'));
+      target.classList.add('cur');
+      sel = wantX;
+    }
+  }
   apply();
 
   document.getElementById('to-top')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
@@ -230,8 +221,7 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
   background: rgba(242,237,227,0.97);
   border-top: 1px solid rgba(42,38,32,0.1); border-bottom: 1px solid rgba(42,38,32,0.14);
 }
-.xiang-pills { flex: 1; display: flex; flex-wrap: nowrap; gap: 0.45rem; overflow-x: auto; scrollbar-width: none; }
-.xiang-pills::-webkit-scrollbar { display: none; }
+.xiang-pills { flex: 1; display: flex; flex-wrap: wrap; gap: 0.45rem; }
 .xiang-pill {
   display: inline-flex; align-items: baseline; gap: 0.3em; flex-shrink: 0; white-space: nowrap; cursor: pointer;
   font-family: var(--font-serif); font-size: 0.86rem; letter-spacing: 0.08em; color: var(--ink-light);

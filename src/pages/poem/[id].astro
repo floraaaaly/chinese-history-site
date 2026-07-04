@@ -5,6 +5,7 @@ import people from '../../data/people.json';
 import threads from '../../data/threads.json';
 import RelationGraph from '../../components/RelationGraph.astro';
 import { autolink } from '../../lib/links';
+import { poemXiang } from '../../lib/xiang';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 export function getStaticPaths() {
@@ -26,22 +27,17 @@ const relEvents = (poem.related_events || []).map((id) => eventMap[id]).filter(B
 // 所属脉络：哪些脉络把本诗列为关联（反查）
 const relThreads = threads.filter((t) => (t.related_poems || []).includes(poem.id));
 
-// 同境之诗：与本诗共享意象的其他诗
-const imagerySet = new Set(poem.imagery || []);
-const kinPoems = poems.filter(
-  (p) => p.id !== poem.id && (p.imagery || []).some((im) => imagerySet.has(im))
-);
+// 同境之诗：以意象网（lib/xiang）计——共享核心意象越多越靠前
+const myXiang = new Set(poemXiang[poem.id] || []);
+const shareCount = (p: any) => (poemXiang[p.id] || []).filter((x: string) => myXiang.has(x)).length;
+const kinPoems = poems
+  .filter((p) => p.id !== poem.id && shareCount(p) > 0)
+  .sort((a, b) => shareCount(b) - shareCount(a))
+  .slice(0, 8); // 图谱与列表都取最相近的 8 首，避免大意象（如「山」）撑爆
 
-// 底部「顺着网继续逛」：同一诗人的作品 + 同境之诗（共母题或共意象）
+// 底部「顺着网继续逛」：同一诗人的作品 + 同境之诗（同意象、异作者）
 const samePoet = author ? poems.filter((p) => p.author_id === author.id && p.id !== poem.id) : [];
-const motifSet = new Set(poem.motif || []);
-const kinBottom = poems
-  .filter((p) =>
-    p.id !== poem.id &&
-    p.author_id !== poem.author_id &&
-    ((p.motif || []).some((m) => motifSet.has(m)) || (p.imagery || []).some((im) => imagerySet.has(im)))
-  )
-  .slice(0, 8);
+const kinBottom = kinPoems.filter((p) => p.author_id !== poem.author_id).slice(0, 8);
 
 // 关联图谱：诗 ↔ 作者 ↔ 所属脉络 ↔ 相关事件 ↔ 同境之诗
 const graphNodes = [
@@ -117,10 +113,11 @@ const graphLinks = [
       {poem.lines.map((line) => <p class="poem-verse">{line}</p>)}
     </div>
 
-    {poem.imagery?.length > 0 && (
+    {(poemXiang[poem.id] || []).length > 0 && (
       <div class="poem-imagery">
-        {poem.imagery.map((im) => (
-          <a href={`${base}shijing`} class="imagery-tag">{im}</a>
+        <span class="poem-imagery-label">意象</span>
+        {(poemXiang[poem.id] || []).map((x) => (
+          <a href={`${base}shijing?x=${encodeURIComponent(x)}`} class="imagery-tag">{x}</a>
         ))}
       </div>
     )}
@@ -317,7 +314,8 @@ a.poem-author-link:hover { opacity: 0.7; }
   letter-spacing: 0.12em; color: var(--ink); text-align: center;
 }
 
-.poem-imagery { margin-top: 1.6rem; display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
+.poem-imagery { margin-top: 1.6rem; display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; align-items: center; }
+.poem-imagery-label { font-size: 0.7rem; letter-spacing: 0.16em; color: var(--ink-light); opacity: 0.7; margin-right: 0.2rem; }
 .imagery-tag {
   font-size: 0.78rem; color: var(--blue); border: 1px solid rgba(63,111,143,0.5);
   padding: 0.15em 0.7em; letter-spacing: 0.08em; transition: background 0.2s, border-color 0.2s;
