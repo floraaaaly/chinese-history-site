@@ -196,7 +196,7 @@
     "year_start": 581,
     "year_end": 618,
     "dynasty": "隋",
-    "category": ["政治", "工程"],
+    "category": ["政治", "科技"],
     "location": "中原",
     "summary": "隋文帝结束三百年分裂，统一南北；隋炀帝开凿大运河，沟通南北交通，然因暴政引发农民起义而亡。",
     "related_people": ["sui-wendi", "sui-yangdi"],
@@ -232,7 +232,7 @@
     "category": ["政治", "文化"],
     "location": "长安",
     "summary": "唐太宗开创贞观之治，唐玄宗前期缔造开元盛世，唐朝国力达到鼎盛，诗歌、艺术、对外交流空前繁荣。",
-    "related_people": ["tang-taizong", "tang-xuanzong", "wei-zheng", "li-bai", "du-fu"],
+    "related_people": ["tang-taizong", "tang-xuanzong", "wei-zheng", "li-bai", "du-fu", "gao-shi", "cen-shen"],
     "related_poems": ["jing-ye-si", "chun-wang", "chang-hen-ge", "jiang-jin-jiu"],
     "tags": ["盛唐", "贞观", "开元"],
     "detail": {
@@ -255,7 +255,7 @@
     "category": ["战争", "政治"],
     "location": "中原、河北",
     "summary": "安禄山、史思明发动叛乱，历时八年，唐朝由盛转衰，藩镇割据局面由此形成，诗圣杜甫以诗记录了这段历史。",
-    "related_people": ["an-lushan", "du-fu", "tang-xuanzong", "yang-guifei"],
+    "related_people": ["an-lushan", "du-fu", "tang-xuanzong", "yang-guifei", "guo-ziyi", "yan-zhenqing"],
     "related_poems": ["chun-wang", "chang-hen-ge", "deng-gao"],
     "tags": ["藩镇割据", "由盛转衰", "杜甫"],
     "detail": {
@@ -406,7 +406,7 @@
     "year_start": 1405,
     "year_end": 1433,
     "dynasty": "明",
-    "category": ["外交", "航海"],
+    "category": ["外交"],
     "location": "东南亚、印度洋、东非",
     "summary": "明成祖命郑和率庞大船队七次远航，最远抵达东非海岸，是人类航海史上的壮举，展示了大明的国力与外交能力。",
     "related_people": ["zheng-he", "ming-chengzu"],
@@ -508,7 +508,7 @@
     "year_start": 1911,
     "year_end": 1912,
     "dynasty": "清末民初",
-    "category": ["政治", "革命"],
+    "category": ["政治"],
     "location": "武昌、南京",
     "summary": "武昌起义爆发，各省响应，清朝覆灭，孙中山就任中华民国临时大总统，中国两千年帝制宣告终结。",
     "related_people": ["sun-yat-sen", "yuan-shikai"],
@@ -540,7 +540,7 @@
     "year_start": 1935,
     "year_end": 1935,
     "dynasty": "民国",
-    "category": ["战争", "军事"],
+    "category": ["战争"],
     "location": "贵州、四川、云南交界（赤水河流域）",
     "summary": "长征途中，毛泽东指挥中央红军在赤水河两岸四次往返渡河，迂回穿插于数十万国民党军重兵之间，最终摆脱追堵，跳出包围圈。",
     "related_people": ["mao-zedong", "zhou-enlai", "chiang-kai-shek"],
@@ -840,7 +840,7 @@
   {
     "id": "may-fourth", "tier": "minor",
     "title": "五四运动", "year_start": 1919, "year_end": 1919, "dynasty": "民国",
-    "category": ["思想", "社会"], "location": "北京",
+    "category": ["思想", "政治"], "location": "北京",
     "summary": "巴黎和会外交失败，北京学生上街抗议，掀起反帝爱国与思想启蒙的五四运动，新文化、新思想由此奔涌。",
     "related_people": ["chen-duxiu", "li-dazhao"], "related_poems": [], "tags": ["反帝爱国", "新文化", "思想启蒙"],
     "detail": {
@@ -1016,7 +1016,7 @@
   {
     "id": "taiping-rebellion",
     "title": "太平天国运动", "year_start": 1851, "year_end": 1864, "dynasty": "晚清",
-    "category": ["战争", "社会"], "location": "广西 — 南京",
+    "category": ["战争", "政治"], "location": "广西 — 南京",
     "summary": "洪秀全借拜上帝会发动起义，从广西金田一路打到南京、定都天京，建立太平天国，与清廷对峙十余年，是中国历史上规模最大的农民战争，沉重动摇了清王朝的统治。",
     "related_people": ["hong-xiuquan", "zeng-guofan", "li-hongzhang"], "related_poems": [], "tags": ["拜上帝会", "天京", "湘军"],
     "detail": {
@@ -1068,7 +1068,7 @@
   {
     "id": "westernization-movement",
     "title": "洋务运动", "year_start": 1861, "year_end": 1895, "dynasty": "晚清",
-    "category": ["经济", "军事"], "location": "全国",
+    "category": ["改革", "政治"], "location": "全国",
     "summary": "两次鸦片战争惨败后，奕䜣、曾国藩、李鸿章、张之洞等洋务派主张「师夷长技以自强」，兴办近代军工与民用企业、建立新式海军，开启了中国近代化的第一步。",
     "related_people": ["zeng-guofan", "li-hongzhang", "zhang-zhidong", "yixin"], "related_poems": [], "tags": ["自强求富", "北洋水师", "中体西用"],
     "detail": {
@@ -1838,7 +1838,7 @@
   },
   {
     "id": "kangqian-shengshi",
-    "title": "康乾盛世", "year_start": 1681, "year_end": 1796, "dynasty": "清",
+    "title": "康乾盛世", "year_start": 1662, "year_end": 1796, "dynasty": "清",
     "category": ["政治"], "location": "北京",
     "summary": "康熙、雍正、乾隆三代经营百余年，疆域极盛、人口过三亿，是帝制中国最后的盛世——也是与世界悄然拉开差距的时代。",
     "related_people": ["kangxi-emperor", "yongzheng-emperor", "qianlong-emperor"], "related_poems": [], "tags": ["盛世", "摊丁入亩", "闭关"],
@@ -1962,6 +1962,102 @@
         { "phase": "四书集注", "date": "1190年前后", "place": "武夷山", "text": "他毕生修订《四书章句集注》，临终前三日犹在改《大学》诚意章。庆元年间遭「伪学」之禁，身后方得昭雪。" }
       ],
       "significance": "朱熹是孔孟之后影响最大的儒者。《四书集注》自元代定为科举标准，此后六百年读书人无不由朱注入门，其学笼罩中国并远及朝鲜、日本、越南。理学重塑了中国人的伦理秩序与精神世界——推崇者见其精深，批判者责其禁锢，但无人能绕过他。"
+    }
+  },
+  {
+    "id": "sunzi-bingfa",
+    "title": "孙武著《孙子兵法》", "tier": "minor", "year_start": -512, "year_end": -506, "dynasty": "春秋",
+    "category": ["文化"], "location": "吴国",
+    "summary": "孙武以兵法十三篇见吴王，助吴破楚入郢。《孙子兵法》是人类第一部系统兵学著作，「知彼知己，百战不殆」响彻两千五百年。",
+    "related_people": ["sun-wu"], "related_poems": [], "tags": ["孙子兵法", "兵圣", "不战而屈人之兵"],
+    "detail": {
+      "background": "春秋末年列国争霸、战争频仍，用兵之道亟需从经验升华为学问。齐人孙武避乱奔吴，携所著兵法十三篇求见锐意图强的吴王阖闾。",
+      "process": [
+        { "phase": "吴宫教战", "date": "前512年", "place": "姑苏", "text": "吴王以宫女百八十人试其治军，孙武三令五申而宫女嬉笑，遂斩吴王二宠姬为号令——「将在军，君命有所不受」，全军肃然。" },
+        { "phase": "五战入郢", "date": "前506年", "place": "楚国", "text": "孙武与伍子胥佐吴王伐楚，千里奔袭、五战五捷，攻入楚都郢，以三万破二十万，兵法之效震动天下。" },
+        { "phase": "十三篇传世", "date": "此后", "place": "天下", "text": "《孙子兵法》六千余言、十三篇，从庙算、作战到用间，构建起完整的战争理论，历代兵家奉为圭臬。" }
+      ],
+      "significance": "《孙子兵法》是人类历史上第一部系统的军事理论著作，比西方同类著作早两千余年。它以「慎战」为魂——「兵者，国之大事，死生之地，存亡之道」；以「全胜」为上——「不战而屈人之兵，善之善者也」。两千五百年来被译成数十种文字，其智慧早已越出兵学，渗入战略、经营与处世的方方面面。"
+    }
+  },
+  {
+    "id": "hanmo-yisheng",
+    "title": "医圣与神医", "tier": "minor", "year_start": 200, "year_end": 219, "dynasty": "东汉末",
+    "category": ["科技"], "location": "南阳 · 沛国",
+    "summary": "汉末大疫，张仲景著《伤寒杂病论》立辨证论治之法，华佗创麻沸散行外科手术——乱世之中，中医奠基。",
+    "related_people": ["zhang-zhongjing", "hua-tuo", "cao-cao"], "related_poems": [], "tags": ["伤寒杂病论", "麻沸散", "五禽戏"],
+    "detail": {
+      "background": "东汉末年战乱与瘟疫交加，「家家有僵尸之痛，室室有号泣之哀」，曹操诗中「白骨露于野，千里无鸡鸣」正是写照。空前的疫难，逼出了中国医学的奠基时代。",
+      "process": [
+        { "phase": "发愤著书", "date": "约200—210年", "place": "南阳", "text": "张仲景宗族二百余口十年死者三分之二，他痛而发愤，勤求古训、博采众方，著《伤寒杂病论》十六卷，确立辨证论治的临床根本。" },
+        { "phase": "外科神技", "date": "同时代", "place": "沛国 · 中原", "text": "华佗创麻醉剂「麻沸散」，能行剖腹之术，比西方麻醉手术早一千六百年；又编五禽戏开健身导引之先。" },
+        { "phase": "青囊之叹", "date": "约208年", "place": "许昌", "text": "华佗不愿专侍曹操而遭囚杀，医书《青囊经》焚于狱中，绝学失传；张仲景之书亦散乱，赖后人整理为《伤寒论》《金匮要略》传世。" }
+      ],
+      "significance": "汉末的疫难成就了中国医学的轴心时代：张仲景的辨证论治成为中医临床两千年的根本方法，华佗的麻醉外科是世界医学史的孤峰。「医圣」与「神医」一著书传世、一绝学失传，一存一亡之间，尽是乱世学术的幸与不幸。"
+    }
+  },
+  {
+    "id": "mingdai-xiaoshuo",
+    "title": "明代小说与戏曲", "tier": "minor", "year_start": 1370, "year_end": 1616, "dynasty": "明",
+    "category": ["文化"], "location": "江南 · 各地",
+    "summary": "《三国演义》《水浒传》《西游记》相继问世，《牡丹亭》唱彻天下——白话文学登堂入室，故事从说书场走进千家万户。",
+    "related_people": ["luo-guanzhong", "shi-naian", "wu-chengen", "tang-xianzu"], "related_poems": [], "tags": ["四大名著", "章回小说", "牡丹亭"],
+    "detail": {
+      "background": "宋元以来，市井说话、讲史平话积累了丰厚的民间叙事传统。入明后印刷业繁荣、市民阶层壮大，文人开始整理并创作长篇小说，白话文学迎来了黄金时代。",
+      "process": [
+        { "phase": "讲史成书", "date": "元末明初", "place": "江南", "text": "罗贯中据史传与话本写成《三国演义》，施耐庵集水浒故事之大成写就《水浒传》——中国长篇章回小说自此立体。" },
+        { "phase": "神魔奇观", "date": "16世纪", "place": "淮安", "text": "吴承恩融玄奘取经史实与千年传说，成《西游记》，孙悟空成为中国文学最富生命力的形象。" },
+        { "phase": "临川一梦", "date": "1598年", "place": "临川", "text": "汤显祖作《牡丹亭》，「情不知所起，一往而深」，传奇戏曲臻于化境，与同时代的莎士比亚东西辉映。" }
+      ],
+      "significance": "明代小说戏曲的兴盛，标志着中国文学重心从诗文转向叙事、从文人书斋走向市井万家。三国的谋略、水浒的义气、西游的想象，连同牡丹亭的深情，塑造了此后数百年中国人的故事世界与价值想象——它们至今仍是被改编最多的文本。"
+    }
+  },
+  {
+    "id": "qingdai-xiaoshuo",
+    "title": "聊斋与红楼梦", "tier": "minor", "year_start": 1679, "year_end": 1791, "dynasty": "清",
+    "category": ["文化"], "location": "淄川 · 北京",
+    "summary": "蒲松龄谈狐说鬼、刺贪刺虐，曹雪芹十年辛苦、字字是血——古典小说在清代攀上巅峰，《红楼梦》成为绝响。",
+    "related_people": ["pu-songling", "cao-xueqin"], "related_poems": [], "tags": ["聊斋志异", "红楼梦", "古典巅峰"],
+    "detail": {
+      "background": "清代文网渐密、科场依旧，两位落拓文人却在困顿中把小说推向了绝顶：一位是屡试不第的塾师，一位是家道败落的贵公子。",
+      "process": [
+        { "phase": "聊斋谈鬼", "date": "1679年前后", "place": "淄川", "text": "蒲松龄数十年搜奇著异，成《聊斋志异》近五百篇，花妖狐魅俱有人情，刺贪刺虐入骨三分，文言小说至此登峰。" },
+        { "phase": "十年辛苦", "date": "约1744—1763年", "place": "北京西山", "text": "曹雪芹由锦衣纨绔坠入贫困，「披阅十载，增删五次」写作《红楼梦》，书未成而人先逝。" },
+        { "phase": "程高刊行", "date": "1791年", "place": "北京", "text": "程伟元、高鹗整理刊行一百二十回本《红楼梦》，此书遂风行天下，「开谈不说红楼梦，读尽诗书也枉然」。" }
+      ],
+      "significance": "《聊斋志异》与《红楼梦》是中国古典小说的双峰绝唱：前者把文言短篇写到极致，后者以一部书写尽繁华幻灭、人情世相，成为中国古典文学的最高成就。此后「红学」绵延两百年——一部小说养活一门学问，古今中外，唯此一书。"
+    }
+  },
+  {
+    "id": "yongle-shengshi",
+    "title": "永乐盛世", "year_start": 1402, "year_end": 1424, "dynasty": "明",
+    "category": ["政治"], "location": "北京 · 南京",
+    "summary": "明成祖迁都北京、五征漠北、修《永乐大典》、遣郑和下西洋——明朝国势在永乐一朝达于巅峰。",
+    "related_people": ["ming-chengzu", "zheng-he"], "related_poems": [], "tags": ["迁都北京", "永乐大典", "下西洋"],
+    "detail": {
+      "background": "靖难之役后，明成祖朱棣夺得帝位。这位马上得天下的君主雄才大略、好大喜功，倾一国之力铸就了明朝的极盛时代。",
+      "process": [
+        { "phase": "迁都北京", "date": "1421年", "place": "北京", "text": "朱棣营建北京紫禁城、疏浚大运河，正式迁都——「天子守国门」，北京自此成为此后五百年的帝都。" },
+        { "phase": "文治武功", "date": "1403—1424年", "place": "漠北 · 南疆", "text": "他五次亲征漠北、南定安南，又命解缙等编纂《永乐大典》，两万余卷，为古代类书之最。" },
+        { "phase": "宝船西洋", "date": "1405年起", "place": "西洋", "text": "郑和奉命率庞大舟师七下西洋，远抵波斯湾与东非，是中国古代航海与国力投射的顶点。" }
+      ],
+      "significance": "永乐一朝，明朝的疆域经略、文化工程与海上远航同时达到顶峰，「远迈汉唐」并非虚言。然而盛世靠透支民力铸成，宝船在其身后不久便告停驶——明朝由外向转向内敛，正以永乐为分水岭。"
+    }
+  },
+  {
+    "id": "jiajing-wanming",
+    "title": "嘉靖与晚明", "year_start": 1522, "year_end": 1644, "dynasty": "明",
+    "category": ["政治"], "location": "北京 · 江南",
+    "summary": "嘉靖修玄倦勤、万历数十年不朝，朝堂日坏而江南繁华、思想活跃——危机与繁荣并存的晚明百年。",
+    "related_people": ["hai-rui", "zhang-juzheng", "wei-zhongxian"], "related_poems": [], "tags": ["嘉靖", "万历", "党争"],
+    "detail": {
+      "background": "明中叶以后，皇权怠惰与官僚党争交织：嘉靖帝醮斋修玄数十年，万历帝更创下近三十年不上朝的纪录。然而与朝堂的沉疴同时，江南市镇繁荣、白银流入、思想与文艺空前活跃。",
+      "process": [
+        { "phase": "嘉靖倦勤", "date": "1522—1566年", "place": "北京", "text": "嘉靖帝崇道修玄、久居西苑，严嵩父子专权二十年，海瑞抬棺上疏直斥其非，朝政积弊丛生。" },
+        { "phase": "万历怠政", "date": "1573—1620年", "place": "北京", "text": "张居正辅政十年一度中兴，身后新政尽废；万历帝此后数十年不朝，官缺不补、奏疏留中，国家机器近乎空转。" },
+        { "phase": "党争亡国", "date": "1620—1644年", "place": "北京", "text": "东林与阉党生死相搏，魏忠贤专权肆虐；辽东战事糜烂、天灾民变四起，明朝在内耗中走向崩解。" }
+      ],
+      "significance": "晚明是一个撕裂的时代：政治上皇权怠惰、党争误国，一步步走向覆亡；经济文化上却市井繁荣、心学解放、小说戏曲科学著作迭出，几与近代擦肩。这一「败落中的繁华」，是明亡最深的教训，也是后人回望时最复杂的一段风景。"
     }
   }
 ]

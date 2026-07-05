@@ -116,6 +116,10 @@ const eraStats = eras
       <button class="ds-opt active" data-mode="all">全部</button>
       <button class="ds-opt" data-mode="skeleton">只看大事</button>
     </div>
+    <select class="cat-filter" id="cat-filter" aria-label="按类别筛选">
+      <option value="__all__">全部类别</option>
+      {['政治', '战争', '改革', '思想', '文化', '科技', '外交'].map((c) => (<option value={c}>{c}</option>))}
+    </select>
   </div>
 </div>
 
@@ -153,7 +157,7 @@ const eraStats = eras
               {groups.map((group) => (
                 <div class="tl-group">
                   {group.major && (
-                    <article class="timeline-item is-major" data-id={group.major.id}>
+                    <article class="timeline-item is-major" data-id={group.major.id} data-cats={(group.major.category || []).join(' ')}>
                       <span class="tl-node"></span>
                       <a href={`${base}event/${group.major.id}`} class="tl-card">
                         <div class="tl-meta">
@@ -172,12 +176,13 @@ const eraStats = eras
                   {group.minors.length > 0 && (
                     <div class="minor-track">
                       {group.minors.map((m: any) => (
-                        <article class="timeline-item is-minor" data-id={m.id}>
+                        <article class="timeline-item is-minor" data-id={m.id} data-cats={(m.category || []).join(' ')}>
                           <span class="tl-node"></span>
                           <a href={`${base}event/${m.id}`} class="tl-card minor">
                             <div class="tl-minor-row">
                               <span class="tl-year">{yl(m)}</span>
                               <span class="tl-title">{m.title}</span>
+                              {m.category?.[0] && <span class="tl-minor-cat">{m.category[0]}</span>}
                             </div>
                             <p class="tl-summary">{m.summary}</p>
                           </a>
@@ -235,6 +240,7 @@ const eraStats = eras
   function updateActive() {
     let current = blocks[0];
     for (const b of blocks) {
+      if (b.style.display === 'none') continue;
       if (b.getBoundingClientRect().top <= 110) current = b;
       else break;
     }
@@ -253,16 +259,38 @@ const eraStats = eras
     if (b) window.scrollTo({ top: b.getBoundingClientRect().top + window.scrollY - 92, behavior: 'smooth' });
   }));
 
-  // 详略切换：只看大事 / 全部
-  const tl = document.getElementById('timeline');
+  // 详略 + 类别 统一筛选
+  const catSel = document.getElementById('cat-filter') as HTMLSelectElement | null;
+  let mode = 'all';
+  let cat = '__all__';
+
+  function applyFilter() {
+    blocks.forEach((b) => {
+      let vis = 0;
+      b.querySelectorAll<HTMLElement>('.timeline-item').forEach((it) => {
+        const isMinor = it.classList.contains('is-minor');
+        const cats = (it.dataset.cats || '').split(' ');
+        const show = (mode === 'all' || !isMinor) && (cat === '__all__' || cats.includes(cat));
+        it.style.display = show ? '' : 'none';
+        if (show) vis++;
+      });
+      b.style.display = vis ? '' : 'none';
+      const g = b.dataset.dynastyGroup || '';
+      if (segByGroup[g]) segByGroup[g].style.display = vis ? '' : 'none';
+    });
+    declutterTicks();
+    updateActive();
+  }
+
   document.querySelectorAll<HTMLElement>('.ds-opt').forEach((btn) => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.ds-opt').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      if (btn.dataset.mode === 'skeleton') tl?.classList.add('skeleton');
-      else tl?.classList.remove('skeleton');
+      mode = btn.dataset.mode || 'all';
+      applyFilter();
     });
   });
+  catSel?.addEventListener('change', () => { cat = catSel.value; applyFilter(); });
 
   // 撕裂边框 hover
   document.querySelectorAll<HTMLElement>('.tl-card').forEach((card) => {
@@ -365,6 +393,15 @@ body { font-family: var(--font-serif); background-color: var(--bg); color: var(-
 }
 .ds-opt + .ds-opt { border-left: 1px solid rgba(42,38,32,0.2); }
 .ds-opt.active { background: var(--ink); color: var(--bg); }
+.cat-filter {
+  flex-shrink: 0; align-self: flex-start; margin-top: 6px;
+  font-family: var(--font-serif); font-size: 0.72rem; letter-spacing: 0.04em; color: var(--ink);
+  background: transparent; border: 1px solid rgba(42,38,32,0.25); border-radius: 0;
+  padding: 0.28rem 1.6rem 0.28rem 0.6rem; cursor: pointer; -webkit-appearance: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B6458'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 0.5rem center;
+}
+.cat-filter:hover, .cat-filter:focus { border-color: var(--ink); outline: none; }
 
 /* 时间轴 */
 .timeline-section { padding: 1.75rem 0 3rem; }
@@ -410,8 +447,8 @@ body { font-family: var(--font-serif); background-color: var(--bg); color: var(-
 .tl-card.minor:hover .tl-title { color: var(--red); }
 .tl-card.minor .tl-summary { margin-top: 0.2rem; font-size: 0.76rem; opacity: 0.8; line-height: 1.7; }
 
-/* 骨架模式：隐藏次线小事件 */
-#timeline.skeleton .minor-track { display: none; }
+/* 二级条目类别小标 */
+.tl-minor-cat { font-size: 0.66rem; color: var(--ink-light); opacity: 0.6; border: 1px solid rgba(107,100,88,0.35); padding: 0.02em 0.4em; letter-spacing: 0.08em; flex-shrink: 0; }
 
 /* 页脚 */
 .site-footer { padding: 2rem 0; border-top: 1px solid rgba(42,38,32,0.1); }
