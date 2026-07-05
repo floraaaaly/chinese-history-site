@@ -84,7 +84,13 @@ const graphLinks = [
 
 <main class="container detail">
 
-  <a href={base} class="back-link">← 返回時間軸</a>
+  <div class="back-row">
+    <button type="button" class="back-link back-prev" id="back-prev" hidden>← 返回上頁</button>
+    <a href={base} class="back-link">← 返回時間軸</a>
+  </div>
+  <script is:inline>
+    (function(){var b=document.getElementById('back-prev');if(b&&document.referrer&&document.referrer.indexOf(location.origin)===0&&history.length>1){b.hidden=false;b.addEventListener('click',function(){history.back();});}})();
+  </script>
 
   <div class="event-head">
     <div class="event-meta">
@@ -283,6 +289,14 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 .detail { padding: 2.5rem 0 1rem; }
 .back-link { display: inline-block; font-size: 0.8rem; color: var(--ink-light); letter-spacing: 0.06em; transition: color 0.2s; }
 .back-link:hover { color: var(--red); }
+.back-row {
+  position: sticky; top: 0; z-index: 1200;
+  display: flex; align-items: center; gap: 1.5rem;
+  padding: 0.55rem 0; margin-bottom: 0.5rem;
+  background: rgba(242,237,227,0.97);
+  border-bottom: 1px solid rgba(42,38,32,0.12);
+}
+.back-prev { background: none; border: none; padding: 0; cursor: pointer; font: inherit; font-size: 0.8rem; color: var(--ink-light); letter-spacing: 0.06em; }
 
 .event-head { margin-top: 2rem; text-align: center; }
 .event-meta { display: flex; align-items: center; justify-content: center; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 1.2rem; }

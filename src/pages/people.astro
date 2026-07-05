@@ -5,12 +5,12 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 // 身份 → 类别
 function roleCategory(role: string) {
-  if (['君主', '大汗', '太后', '贵妃', '摄政王'].includes(role)) return '君主';
+  if (['君主', '大汗', '太后', '贵妃', '摄政王', '公主'].includes(role)) return '君主';
   if (['丞相', '宰相', '名相', '谋臣', '谏臣', '重臣', '大臣', '名臣', '钦差大臣', '权臣', '亲王', '外交家', '改革家', '军政首领', '革命家', '宦官'].includes(role)) return '文臣';
   if (['名将', '霸王', '将领', '起义领袖', '节度使', '军事家', '军人', '群雄', '藩镇', '蒙古首领', '刺客'].includes(role)) return '武将';
   if (['思想家'].includes(role)) return '思想';
   if (['诗人', '词人', '文学家', '史学家', '书法家', '高僧', '戏曲家', '小说家'].includes(role)) return '文人';
-  if (['发明家', '科学家', '数学家', '医药学家', '航海家'].includes(role)) return '科技';
+  if (['发明家', '科学家', '数学家', '医药学家', '航海家', '水利家', '地理学家'].includes(role)) return '科技';
   return '其他';
 }
 const catOrder = ['君主', '文臣', '武将', '思想', '文人', '科技', '其他'];

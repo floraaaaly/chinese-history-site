@@ -31,7 +31,7 @@
     "span_label": "605 — 1905",
     "summary": "科举制是中国独创的、以考试选拔官员的制度。它打破了门阀世族对仕途的垄断，让寒门子弟得以「朝为田舍郎，暮登天子堂」，深刻塑造了中国一千三百年的社会结构与文化心理。",
     "related_people": ["sui-wendi", "tang-taizong", "zhu-yuanzhang", "zhu-xi"],
-    "related_events": ["sui-unification", "tang-flourish"],
+    "related_events": ["sui-unification", "tang-flourish", "feichu-keju"],
     "related_poems": [],
     "tags": ["选官", "寒门", "八股", "进士"],
     "detail": {
@@ -54,7 +54,7 @@
     "span_label": "前3世纪 — 18世纪",
     "summary": "长城内外，农耕的中原王朝与游牧的草原民族，上演了长达两千年的冲突、贸易、和亲与融合。这条农耕—游牧的互动主线，是理解中国疆域形成与民族融合的关键。",
     "related_people": ["han-wudi", "genghis-khan", "kublai-khan", "shunzhi-emperor"],
-    "related_events": ["silk-road", "feishui-battle", "shi-jingtang-yanyun", "shijingtang-cede-yanyun", "jingkang-incident", "tumu-crisis", "mongol-conquest", "qing-founded"],
+    "related_events": ["silk-road", "feishui-battle", "shi-jingtang-yanyun", "shijingtang-cede-yanyun", "jingkang-incident", "tumu-crisis", "mongol-conquest", "qing-founded", "suwu-muyang", "banchao-xiyu", "wencheng-rutibet"],
     "related_poems": ["chu-sai", "man-jiang-hong", "yong-yu-le-jingkou"],
     "tags": ["长城", "匈奴", "和亲", "民族融合"],
     "detail": {
@@ -306,7 +306,7 @@
     "dynasty": "战国 — 近代",
     "span_label": "先秦 — 近世",
     "summary": "「富贵不能淫，贫贱不能移，威武不能屈。」自屈原沉江、陶潜归隐，到文天祥就义——一代代读书人以气节立身。他们或许无力回天，却以风骨为这个民族守住了精神的底线。",
-    "related_people": ["qu-yuan", "tao-yuanming", "han-yu", "fan-zhongyan", "su-shi", "wen-tianxiang", "hai-rui", "bao-zheng"],
+    "related_people": ["qu-yuan", "tao-yuanming", "han-yu", "fan-zhongyan", "su-shi", "wen-tianxiang", "hai-rui", "bao-zheng", "su-wu"],
     "related_events": ["quyuan-death", "yashan-battle"],
     "related_poems": ["li-sao", "yin-jiu-wu", "guo-ling-tan"],
     "tags": ["气节", "风骨", "士大夫"],
