@@ -54,7 +54,7 @@
     "span_label": "前3世纪 — 18世纪",
     "summary": "长城内外，农耕的中原王朝与游牧的草原民族，上演了长达两千年的冲突、贸易、和亲与融合。这条农耕—游牧的互动主线，是理解中国疆域形成与民族融合的关键。",
     "related_people": ["han-wudi", "genghis-khan", "kublai-khan", "shunzhi-emperor"],
-    "related_events": ["silk-road", "feishui-battle", "shi-jingtang-yanyun", "shijingtang-cede-yanyun", "jingkang-incident", "tumu-crisis", "mongol-conquest", "qing-founded", "suwu-muyang", "banchao-xiyu", "wencheng-rutibet"],
+    "related_events": ["silk-road", "feishui-battle", "shi-jingtang-yanyun", "shijingtang-cede-yanyun", "jingkang-incident", "tumu-crisis", "mongol-conquest", "qing-founded", "suwu-muyang", "banchao-xiyu", "wencheng-rutibet", "zhaojun-chusai", "mengtian-changcheng"],
     "related_poems": ["chu-sai", "man-jiang-hong", "yong-yu-le-jingkou"],
     "tags": ["长城", "匈奴", "和亲", "民族融合"],
     "detail": {
@@ -146,7 +146,7 @@
     "span_label": "秦 — 清",
     "summary": "两千年中国政治有一条几乎不回头的单行道：相权不断被削、皇权不断独大。丞相 → 三省分权 → 明废丞相 → 清设军机处，皇帝把权力一点点收进自己手里，专制只增不减。",
     "related_people": ["li-si", "sui-wendi", "zhu-yuanzhang", "qin-shi-huang", "zhao-kuangyin"],
-    "related_events": ["qin-unification", "sui-unification", "song-founded", "ming-founded", "xinhai-revolution"],
+    "related_events": ["qin-unification", "sui-unification", "song-founded", "ming-founded", "xinhai-revolution", "wenziyu"],
     "related_poems": ["gai-xia-ge", "yu-mei-ren"],
     "tags": ["皇权", "相权", "中央集权"],
     "detail": {
@@ -169,7 +169,7 @@
     "span_label": "战国 — 近世",
     "summary": "商鞅车裂、王莽身死、王安石黜退、张居正死后抄家、戊戌六君子喋血——中国历史上的改革者，几乎都没有好下场。变法为何如此凶险？这条母题反复上演，令人扼腕。",
     "related_people": ["shang-yang", "wang-mang", "wang-anshi", "zhang-juzheng", "kang-youwei"],
-    "related_events": ["shangyang-reform", "wang-mang-usurp", "wang-anshi-reform", "wuxu-reform"],
+    "related_events": ["shangyang-reform", "wang-mang-usurp", "wang-anshi-reform", "wuxu-reform", "hufu-qishe"],
     "related_poems": ["mei-hua", "jiang-xue", "zuoqian-languan"],
     "tags": ["变法", "改革", "人亡政息"],
     "detail": {
@@ -238,7 +238,7 @@
     "span_label": "1840 — 1919",
     "summary": "鸦片战争惊破天朝迷梦，此后百年，仁人志士前赴后继地探寻救国之路——从学器物（洋务）到学制度（变法、革命）再到求思想（新文化），层层递进、屡败屡战，汇成近代中国救亡图存的悲壮长卷。",
     "related_people": ["lin-zexu", "sun-yat-sen", "kang-youwei", "liang-qichao", "li-hongzhang"],
-    "related_events": ["opium-war", "second-opium-war", "westernization-movement", "sino-japanese-war", "wuxu-reform", "boxer-rebellion", "xinhai-revolution", "may-fourth", "kangri-war"],
+    "related_events": ["opium-war", "second-opium-war", "westernization-movement", "sino-japanese-war", "wuxu-reform", "boxer-rebellion", "xinhai-revolution", "may-fourth", "kangri-war", "xinwenhua-movement"],
     "related_poems": [],
     "tags": ["师夷长技", "变法", "革命", "新文化"],
     "detail": {
@@ -319,6 +319,29 @@
         { "phase": "留取丹心", "date": "南宋", "place": "崖山 · 大都", "text": "宋亡之际，文天祥兵败被俘、宁死不屈，「人生自古谁无死，留取丹心照汗青」，将士人气节推向悲壮的顶点。" }
       ],
       "significance": "士人风骨，是中华文明最动人的精神底色之一。它未必能改变一时的成败兴亡，却在王朝更替、外侮频仍的漫长历史中，一次次挺起民族的脊梁。从屈原到文天祥，这条气节的血脉从未中断——「诗境」中那些千古传诵的名篇，多半正出自这样的胸襟。"
+    }
+  },
+  {
+    "id": "silk-sea-routes",
+    "title": "丝路与海路",
+    "category": "交流",
+    "era_group": "秦汉",
+    "dynasty": "汉 — 明",
+    "span_label": "前138 — 1433",
+    "summary": "从张骞凿空西域到郑和宝船停驶，一条陆上驼铃、一条海上帆影——中国与世界的对话延续了一千五百年，又在最不该停下的时刻戛然而止。",
+    "related_people": ["zhang-qian", "ban-chao", "xuanzang", "jian-zhen", "zheng-he", "kublai-khan"],
+    "related_events": ["silk-road", "banchao-xiyu", "xuanzang-pilgrimage", "jianzhen-dongdu", "marco-polo", "zheng-he-voyages"],
+    "related_poems": ["baixuege"],
+    "tags": ["丝绸之路", "海上丝路", "中外交流"],
+    "detail": {
+      "background": "文明因交流而丰盈。横贯欧亚的沙漠绿洲与季风吹拂的南海印度洋，是古代中国望向世界的两扇窗——驼队与帆船载去丝绸瓷器，也载回作物、信仰与知识。",
+      "process": [
+        { "phase": "凿空与缝合", "date": "前138 — 102年", "place": "西域", "text": "张骞两度出使，凿空西域；王莽乱后丝路中断，班超投笔从戎、以三十六人重新缝合——陆上丝路自此成为帝国的血脉。" },
+        { "phase": "信仰的道路", "date": "7 — 8世纪", "place": "天竺 · 日本", "text": "玄奘西行五万里取回佛经，鉴真六渡沧海东传戒律——丝路与海路不只运货物，更运思想与信仰。" },
+        { "phase": "驿路通欧亚", "date": "13世纪", "place": "大都", "text": "蒙古帝国打通欧亚驿路，马可·波罗东来居华十七年，其游记让欧洲第一次系统「看见」中国。" },
+        { "phase": "宝船与转身", "date": "1405 — 1433年", "place": "西洋", "text": "郑和七下西洋，将海上交流推向顶峰；然宝船在国力转衰中停驶，明清相继海禁——中国在大航海时代前夜转身向内。" }
+      ],
+      "significance": "丝路与海路是中华文明开放性的见证：佛教、良种、历法由此而入，四大发明由此而出。这条线的终点尤其发人深省——郑和停航六十年后，哥伦布扬帆起航。开放则盛、闭关则衰，一千五百年的驼铃与帆影，说的是同一个道理。"
     }
   }
 ]

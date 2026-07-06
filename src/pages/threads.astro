@@ -3,12 +3,13 @@ import threads from '../data/threads.json';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 // 类别顺序：大势统领，其后分门别类
-const categoryOrder = ['母题', '思想', '制度', '民族', '科技', '文艺'];
+const categoryOrder = ['母题', '思想', '制度', '民族', '交流', '科技', '文艺'];
 const categoryDesc: Record<string, string> = {
   '母题': '贯通古今、反复上演的历史母题——观复之眼所凝视者',
   '思想': '思想流派的兴替与交锋',
   '制度': '权力与治理结构的演进',
   '民族': '农耕与游牧的千年互动',
+  '交流': '丝路与海路上的文明对话',
   '科技': '技术与物质文明的脉络',
   '文艺': '文学艺术的流变',
 };
