@@ -31,7 +31,7 @@
     "span_label": "605 — 1905",
     "summary": "科举制是中国独创的、以考试选拔官员的制度。它打破了门阀世族对仕途的垄断，让寒门子弟得以「朝为田舍郎，暮登天子堂」，深刻塑造了中国一千三百年的社会结构与文化心理。",
     "related_people": ["sui-wendi", "tang-taizong", "zhu-yuanzhang", "zhu-xi"],
-    "related_events": ["sui-unification", "tang-flourish", "feichu-keju"],
+    "related_events": ["sui-unification", "tang-flourish", "feichu-keju", "jiayou-bang"],
     "related_poems": [],
     "tags": ["选官", "寒门", "八股", "进士"],
     "detail": {
@@ -54,7 +54,7 @@
     "span_label": "前3世纪 — 18世纪",
     "summary": "长城内外，农耕的中原王朝与游牧的草原民族，上演了长达两千年的冲突、贸易、和亲与融合。这条农耕—游牧的互动主线，是理解中国疆域形成与民族融合的关键。",
     "related_people": ["han-wudi", "genghis-khan", "kublai-khan", "shunzhi-emperor"],
-    "related_events": ["silk-road", "feishui-battle", "shi-jingtang-yanyun", "shijingtang-cede-yanyun", "jingkang-incident", "tumu-crisis", "mongol-conquest", "qing-founded", "suwu-muyang", "banchao-xiyu", "wencheng-rutibet", "zhaojun-chusai", "mengtian-changcheng"],
+    "related_events": ["silk-road", "feishui-battle", "shi-jingtang-yanyun", "shijingtang-cede-yanyun", "jingkang-incident", "tumu-crisis", "mongol-conquest", "qing-founded", "suwu-muyang", "banchao-xiyu", "wencheng-rutibet", "zhaojun-chusai", "mengtian-changcheng", "xixia-jianguo", "jin-mie-liao"],
     "related_poems": ["chu-sai", "man-jiang-hong", "yong-yu-le-jingkou"],
     "tags": ["长城", "匈奴", "和亲", "民族融合"],
     "detail": {
@@ -101,7 +101,7 @@
     "summary": "从《诗经》的质朴、楚辞的瑰丽，到唐诗的雄浑、宋词的婉转，中国古典诗词随时代流转而气象万千。它既是文学的高峰，也是一部用韵律写就的民族心灵史。",
     "related_people": ["li-bai", "du-fu", "li-qingzhao", "qu-yuan", "su-shi", "xin-qiji"],
     "related_events": ["quyuan-death", "lanting-preface", "anshi-rebellion"],
-    "related_poems": ["gai-xia-ge", "duan-ge-xing", "jing-ye-si", "chun-wang", "yu-mei-ren", "nian-nu-jiao-chibi", "sheng-sheng-man", "yong-yu-le-jingkou"],
+    "related_poems": ["gai-xia-ge", "duan-ge-xing", "jing-ye-si", "chun-wang", "yu-mei-ren", "nian-nu-jiao-chibi", "sheng-sheng-man", "yong-yu-le-jingkou", "jian-jia", "mulan-shi"],
     "tags": ["诗经", "唐诗", "宋词", "意象"],
     "detail": {
       "background": "诗，是中国文学的正宗与源头。先民「饥者歌其食，劳者歌其事」，自《诗经》起，诗便承载着中国人最深的情感与最高的审美，并在两千余年间不断演化出新的形式与境界。",
@@ -124,7 +124,7 @@
     "summary": "历代王朝几乎都亡于同一台机器：开国均田、与民休息 → 承平日久、豪强兼并 → 自耕农破产沦为流民 → 流民揭竿、天下大乱 → 新朝重新分配土地，循环重启。土地，是王朝兴亡的隐秘引擎。",
     "related_people": ["wang-mang", "li-zicheng", "shang-yang", "hong-xiuquan"],
     "related_events": ["shangyang-reform", "chensheng-uprising", "chu-han-war", "western-han-founded", "wang-mang-usurp", "wang-anshi-reform", "taiping-rebellion"],
-    "related_poems": [],
+    "related_poems": ["min-nong", "shanpoyang-tongguan"],
     "tags": ["土地兼并", "自耕农", "王朝周期"],
     "detail": {
       "background": "中国是以小农为根基的农业帝国，自耕农既是赋税的来源，也是兵员的根本。土地能否大致均平，直接关系到王朝的财政、军力与人心。于是「土地」便成了贯穿两千年、决定王朝寿命的那台隐秘机器。",
@@ -168,8 +168,8 @@
     "dynasty": "贯通古今",
     "span_label": "战国 — 近世",
     "summary": "商鞅车裂、王莽身死、王安石黜退、张居正死后抄家、戊戌六君子喋血——中国历史上的改革者，几乎都没有好下场。变法为何如此凶险？这条母题反复上演，令人扼腕。",
-    "related_people": ["shang-yang", "wang-mang", "wang-anshi", "zhang-juzheng", "kang-youwei"],
-    "related_events": ["shangyang-reform", "wang-mang-usurp", "wang-anshi-reform", "wuxu-reform", "hufu-qishe"],
+    "related_people": ["shang-yang", "wang-mang", "wang-anshi", "zhang-juzheng", "kang-youwei", "tan-sitong", "yang-yan"],
+    "related_events": ["shangyang-reform", "wang-mang-usurp", "wang-anshi-reform", "wuxu-reform", "hufu-qishe", "liangshui-fa", "yongzhen-gexin"],
     "related_poems": ["mei-hua", "jiang-xue", "zuoqian-languan"],
     "tags": ["变法", "改革", "人亡政息"],
     "detail": {
@@ -215,7 +215,7 @@
     "span_label": "明中叶 — 近代",
     "summary": "一个农业帝国的命脉，竟系于海外白银。明清以白银为货币，本土却不产银，全赖美洲与日本输入；白银滚滚流入则繁荣，一旦断流，便牵动财政崩溃与王朝危亡。",
     "related_people": ["zhang-juzheng"],
-    "related_events": ["zhangjuzheng-reform", "opium-war"],
+    "related_events": ["zhangjuzheng-reform", "opium-war", "longqing-kaiguan", "jiaozi-wenshi"],
     "related_poems": [],
     "tags": ["一条鞭法", "白银", "全球贸易"],
     "detail": {
@@ -283,8 +283,8 @@
     "dynasty": "秦 — 清",
     "span_label": "前3世纪 — 20世纪",
     "summary": "每当皇帝年幼、庸懦或深居宫中，两股力量便轮番窃据神器——皇帝的母族妻族（外戚），与朝夕侍奉的家奴（宦官）。从赵高指鹿为马到慈禧垂帘听政，外戚与宦官之祸，是皇权专制难以摆脱的痼疾。",
-    "related_people": ["zhao-gao", "wang-mang", "wang-zhen", "cixi", "wei-zhongxian"],
-    "related_events": ["wang-mang-usurp", "tumu-crisis", "wuxu-reform"],
+    "related_people": ["zhao-gao", "wang-mang", "wang-zhen", "cixi", "wei-zhongxian", "lv-hou"],
+    "related_events": ["wang-mang-usurp", "tumu-crisis", "wuxu-reform", "lvhou-chengzhi"],
     "related_poems": [],
     "tags": ["外戚", "宦官", "皇权旁落"],
     "detail": {
@@ -306,9 +306,9 @@
     "dynasty": "战国 — 近代",
     "span_label": "先秦 — 近世",
     "summary": "「富贵不能淫，贫贱不能移，威武不能屈。」自屈原沉江、陶潜归隐，到文天祥就义——一代代读书人以气节立身。他们或许无力回天，却以风骨为这个民族守住了精神的底线。",
-    "related_people": ["qu-yuan", "tao-yuanming", "han-yu", "fan-zhongyan", "su-shi", "wen-tianxiang", "hai-rui", "bao-zheng", "su-wu"],
+    "related_people": ["qu-yuan", "tao-yuanming", "han-yu", "fan-zhongyan", "su-shi", "wen-tianxiang", "hai-rui", "bao-zheng", "su-wu", "tan-sitong", "zhang-yanghao"],
     "related_events": ["quyuan-death", "yashan-battle"],
-    "related_poems": ["li-sao", "yin-jiu-wu", "guo-ling-tan"],
+    "related_poems": ["li-sao", "yin-jiu-wu", "guo-ling-tan", "yuzhong-tibi"],
     "tags": ["气节", "风骨", "士大夫"],
     "detail": {
       "background": "「士」是中国古代掌握知识、以天下为己任的读书人。孔子立「杀身成仁」，孟子倡「舍生取义」，为士人立下了精神的标尺。此后两千余年，无论治世乱世，总有士人以气节自持，构成中华文明一条不绝的精神血脉。",
@@ -330,7 +330,7 @@
     "span_label": "前138 — 1433",
     "summary": "从张骞凿空西域到郑和宝船停驶，一条陆上驼铃、一条海上帆影——中国与世界的对话延续了一千五百年，又在最不该停下的时刻戛然而止。",
     "related_people": ["zhang-qian", "ban-chao", "xuanzang", "jian-zhen", "zheng-he", "kublai-khan"],
-    "related_events": ["silk-road", "banchao-xiyu", "xuanzang-pilgrimage", "jianzhen-dongdu", "marco-polo", "zheng-he-voyages"],
+    "related_events": ["silk-road", "banchao-xiyu", "xuanzang-pilgrimage", "jianzhen-dongdu", "marco-polo", "zheng-he-voyages", "biguan-suoguo"],
     "related_poems": ["baixuege"],
     "tags": ["丝绸之路", "海上丝路", "中外交流"],
     "detail": {
