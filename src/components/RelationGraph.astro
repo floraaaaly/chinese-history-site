@@ -5,13 +5,28 @@
 interface GNode { id: string; label: string; type: string; url?: string; current?: boolean; }
 interface GLink { source: string; target: string; }
 interface Props { nodes: GNode[]; links: GLink[]; }
-const { nodes, links } = Astro.props as Props;
+const { nodes: allNodes, links: allLinks } = Astro.props as Props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const centerId = allNodes.find((n) => n.current)?.id || '';
+
+// 详情页图谱 = 一层直邻（中心 + 直接相关，去掉邻居之间的连线与二跳节点）；
+// 更深的两层漫游交给「星图」，两者分工不重复。
+const direct = new Set<string>([centerId]);
+allLinks.forEach((l) => {
+  if (l.source === centerId) direct.add(l.target);
+  else if (l.target === centerId) direct.add(l.source);
+});
+const nodes = allNodes.filter((n) => direct.has(n.id));
+const links = allLinks.filter((l) => l.source === centerId || l.target === centerId);
 const show = nodes.length > 1;
 ---
 
 {show && (
   <section class="module graph-module">
-    <h2 class="gm-title">关联图谱</h2>
+    <div class="gm-head">
+      <h2 class="gm-title">关联图谱</h2>
+      <a href={`${base}graph?focus=${encodeURIComponent(centerId)}`} class="gm-expand">在星图中展开 →</a>
+    </div>
     <p class="gm-hint">朱红为当前页面 · 拖动可移动 · 点击节点跳转</p>
     <div id="relation-graph" class="relation-graph"></div>
     <div class="gm-legend">
@@ -126,10 +141,10 @@ const show = nodes.length > 1;
 
 <style>
 .graph-module { max-width: 640px; margin: 3.5rem auto 0; }
-.gm-title {
-  font-size: 0.92rem; font-weight: 500; letter-spacing: 0.22em; color: #1A1814;
-  padding-bottom: 0.7rem; border-bottom: 1px solid rgba(42,38,32,0.14);
-}
+.gm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid rgba(42,38,32,0.14); }
+.gm-title { font-size: 0.92rem; font-weight: 500; letter-spacing: 0.22em; color: #1A1814; }
+.gm-expand { font-size: 0.76rem; letter-spacing: 0.06em; color: #6B6458; text-decoration: none; opacity: 0.75; transition: color 0.2s, opacity 0.2s; }
+.gm-expand:hover { color: #B83232; opacity: 1; }
 .gm-hint { margin-top: 0.8rem; font-size: 0.74rem; color: #6B6458; letter-spacing: 0.04em; opacity: 0.8; }
 .relation-graph {
   margin-top: 1rem; height: 460px; width: 100%;

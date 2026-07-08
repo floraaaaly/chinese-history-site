@@ -67,16 +67,22 @@ const graphData = { nodes: [...nodeMap.values()], edges };
 </header>
 
 <div class="g-stage" id="stage">
+  <div class="g-controls">
+    <button class="gc-btn cur" id="mode-focus">聚焦</button>
+    <button class="gc-btn" id="mode-pan">全景</button>
+    <button class="gc-btn gc-shuffle" id="shuffle">⟳ 换一个</button>
+  </div>
   <canvas id="graph"></canvas>
   <div class="g-tip" id="tip" hidden></div>
   <button class="g-reset" id="reset">复位</button>
-  <p class="g-hint">拖动平移 · 滚轮缩放 · 悬停看关联 · 点击进入词条</p>
+  <p class="g-hint" id="g-hint">单击节点重新聚焦 · 双击进入词条</p>
 </div>
 
 </body>
 </html>
 
 <script is:inline define:vars={{ graphData }}>
+
   const DATA = graphData;
   const TYPE = {
     thread: { color: '#B0873E', name: '脉络' },
@@ -89,33 +95,188 @@ const graphData = { nodes: [...nodeMap.values()], edges };
   const ctx = canvas.getContext('2d');
   const stage = document.getElementById('stage');
   const tip = document.getElementById('tip');
+  const hintEl = document.getElementById('g-hint');
 
-  const nodes = DATA.nodes.map((n) => Object.assign({}, n, { x: (Math.random() - 0.5) * 700, y: (Math.random() - 0.5) * 700, vx: 0, vy: 0 }));
+  const nodes = DATA.nodes.map(function (n) { return Object.assign({}, n, { x: 0, y: 0, vx: 0, vy: 0 }); });
   const byId = {};
-  nodes.forEach((n) => { byId[n.id] = n; });
-  const edges = DATA.edges.map((pair) => ({ a: byId[pair[0]], b: byId[pair[1]] }));
+  nodes.forEach(function (n) { byId[n.id] = n; });
+  const edges = DATA.edges.map(function (pair) { return { a: byId[pair[0]], b: byId[pair[1]] }; });
   const nbr = {};
-  nodes.forEach((n) => { nbr[n.id] = new Set(); });
-  edges.forEach((e) => { nbr[e.a.id].add(e.b.id); nbr[e.b.id].add(e.a.id); });
-
-  const radius = (n) => 3.2 + Math.sqrt(n.deg) * 1.7;
+  nodes.forEach(function (n) { nbr[n.id] = new Set(); });
+  edges.forEach(function (e) { nbr[e.a.id].add(e.b.id); nbr[e.b.id].add(e.a.id); });
 
   const view = { x: 0, y: 0, scale: 1 };
-  let baseScale = 1;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const hidden = new Set();
-  let hover = null, alpha = 1;
-  let dragNode = null, panning = false, moved = false;
-  let last = { x: 0, y: 0 };
+  let hover = null;
+  let mode = 'focus';
+  let focusId = null;
 
   function resize() {
     const r = stage.getBoundingClientRect();
     canvas.width = r.width * dpr; canvas.height = r.height * dpr;
     canvas.style.width = r.width + 'px'; canvas.style.height = r.height + 'px';
   }
-  window.addEventListener('resize', resize);
+  window.addEventListener('resize', function () { resize(); if (mode === 'focus') { buildEgo(); } render(); });
   resize();
 
+  // ---------- 聚焦模式：放射状两层局部图 ----------
+  function normFocus(raw) {
+    if (!raw) return null;
+    if (byId[raw]) return raw;
+    const mapped = raw.replace(/^th:/, 't:').replace(/^po:/, 'm:');
+    if (byId[mapped]) return mapped;
+    if (byId['e:' + raw]) return 'e:' + raw;
+    return null;
+  }
+  function randomHub() {
+    const hubs = nodes.filter(function (n) { return n.deg >= 3 && !hidden.has(n.type); });
+    const pool = hubs.length ? hubs : nodes;
+    return pool[Math.floor(Math.random() * pool.length)].id;
+  }
+
+  let egoNodes = [], egoEdges = [];
+  function buildEgo() {
+    const center = byId[focusId];
+    if (!center) return;
+    const r = stage.getBoundingClientRect();
+    const cx = r.width / 2, cy = r.height / 2;
+    const R1 = Math.min(r.width, r.height) * 0.24;
+    const R2 = Math.min(r.width, r.height) * 0.44;
+
+    let ring1 = Array.from(nbr[focusId] || []).map(function (id) { return byId[id]; })
+      .filter(function (n) { return !hidden.has(n.type); });
+    ring1.sort(function (a, b) { return b.deg - a.deg; });
+    ring1 = ring1.slice(0, 14);
+    const inSet = new Set([focusId]);
+    ring1.forEach(function (n) { inSet.add(n.id); });
+
+    const cand = new Map();
+    ring1.forEach(function (p) {
+      (nbr[p.id] || []).forEach(function (id) {
+        if (inSet.has(id)) return;
+        const n = byId[id];
+        if (hidden.has(n.type)) return;
+        if (!cand.has(id)) cand.set(id, []);
+        cand.get(id).push(p.id);
+      });
+    });
+    let ring2 = Array.from(cand.keys()).map(function (id) { return byId[id]; });
+    ring2.sort(function (a, b) {
+      return (cand.get(b.id).length - cand.get(a.id).length) || (b.deg - a.deg);
+    });
+    ring2 = ring2.slice(0, 22);
+    ring2.forEach(function (n) { inSet.add(n.id); });
+
+    center.gx = cx; center.gy = cy; center.depth = 0;
+    ring1.forEach(function (n, i) {
+      const a = -Math.PI / 2 + i * 2 * Math.PI / Math.max(ring1.length, 1);
+      n.gx = cx + R1 * Math.cos(a); n.gy = cy + R1 * Math.sin(a);
+      n.angle = a; n.depth = 1;
+    });
+    ring2.forEach(function (n) {
+      const ps = cand.get(n.id).map(function (pid) { return byId[pid]; })
+        .filter(function (p) { return p.angle !== undefined; });
+      let a;
+      if (ps.length) {
+        let sx = 0, sy = 0;
+        ps.forEach(function (p) { sx += Math.cos(p.angle); sy += Math.sin(p.angle); });
+        a = Math.atan2(sy, sx);
+      } else a = Math.random() * 2 * Math.PI;
+      n.baseAngle = a; n.depth = 2;
+    });
+    ring2.sort(function (a, b) { return a.baseAngle - b.baseAngle; });
+    const minSep = ring2.length ? Math.min(0.42, 2 * Math.PI / ring2.length) : 0;
+    for (let i = 1; i < ring2.length; i++) {
+      if (ring2[i].baseAngle - ring2[i - 1].baseAngle < minSep) {
+        ring2[i].baseAngle = ring2[i - 1].baseAngle + minSep;
+      }
+    }
+    ring2.forEach(function (n) {
+      n.gx = cx + R2 * Math.cos(n.baseAngle); n.gy = cy + R2 * Math.sin(n.baseAngle);
+    });
+
+    egoNodes = [center].concat(ring1, ring2);
+    const ids = new Set(egoNodes.map(function (n) { return n.id; }));
+    egoEdges = edges.filter(function (e) { return ids.has(e.a.id) && ids.has(e.b.id); });
+    view.x = 0; view.y = 0; view.scale = 1;
+  }
+
+  function setFocus(id, push) {
+    focusId = id;
+    buildEgo();
+    render();
+    if (push !== false) {
+      const u = new URL(location.href);
+      u.searchParams.set('focus', id);
+      history.replaceState(null, '', u);
+    }
+  }
+
+  const sx = function (wx) { return wx * view.scale + view.x; };
+  const sy = function (wy) { return wy * view.scale + view.y; };
+
+  function nodePos(n) {
+    return mode === 'focus' ? { x: n.gx, y: n.gy } : { x: n.x, y: n.y };
+  }
+  function nodeRadius(n) {
+    if (mode === 'focus') {
+      return n.depth === 0 ? 13 : n.depth === 1 ? 6.5 : 4.5;
+    }
+    return 3.2 + Math.sqrt(n.deg) * 1.7;
+  }
+
+  function drawLabel(n, fs, color, dy) {
+    const p = nodePos(n);
+    const tx = sx(p.x), ty = sy(p.y) + dy;
+    ctx.font = fs + "px 'Noto Serif SC', serif";
+    ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(242,237,227,0.92)';
+    ctx.strokeText(n.label, tx, ty);
+    ctx.fillStyle = color;
+    ctx.fillText(n.label, tx, ty);
+  }
+
+  function renderFocus() {
+    const r = stage.getBoundingClientRect();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, r.width, r.height);
+    const hi = hover ? nbr[hover.id] : null;
+
+    egoEdges.forEach(function (e) {
+      const deep = Math.max(e.a.depth, e.b.depth);
+      const on = hover && (e.a === hover || e.b === hover);
+      ctx.strokeStyle = on ? 'rgba(176,80,62,0.55)' : deep <= 1 ? 'rgba(60,52,44,0.28)' : 'rgba(60,52,44,0.10)';
+      ctx.lineWidth = deep <= 1 ? 1.4 : 1;
+      const pa = nodePos(e.a), pb = nodePos(e.b);
+      ctx.beginPath();
+      ctx.moveTo(sx(pa.x), sy(pa.y));
+      ctx.lineTo(sx(pb.x), sy(pb.y));
+      ctx.stroke();
+    });
+
+    egoNodes.forEach(function (n) {
+      const p = nodePos(n);
+      const faded = hover && n !== hover && !(hi && hi.has(n.id));
+      ctx.globalAlpha = faded ? 0.25 : n.depth === 2 ? 0.75 : 1;
+      ctx.beginPath();
+      ctx.arc(sx(p.x), sy(p.y), nodeRadius(n) * view.scale, 0, Math.PI * 2);
+      ctx.fillStyle = n.depth === 0 ? '#B83232' : TYPE[n.type].color;
+      ctx.fill();
+      if (n === hover) { ctx.lineWidth = 2; ctx.strokeStyle = '#1A1814'; ctx.stroke(); }
+      ctx.globalAlpha = 1;
+    });
+
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    egoNodes.forEach(function (n) {
+      const dy = nodeRadius(n) * view.scale + 3;
+      if (n.depth === 0) drawLabel(n, 14, '#1A1814', dy);
+      else if (n.depth === 1) drawLabel(n, 11.5, '#3B342C', dy);
+      else drawLabel(n, 10, '#8A8172', dy);
+    });
+  }
+
+  // ---------- 全景模式：力导向 ----------
+  let alpha = 0, panReady = false;
   function simulate(a) {
     const N = nodes.length;
     for (let i = 0; i < N; i++) {
@@ -127,74 +288,76 @@ const graphData = { nodes: [...nodeMap.values()], edges };
         if (d2 < 0.01) { d2 = 0.01; dx = Math.random() - 0.5; dy = Math.random() - 0.5; }
         const d = Math.sqrt(d2);
         const f = (9000 / d2) * a;
-        const fx = (dx / d) * f, fy = (dy / d) * f;
-        ni.vx += fx; ni.vy += fy; nj.vx -= fx; nj.vy -= fy;
+        ni.vx += (dx / d) * f; ni.vy += (dy / d) * f;
+        nj.vx -= (dx / d) * f; nj.vy -= (dy / d) * f;
       }
     }
-    for (const e of edges) {
+    edges.forEach(function (e) {
       let dx = e.b.x - e.a.x, dy = e.b.y - e.a.y;
       const d = Math.sqrt(dx * dx + dy * dy) || 0.01;
       const f = (d - 70) * 0.02 * a;
-      const fx = (dx / d) * f, fy = (dy / d) * f;
-      e.a.vx += fx; e.a.vy += fy; e.b.vx -= fx; e.b.vy -= fy;
-    }
-    for (const n of nodes) {
+      e.a.vx += (dx / d) * f; e.a.vy += (dy / d) * f;
+      e.b.vx -= (dx / d) * f; e.b.vy -= (dy / d) * f;
+    });
+    nodes.forEach(function (n) {
       n.vx += -n.x * 0.012 * a; n.vy += -n.y * 0.012 * a;
       n.vx *= 0.86; n.vy *= 0.86;
-      if (n !== dragNode) { n.x += n.vx; n.y += n.vy; }
-    }
+      n.x += n.vx; n.y += n.vy;
+    });
   }
-
-  function fit() {
+  function fitPan() {
     let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
-    for (const n of nodes) { minX = Math.min(minX, n.x); minY = Math.min(minY, n.y); maxX = Math.max(maxX, n.x); maxY = Math.max(maxY, n.y); }
+    nodes.forEach(function (n) {
+      minX = Math.min(minX, n.x); minY = Math.min(minY, n.y);
+      maxX = Math.max(maxX, n.x); maxY = Math.max(maxY, n.y);
+    });
     const r = stage.getBoundingClientRect();
     const w = maxX - minX || 1, h = maxY - minY || 1;
     view.scale = Math.min(r.width / (w + 120), r.height / (h + 120), 2.2);
     view.x = r.width / 2 - ((minX + maxX) / 2) * view.scale;
     view.y = r.height / 2 - ((minY + maxY) / 2) * view.scale;
-    baseScale = view.scale;
   }
-
-  const sx = (wx) => wx * view.scale + view.x;
-  const sy = (wy) => wy * view.scale + view.y;
-
-  function render() {
+  function ensurePan() {
+    if (panReady) return;
+    nodes.forEach(function (n) { n.x = (Math.random() - 0.5) * 700; n.y = (Math.random() - 0.5) * 700; });
+    let a = 1;
+    for (let i = 0; i < 240; i++) { simulate(a); a *= 0.985; }
+    panReady = true;
+    fitPan();
+  }
+  function renderPan() {
     const r = stage.getBoundingClientRect();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, r.width, r.height);
-
     const hi = hover ? nbr[hover.id] : null;
     ctx.lineWidth = 1;
-    for (const e of edges) {
-      if (hidden.has(e.a.type) || hidden.has(e.b.type)) continue;
+    edges.forEach(function (e) {
+      if (hidden.has(e.a.type) || hidden.has(e.b.type)) return;
       const on = hover && (e.a === hover || e.b === hover);
-      ctx.strokeStyle = on ? 'rgba(176,80,62,0.5)' : (hover ? 'rgba(60,52,44,0.05)' : 'rgba(60,52,44,0.11)');
+      ctx.strokeStyle = on ? 'rgba(176,80,62,0.5)' : hover ? 'rgba(60,52,44,0.05)' : 'rgba(60,52,44,0.11)';
       ctx.beginPath();
       ctx.moveTo(sx(e.a.x), sy(e.a.y));
       ctx.lineTo(sx(e.b.x), sy(e.b.y));
       ctx.stroke();
-    }
-    for (const n of nodes) {
-      if (hidden.has(n.type)) continue;
+    });
+    nodes.forEach(function (n) {
+      if (hidden.has(n.type)) return;
       const faded = hover && n !== hover && !(hi && hi.has(n.id));
-      const rad = radius(n) * view.scale;
-      ctx.beginPath();
-      ctx.arc(sx(n.x), sy(n.y), rad, 0, Math.PI * 2);
       ctx.globalAlpha = faded ? 0.22 : 1;
+      ctx.beginPath();
+      ctx.arc(sx(n.x), sy(n.y), nodeRadius(n) * view.scale, 0, Math.PI * 2);
       ctx.fillStyle = TYPE[n.type].color;
       ctx.fill();
       if (n === hover) { ctx.lineWidth = 2; ctx.strokeStyle = '#1A1814'; ctx.stroke(); }
       ctx.globalAlpha = 1;
-    }
-    // 标签：优先级 + 避让。全览只显枢纽；放大到基准 1.35 倍后显示视野内全部
+    });
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     const placed = [];
     function label(n, fs, strong) {
       if (hidden.has(n.type)) return;
       ctx.font = fs + "px 'Noto Serif SC', serif";
       const w = ctx.measureText(n.label).width;
-      const tx = sx(n.x), ty = sy(n.y) + radius(n) * view.scale + 2;
+      const tx = sx(n.x), ty = sy(n.y) + nodeRadius(n) * view.scale + 2;
       const box = { x: tx - w / 2 - 2, y: ty - 1, w: w + 4, h: fs + 3 };
       if (tx < -40 || tx > r.width + 40 || ty < -20 || ty > r.height + 20) return;
       for (const b of placed) {
@@ -208,63 +371,62 @@ const graphData = { nodes: [...nodeMap.values()], edges };
     }
     if (hover) {
       label(hover, 12.5, true);
-      if (hi) for (const n of nodes) if (hi.has(n.id)) label(n, 11, false);
+      if (hi) nodes.forEach(function (n) { if (hi.has(n.id)) label(n, 11, false); });
     } else {
-      const zoomed = view.scale > baseScale * 1.35;
-      // 枢纽优先占位
-      for (const n of nodes) if (n.deg >= 7) label(n, 11.5, true);
-      if (zoomed) for (const n of nodes) if (n.deg < 7) label(n, 10.5, false);
+      const zoomed = view.scale > 1.2;
+      nodes.forEach(function (n) { if (n.deg >= 7) label(n, 11.5, true); });
+      if (zoomed) nodes.forEach(function (n) { if (n.deg < 7) label(n, 10.5, false); });
     }
   }
 
-  // 渲染按需触发：模拟激活时才跑 rAF，静止后停下（省 CPU，也让截图/页面不被占用）
-  let running = false, refitT = null;
-  function frame() {
-    simulate(alpha); alpha *= 0.985;
+  function render() { if (mode === 'focus') renderFocus(); else renderPan(); }
+
+  function setMode(m) {
+    mode = m;
+    document.getElementById('mode-focus').classList.toggle('cur', m === 'focus');
+    document.getElementById('mode-pan').classList.toggle('cur', m === 'pan');
+    if (m === 'pan') { ensurePan(); }
+    else { buildEgo(); }
+    if (hintEl) hintEl.textContent = m === 'focus'
+      ? '单击节点重新聚焦 · 双击进入词条 · 「换一个」随机漫游'
+      : '拖动平移 · 滚轮缩放 · 单击聚焦该节点 · 双击进入词条';
     render();
-    if (alpha > 0.02 || dragNode) requestAnimationFrame(frame);
-    else running = false;
   }
-  function start() { if (!running) { running = true; requestAnimationFrame(frame); } }
-  // 预先跑出布局（带冷却）后静态呈现
-  alpha = 1;
-  for (let i = 0; i < 240; i++) { simulate(alpha); alpha *= 0.985; }
-  alpha = 0;
-  fit();
-  render();
 
-  function toWorld(mx, my) { return { x: (mx - view.x) / view.scale, y: (my - view.y) / view.scale }; }
-  function pick(mx, my) {
-    const w = toWorld(mx, my);
-    let best = null, bd = 1e9;
-    for (const n of nodes) {
-      if (hidden.has(n.type)) continue;
-      const dx = n.x - w.x, dy = n.y - w.y, d = dx * dx + dy * dy;
-      const rr = radius(n) + 6 / view.scale;
-      if (d < rr * rr && d < bd) { bd = d; best = n; }
-    }
-    return best;
-  }
+  // ---------- 交互 ----------
+  let panning = false, moved = false, last = { x: 0, y: 0 };
+  let clickTimer = null;
+
   function relPos(ev) {
     const r = canvas.getBoundingClientRect();
     return { x: ev.clientX - r.left, y: ev.clientY - r.top };
   }
+  function pick(mx, my) {
+    const wx = (mx - view.x) / view.scale, wy = (my - view.y) / view.scale;
+    const list = mode === 'focus' ? egoNodes : nodes.filter(function (n) { return !hidden.has(n.type); });
+    let best = null, bd = 1e9;
+    list.forEach(function (n) {
+      const p = nodePos(n);
+      const dx = p.x - wx, dy = p.y - wy, d = dx * dx + dy * dy;
+      const rr = nodeRadius(n) + 8 / view.scale;
+      if (d < rr * rr && d < bd) { bd = d; best = n; }
+    });
+    return best;
+  }
 
-  canvas.addEventListener('pointerdown', (ev) => {
-    const p = relPos(ev); moved = false; last = p;
-    const n = pick(p.x, p.y);
-    if (n) dragNode = n; else panning = true;
+  canvas.addEventListener('pointerdown', function (ev) {
+    const p = relPos(ev); moved = false; last = p; panning = true;
     canvas.setPointerCapture(ev.pointerId);
   });
-  canvas.addEventListener('pointermove', (ev) => {
+  canvas.addEventListener('pointermove', function (ev) {
     const p = relPos(ev);
-    if (dragNode) {
+    if (panning && (Math.abs(p.x - last.x) > 3 || Math.abs(p.y - last.y) > 3)) {
       moved = true;
-      dragNode.x = (p.x - view.x) / view.scale; dragNode.y = (p.y - view.y) / view.scale;
-      dragNode.vx = 0; dragNode.vy = 0; alpha = Math.max(alpha, 0.25); start();
-    } else if (panning) {
-      moved = true; view.x += p.x - last.x; view.y += p.y - last.y; last = p; render();
-    } else {
+      view.x += p.x - last.x; view.y += p.y - last.y; last = p;
+      render();
+      return;
+    }
+    if (!panning) {
       const n = pick(p.x, p.y);
       if (n !== hover) {
         hover = n;
@@ -276,11 +438,25 @@ const graphData = { nodes: [...nodeMap.values()], edges };
       if (n) { tip.style.left = (p.x + 14) + 'px'; tip.style.top = (p.y + 14) + 'px'; }
     }
   });
-  canvas.addEventListener('pointerup', (ev) => {
-    if (dragNode && !moved) window.location.href = dragNode.url;
-    dragNode = null; panning = false;
+  canvas.addEventListener('pointerup', function (ev) {
+    panning = false;
+    if (moved) return;
+    const p = relPos(ev);
+    const n = pick(p.x, p.y);
+    if (!n) return;
+    if (clickTimer) {
+      clearTimeout(clickTimer); clickTimer = null;
+      window.location.href = n.url;
+      return;
+    }
+    clickTimer = setTimeout(function () {
+      clickTimer = null;
+      if (mode === 'pan') { setMode('focus'); setFocus(n.id); }
+      else if (n.id !== focusId) setFocus(n.id);
+      else window.location.href = n.url;
+    }, 260);
   });
-  canvas.addEventListener('wheel', (ev) => {
+  canvas.addEventListener('wheel', function (ev) {
     ev.preventDefault();
     const p = relPos(ev);
     const f = ev.deltaY < 0 ? 1.12 : 1 / 1.12;
@@ -290,18 +466,32 @@ const graphData = { nodes: [...nodeMap.values()], edges };
     render();
   }, { passive: false });
 
-  document.querySelectorAll('.lg').forEach((btn) => {
-    btn.addEventListener('click', () => {
+  document.querySelectorAll('.lg').forEach(function (btn) {
+    btn.addEventListener('click', function () {
       const t = btn.dataset.type;
       if (hidden.has(t)) { hidden.delete(t); btn.classList.add('active'); }
       else { hidden.add(t); btn.classList.remove('active'); }
+      if (mode === 'focus') buildEgo();
       render();
     });
   });
-  document.getElementById('reset').addEventListener('click', () => {
-    alpha = 0.6; start();
-    clearTimeout(refitT); refitT = setTimeout(() => { fit(); render(); }, 1300);
+  document.getElementById('mode-focus').addEventListener('click', function () { setMode('focus'); });
+  document.getElementById('mode-pan').addEventListener('click', function () { setMode('pan'); });
+  document.getElementById('shuffle').addEventListener('click', function () {
+    if (mode !== 'focus') setMode('focus');
+    setFocus(randomHub());
   });
+  document.getElementById('reset').addEventListener('click', function () {
+    if (mode === 'focus') { buildEgo(); render(); }
+    else { fitPan(); render(); }
+  });
+
+  // ---------- 启动 ----------
+  const rawFocus = new URLSearchParams(location.search).get('focus');
+  focusId = normFocus(rawFocus) || randomHub();
+  setMode('focus');
+  setFocus(focusId, false);
+
 </script>
 
 <style>
@@ -352,6 +542,17 @@ body { font-family: var(--font-serif); background: var(--bg); color: var(--ink);
   background: rgba(250,247,240,0.85); border: 1px solid rgba(42,38,32,0.22); padding: 0.3rem 0.7rem; cursor: pointer;
 }
 .g-reset:hover { color: var(--ink); border-color: var(--ink); }
+.g-controls {
+  position: absolute; left: 1.2rem; top: 1rem; z-index: 3; display: flex; gap: 0.45rem;
+}
+.gc-btn {
+  font-family: var(--font-serif); font-size: 0.78rem; letter-spacing: 0.08em; color: var(--ink-light);
+  background: rgba(250,247,240,0.85); border: 1px solid rgba(42,38,32,0.22); padding: 0.3rem 0.75rem; cursor: pointer;
+  transition: all 0.18s;
+}
+.gc-btn:hover { color: var(--ink); border-color: var(--ink); }
+.gc-btn.cur { color: #fff; background: var(--ink); border-color: var(--ink); }
+.gc-shuffle { margin-left: 0.4rem; }
 .g-hint {
   position: absolute; left: 0; right: 0; bottom: 0.9rem; z-index: 2; text-align: center;
   font-size: 0.72rem; color: var(--ink-light); opacity: 0.6; letter-spacing: 0.06em; pointer-events: none;
