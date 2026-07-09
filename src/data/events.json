@@ -1009,7 +1009,7 @@
     "title": "南宋建立", "year_start": 1127, "year_end": 1127, "dynasty": "南宋",
     "category": ["政治"], "location": "应天 · 临安",
     "summary": "靖康之变北宋覆灭后，康王赵构于南方即位，重建宋室，后定都临安，是为南宋，与金隔淮对峙。",
-    "related_people": ["song-gaozong", "yue-fei", "qin-hui"], "related_poems": ["yong-yu-le-jingkou", "shi-er"], "tags": ["赵构", "南渡", "临安"],
+    "related_people": ["song-gaozong", "yue-fei", "qin-hui"], "related_poems": ["yong-yu-le-jingkou", "shi-er", "pozhenzi-xin"], "tags": ["赵构", "南渡", "临安"],
     "detail": {
       "background": "靖康之变，金军攻破汴京，掳走徽、钦二帝，北宋灭亡。中原板荡、皇室倾覆之际，侥幸在外的康王赵构，成为延续赵宋国祚的唯一希望。",
       "process": [
@@ -2779,7 +2779,7 @@
     "title": "李元昊建西夏", "tier": "minor", "year_start": 1038, "year_end": 1044, "dynasty": "西夏",
     "category": ["政治", "战争"], "location": "兴庆府",
     "summary": "李元昊称帝建夏、创西夏文字，三战大败宋军，庆历和议后宋辽夏三分之势成型。",
-    "related_people": ["li-yuanhao", "fan-zhongyan"], "related_poems": ["yu-jia-ao"], "tags": ["西夏", "宋夏战争", "三国鼎立"],
+    "related_people": ["li-yuanhao", "fan-zhongyan"], "related_poems": ["yu-jia-ao", "sumuzhe-fan"], "tags": ["西夏", "宋夏战争", "三国鼎立"],
     "detail": {
       "background": "党项族世居西北，唐末以来渐成割据之势。李元昊继位后弃唐宋赐姓、创制文字、整军经武，称帝之志已不可遏。",
       "process": [
