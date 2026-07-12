@@ -76,8 +76,9 @@ const eraStats = eras
     <div class="header-inner">
       <div class="site-identity">
         <a href={base} class="logo-link">
-          <img src={`${base}logo.png`} alt="观复 · Every era leaves a trace." class="site-logo" />
+          <img src={`${base}logo.png`} alt="观复" class="site-logo" />
         </a>
+        <p class="site-subtitle">Every era leaves a trace.</p>
       </div>
       <nav class="top-nav">
         <a href={`${base}threads`} class="nav-link">脈絡</a>
@@ -335,10 +336,11 @@ body { font-family: var(--font-serif); background-color: var(--bg); color: var(-
 /* 页头 */
 .site-header { padding-top: 3.5rem; }
 .header-inner { display: flex; align-items: flex-end; gap: 1.5rem; justify-content: space-between; }
-.site-identity { flex: 1; }
+.site-identity { display: flex; flex-direction: column; }
 .logo-link { display: inline-block; }
-.site-logo { display: block; width: 168px; height: auto; mix-blend-mode: multiply; opacity: 0.92; transition: opacity 0.2s; }
+.site-logo { display: block; width: 158px; height: auto; mix-blend-mode: multiply; opacity: 0.88; transition: opacity 0.2s; }
 .logo-link:hover .site-logo { opacity: 1; }
+.site-subtitle { align-self: stretch; text-align: right; font-family: var(--font-en); font-style: italic; font-size: 0.92rem; color: var(--red); letter-spacing: 0.05em; margin-top: 0.15rem; }
 .top-nav { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; padding-bottom: 0.2rem; }
 .nav-link, .nav-link:link, .nav-link:visited { font-family: var(--font-serif); font-size: 0.82rem; letter-spacing: 0.14em; color: var(--ink-light); transition: color 0.2s; }
 .nav-link:hover, .nav-link.active { color: var(--ink); }

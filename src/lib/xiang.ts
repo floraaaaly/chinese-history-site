@@ -1,26 +1,80 @@
-// 意象之网：逐首据诗中真实意象提炼的核心意象词汇 → 诗（一首诗归属其含有的多个意象）
-// 诗境页与诗词详情页共用，保证「意象为网」在全站一致
-export const xiangGroups: { name: string; ids: string[] }[] = [
-  { name: '山', ids: ['duan-ge-xing', 'chun-wang', 'man-jiang-hong', 'jiang-xue', 'yin-jiu-wu', 'shan-ju-qiu-ming', 'chu-sai', 'yong-yu-le-jingkou', 'zuoqian-languan', 'guo-guren-zhuang', 'yu-jia-ao', 'guan-cang-hai', 'bo-chuan-guazhou', 'shi-hui-yin', 'baixuege', 'yuzhong-tibi', 'shanpoyang-tongguan', 'deng-guanquelou', 'yanqiu-ci', 'changxiangsi-nalan', 'gui-yuan-tianju', 'lu-zhai', 'dingfengbo-sushi', 'you-shanxicun', 'ti-xilin-bi', 'furong-lou', 'xijiangyue-xin'] },
-  { name: '江河', ids: ['duan-ge-xing', 'jiang-xue', 'shan-ju-qiu-ming', 'yu-mei-ren', 'nian-nu-jiao-chibi', 'yong-yu-le-jingkou', 'zuoqian-languan', 'guo-ling-tan', 'jiang-jin-jiu', 'deng-gao', 'guan-cang-hai', 'xiari-jueju', 'jian-jia', 'shanpoyang-tongguan', 'chunjiang-huayueye', 'deng-guanquelou', 'changxiangsi-nalan', 'wangjiangnan-wen', 'wuti-lishangyin', 'guan-shu-yougan', 'you-shanxicun', 'xiangjianhuan-liyu', 'huatangchun-nalan', 'langtaosha-liyu', 'yijianmei-liqingzhao'] },
-  { name: '月', ids: ['jing-ye-si', 'shan-ju-qiu-ming', 'chu-sai', 'yu-mei-ren', 'nian-nu-jiao-chibi', 'sheng-cha-zi-yuanxi', 'shui-diao-getou', 'bo-chuan-guazhou', 'chunjiang-huayueye', 'yu-lin-ling', 'wangjiangnan-wen', 'xiangjianhuan-liyu', 'dielianhua-nalan', 'qingyuan-yuanxi', 'xijiangyue-xin', 'yijianmei-liqingzhao'] },
-  { name: '草木', ids: ['sheng-sheng-man', 'yi-shandong-xiongdi', 'shan-ju-qiu-ming', 'guo-guren-zhuang', 'guo-ling-tan', 'li-sao', 'deng-gao', 'guan-cang-hai', 'jian-jia', 'min-nong', 'youzi-yin', 'gui-yuan-tianju', 'xiangjianhuan-liyu', 'huanxisha-nalan', 'xijiangyue-xin', 'zuihuayin-liqingzhao', 'sumuzhe-fan'] },
-  { name: '花', ids: ['chun-wang', 'sheng-sheng-man', 'yin-jiu-wu', 'mei-hua', 'yu-mei-ren', 'sheng-cha-zi-yuanxi', 'guo-guren-zhuang', 'wuyi-xiang', 'huanxisha-yanshu', 'chun-xiao', 'dingfengbo-sushi', 'you-shanxicun', 'langtaosha-liyu', 'zuihuayin-liqingzhao', 'rumengling-liqingzhao'] },
-  { name: '关塞', ids: ['man-jiang-hong', 'song-yuan-er', 'chu-sai', 'zuoqian-languan', 'yu-jia-ao', 'baixuege', 'mulan-shi', 'shanpoyang-tongguan', 'liangzhou-ci-wanghan', 'yanmenta-xing'] },
-  { name: '兵戈', ids: ['man-jiang-hong', 'nian-nu-jiao-chibi', 'chi-bi-dumu', 'yong-yu-le-jingkou', 'shi-er', 'yuzhong-tibi', 'mulan-shi', 'yanmenta-xing', 'pozhenzi-xin'] },
-  { name: '相思', ids: ['xiang-si', 'jin-se', 'chang-hen-ge', 'li-sao', 'jian-jia', 'wuti-lishangyin', 'queqiao-xian', 'wangjiangnan-wen', 'mulanhua-nalan', 'huanxisha-nalan', 'huatangchun-nalan', 'dielianhua-nalan', 'yijianmei-liqingzhao', 'zuihuayin-liqingzhao'] },
-  { name: '风', ids: ['yu-mei-ren', 'chi-bi-dumu', 'guo-ling-tan', 'deng-gao', 'guan-cang-hai', 'bo-chuan-guazhou', 'jihai-zashi', 'bie-dong-da', 'baixuege', 'song-dushaofu', 'yu-lin-ling', 'changxiangsi-nalan', 'chun-xiao', 'dingfengbo-sushi', 'wuti-lishangyin', 'mulanhua-nalan', 'huanxisha-nalan', 'sumuzhe-fan'] },
-  { name: '禽鸟', ids: ['chun-wang', 'yin-jiu-wu', 'jin-se', 'chang-hen-ge', 'wuyi-xiang', 'huanxisha-yanshu', 'gui-yuan-tianju', 'chun-xiao', 'dielianhua-nalan', 'xijiangyue-xin', 'rumengling-liqingzhao', 'yijianmei-liqingzhao'] },
-  { name: '雪', ids: ['jiang-xue', 'mei-hua', 'zuoqian-languan', 'bie-dong-da', 'baixuege', 'maitan-weng', 'yanqiu-ci', 'changxiangsi-nalan', 'dielianhua-nalan'] },
-  { name: '酒', ids: ['duan-ge-xing', 'song-yuan-er', 'jiang-jin-jiu', 'yu-lin-ling', 'huanxisha-yanshu', 'liangzhou-ci-wanghan', 'you-shanxicun', 'zuihuayin-liqingzhao', 'sumuzhe-fan'] },
-  { name: '马', ids: ['gai-xia-ge', 'chu-sai', 'yong-yu-le-jingkou', 'jihai-zashi', 'baixuege', 'liangzhou-ci-wanghan', 'pozhenzi-xin'] },
-  { name: '柳', ids: ['song-yuan-er', 'sheng-cha-zi-yuanxi', 'yu-lin-ling'] },
-  { name: '雁', ids: ['sheng-sheng-man', 'yu-jia-ao', 'bie-dong-da', 'yanqiu-ci', 'yijianmei-liqingzhao'] },
-  { name: '乡关', ids: ['hui-xiang-oushu', 'jing-ye-si', 'yi-shandong-xiongdi', 'changxiangsi-nalan'] },
-  { name: '天地', ids: ['deng-youzhoutai', 'shui-diao-getou', 'guan-cang-hai'] },
-  { name: '火', ids: ['chun-wang', 'shi-hui-yin', 'maitan-weng', 'qingyuan-yuanxi'] },
-];
+// 意象之网 —— 自动派生版
+// ────────────────────────────────────────────────────────────────
+// 归类不再手工维护一长串诗 id，而是从每首诗的 imagery / motif 自动派生。
+// 加新诗时通常什么都不用动：只要诗里的意象词已在下方词典中，就会自动归位。
+// 仅当出现「全新的意象词」时，把它加进对应大类一行即可（全站唯一的手工维护点）。
+// 诗境页与诗词详情页共用，保证「意象为网」在全站一致。
+import poemsData from '../data/poems.json';
 
-// 每首诗 → 它的核心意象
+interface Poem { id: string; imagery?: string[]; motif?: string[]; }
+const poems = poemsData as Poem[];
+
+// 大类顺序（诗境页意象条按此排列）
+const ORDER = [
+  '山', '江河', '月', '草木', '花', '关塞', '兵戈', '相思', '风',
+  '禽鸟', '雪', '酒', '马', '柳', '雁', '乡关', '天地', '火',
+] as const;
+
+// 具体意象词 → 大类（一词可归多类，如 江月→江河+月、金戈铁马→兵戈+马）
+const GROUP_TERMS: Record<string, string[]> = {
+  山: ['空山', '庐山', '南山', '千山', '青山', '深山', '峰峦', '峰', '岭', '丘山', '山', '泰山', '群山', '秦岭', '钟山', '身在山中', '万重山', '力拔山', '山海', '山水', '碣石', '楚山', '昆仑', '贺兰山', '天山', '阴山', '山河', '江山', '燕然'],
+  江河: ['长江', '黄河', '大江', '江月', '春水', '春江', '潮水', '江树', '寒江', '清泉', '波涛', '秋水', '瀑布', '银河', '江船', '兰舟', '孤舟', '归舟', '轻舟', '千帆', '孤帆', '巴峡', '巫峡', '沧海', '碧海', '山海', '山水', '潮', '惶恐滩', '零丁洋', '白蘋洲', '望江楼', '山河', '江山', '活水', '方塘', '江东', '瘴江'],
+  月: ['明月', '月', '江月', '残月', '月如钩', '婵娟', '春花秋月', '霜'],
+  草木: ['松', '竹', '菊', '菊花', '黄花', '东篱', '桑麻', '梧桐', '香草', '芳草', '青苔', '稻花', '禾', '蒹葭', '落木', '黄叶', '寸草', '春晖', '桑', '草', '闲田', '风飘絮', '雨打萍', '茱萸'],
+  花: ['花', '落花', '黄花', '梅', '暗香', '凌寒', '梨花', '花千树', '野草花', '藕花', '红藕', '烟花', '花灯', '春花秋月', '桃', '菊花', '菊', '柳暗花明'],
+  关塞: ['关', '阳关', '蓝关', '阴山', '潼关', '燕然', '塞下', '孤城', '羌管', '长车', '胡马', '飞将', '关山', '铁衣', '金柝', '沙场', '角声', '金甲', '玉龙', '黑云', '天山', '贺兰山', '城阙'],
+  兵戈: ['金戈铁马', '折戟', '剑', '连营', '的卢', '铜雀', '长车', '怒发冲冠', '横刀', '铁衣', '金柝', '角声', '金甲', '玉龙', '黑云', '赤壁', '周郎', '二乔', '廉颇', '佛狸祠', '王师', '中原', '孙仲谋', '项羽'],
+  相思: ['相思', '红豆', '锦书', '锦瑟', '珠泪', '比翼鸟', '连理枝', '比翼', '鹊桥', '银汉', '纤云', '飞星', '春蚕', '蜡炬', '青鸟', '双人', '蓝桥', '画扇', '初见', '华年', '蝴蝶', '美人'],
+  风: ['东风', '秋风', '春风', '西风', '北风', '风', '风烟', '风雨', '风雷', '风雪', '烟雨', '萧瑟', '黄云', '风飘絮'],
+  禽鸟: ['燕', '燕子', '飞鸟', '归鸟', '啼鸟', '惊鹊', '鸥鹭', '杜鹃', '青鸟', '雁', '归雁', '雁字', '比翼鸟', '羁鸟'],
+  雪: ['雪', '飞雪', '暮雪', '冰雪', '风雪', '梅', '暗香', '凌寒', '层云'],
+  酒: ['酒', '杜康', '金樽', '葡萄酒', '夜光杯', '腊酒', '泼茶'],
+  马: ['骓', '胡马', '马蹄', '万马', '的卢', '金戈铁马'],
+  柳: ['柳', '杨柳', '柳梢', '柳暗花明'],
+  雁: ['雁', '归雁', '雁字'],
+  乡关: ['故乡', '故园', '乡音', '家书', '异乡', '茱萸', '鬓毛'],
+  天地: ['天地', '日月', '星汉', '青天', '沧海', '碣石', '古人', '来者', '幽州台', '白日'],
+  火: ['烽火', '烈火', '炭', '灯火', '花千树'],
+};
+
+// 情境类：无字面物象，由主题（motif）归入
+const MOTIF_GROUP: Record<string, string> = {
+  爱情相思: '相思',
+  思乡: '乡关',
+};
+
+// ── 以下为派生逻辑，一般无需改动 ──────────────────────────────
+const term2groups = new Map<string, string[]>();
+for (const [g, terms] of Object.entries(GROUP_TERMS)) {
+  for (const t of terms) {
+    const arr = term2groups.get(t);
+    if (arr) arr.push(g); else term2groups.set(t, [g]);
+  }
+}
+
+const groupIds: Record<string, string[]> = {};
+for (const g of ORDER) groupIds[g] = [];
+
+// 每首诗 → 它的核心意象（大类），按 ORDER 顺序
 export const poemXiang: Record<string, string[]> = {};
-xiangGroups.forEach((g) => g.ids.forEach((id) => { (poemXiang[id] = poemXiang[id] || []).push(g.name); }));
+
+for (const p of poems) {
+  const gs = new Set<string>();
+  for (const t of p.imagery || []) {
+    for (const g of term2groups.get(t) || []) gs.add(g);
+  }
+  for (const m of p.motif || []) {
+    const g = MOTIF_GROUP[m];
+    if (g) gs.add(g);
+  }
+  for (const g of ORDER) {
+    if (gs.has(g)) {
+      groupIds[g].push(p.id);
+      (poemXiang[p.id] = poemXiang[p.id] || []).push(g);
+    }
+  }
+}
+
+// 诗境页与详情页共用：{ name, ids }[]，按 ORDER，空类自动略去
+export const xiangGroups: { name: string; ids: string[] }[] =
+  ORDER.filter((g) => groupIds[g].length > 0).map((g) => ({ name: g, ids: groupIds[g] }));
