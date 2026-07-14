@@ -233,7 +233,7 @@
     "location": "长安",
     "summary": "唐太宗开创贞观之治，唐玄宗前期缔造开元盛世，唐朝国力达到鼎盛，诗歌、艺术、对外交流空前繁荣。",
     "related_people": ["tang-taizong", "tang-xuanzong", "wei-zheng", "li-bai", "du-fu", "gao-shi", "cen-shen"],
-    "related_poems": ["jing-ye-si", "chun-wang", "chang-hen-ge", "jiang-jin-jiu", "wanglushan-pubu", "huanghelou-song-meng", "yuexia-duzhuo", "wang-yue"],
+    "related_poems": ["jing-ye-si", "chun-wang", "chang-hen-ge", "jiang-jin-jiu", "wanglushan-pubu", "huanghelou-song-meng", "yuexia-duzhuo", "wang-yue", "huanghelou-cuihao", "shizhi-saishang", "liangzhou-wangzhihuan", "wang-tianmenshan"],
     "tags": ["盛唐", "贞观", "开元"],
     "detail": {
       "background": "隋末天下大乱，李渊父子起兵建唐。唐初百废待兴，如何医治战乱创伤、开创长治久安，成为新王朝的首要课题。唐太宗以隋亡为鉴，由此拉开了中国古代最辉煌盛世的序幕。",
@@ -256,7 +256,7 @@
     "location": "中原、河北",
     "summary": "安禄山、史思明发动叛乱，历时八年，唐朝由盛转衰，藩镇割据局面由此形成，诗圣杜甫以诗记录了这段历史。",
     "related_people": ["an-lushan", "du-fu", "tang-xuanzong", "yang-guifei", "guo-ziyi", "yan-zhenqing"],
-    "related_poems": ["chun-wang", "chang-hen-ge", "deng-gao", "zaofa-baidicheng", "chunye-xiyu", "maowu-qiufeng", "wen-guanjun"],
+    "related_poems": ["chun-wang", "chang-hen-ge", "deng-gao", "zaofa-baidicheng", "chunye-xiyu", "maowu-qiufeng", "wen-guanjun", "jueju-liangge", "lvye-shuhuai"],
     "tags": ["藩镇割据", "由盛转衰", "杜甫"],
     "detail": {
       "background": "开元盛世之后，唐玄宗怠政、奸相当道，地方节度使权力膨胀。身兼范阳、平卢、河东三镇节度使的安禄山，手握重兵、久蓄异志。盛唐繁华的表象之下，一场动摇国本的大乱一触即发。",
@@ -744,7 +744,7 @@
     "title": "王安石变法", "year_start": 1069, "year_end": 1085, "dynasty": "宋",
     "category": ["政治", "改革"], "location": "北宋 · 汴京",
     "summary": "宋神宗任王安石推行熙宁变法，行青苗、募役、方田均税诸法以富国强兵，然因新旧党争激烈，终告失败。",
-    "related_people": ["wang-anshi", "su-shi", "sima-guang"], "related_poems": ["mei-hua", "bo-chuan-guazhou"], "tags": ["熙宁变法", "新旧党争"],
+    "related_people": ["wang-anshi", "su-shi", "sima-guang"], "related_poems": ["mei-hua", "bo-chuan-guazhou", "yuan-ri"], "tags": ["熙宁变法", "新旧党争"],
     "detail": {
       "background": "北宋立国百年，「冗官、冗兵、冗费」积弊深重，财政入不敷出，外有辽、夏威胁，积贫积弱之势日显。宋神宗锐意图强，起用力主变法的王安石为相，一场旨在富国强兵的大改革就此推行。",
       "process": [

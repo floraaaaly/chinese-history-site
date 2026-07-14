@@ -6,6 +6,33 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 import { xiangGroups, poemXiang } from '../lib/xiang';
 // 诗流：按年代排（流动中暗含诗史顺序）
 const flowPoems = [...poems].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
+
+// 时代筛选轴：把朝代归入诗史四段
+const ERA_BUCKET: Record<string, string> = {
+  '春秋': '先秦汉魏', '战国': '先秦汉魏', '秦': '先秦汉魏', '秦末': '先秦汉魏',
+  '西汉': '先秦汉魏', '东汉': '先秦汉魏', '东汉末': '先秦汉魏', '汉': '先秦汉魏',
+  '三国': '先秦汉魏', '魏': '先秦汉魏', '西晋': '先秦汉魏', '东晋': '先秦汉魏', '南北朝': '先秦汉魏',
+  '唐': '唐五代', '南唐': '唐五代', '五代': '唐五代', '五代十国': '唐五代',
+  '北宋': '宋', '南宋': '宋', '宋': '宋', '金': '宋', '辽': '宋', '西夏': '宋',
+  '元': '元明清', '明': '元明清', '清': '元明清', '晚清': '元明清', '近代': '元明清',
+};
+const eraOf = (d: string) => ERA_BUCKET[d] || '先秦汉魏';
+const ERA_ORDER = ['先秦汉魏', '唐五代', '宋', '元明清'];
+const ERA_LABEL: Record<string, string> = { '先秦汉魏': '先秦·汉魏', '唐五代': '唐·五代', '宋': '宋', '元明清': '元·明·清' };
+const eraCount: Record<string, number> = {};
+poems.forEach((p) => { const e = eraOf(p.dynasty); eraCount[e] = (eraCount[e] || 0) + 1; });
+const eraList = ERA_ORDER.filter((e) => eraCount[e]);
+
+// 意象按族群分簇显示（同类相邻，一眼可寻，不再是一堵标签墙）
+const XIANG_FAMILY = [
+  { fam: '天象', names: ['月', '云', '风', '雨', '雪', '暮', '天地'] },
+  { fam: '山水', names: ['山', '江河'] },
+  { fam: '草木', names: ['草木', '花', '柳', '禽鸟', '雁'] },
+  { fam: '征戍', names: ['关塞', '兵戈', '马'] },
+  { fam: '器物', names: ['楼台', '丝竹', '酒', '火'] },
+  { fam: '情思', names: ['相思', '乡关', '梦'] },
+];
+const xiangCount: Record<string, number> = Object.fromEntries(xiangGroups.map((g) => [g.name, g.ids.length]));
 ---
 
 <!doctype html>
@@ -56,13 +83,36 @@ const flowPoems = [...poems].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
 
   <div class="page-search"><SiteSearch full placeholder="搜索诗题、诗人、意象，或任意事件 / 人物……" /></div>
 
-  <!-- 意象之网导航 -->
+  <!-- 时代 × 意象 双轴筛选 -->
   <nav class="xiang-nav">
-    <div class="xiang-pills">
-      <button class="xiang-pill cur" data-xiang="__all__">全部<span class="xp-count">{poems.length}</span></button>
-      {xiangGroups.map((g) => (
-        <button class="xiang-pill" data-xiang={g.name}>{g.name}<span class="xp-count">{g.ids.length}</span></button>
-      ))}
+    <div class="filter-rows">
+      <div class="filter-row">
+        <span class="filter-label">时代</span>
+        <div class="chips">
+          <button class="era-chip cur" data-era="__all__">全部<span class="xp-count">{poems.length}</span></button>
+          {eraList.map((e) => (
+            <button class="era-chip" data-era={e}>{ERA_LABEL[e]}<span class="xp-count">{eraCount[e]}</span></button>
+          ))}
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">意象</span>
+        <div class="xiang-stack">
+          <div class="xf-line xf-line-all">
+            <button class="xiang-pill cur" data-xiang="__all__">全部<span class="xp-count">{poems.length}</span></button>
+          </div>
+          {XIANG_FAMILY.map((f) => (
+            <div class="xf-line">
+              <span class="xf-name">{f.fam}</span>
+              <div class="xf-pills">
+                {f.names.filter((n) => xiangCount[n]).map((n) => (
+                  <button class="xiang-pill" data-xiang={n}>{n}<span class="xp-count">{xiangCount[n]}</span></button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
     <button class="to-top" id="to-top" title="回到顶部">↑ 顶部</button>
   </nav>
@@ -71,7 +121,7 @@ const flowPoems = [...poems].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
 
   <div class="poem-flow" id="poem-flow">
     {flowPoems.map((p) => (
-      <a href={`${base}poem/${p.id}`} class="poemcard" data-xiang={(poemXiang[p.id] || []).join(' ')}>
+      <a href={`${base}poem/${p.id}`} class="poemcard" data-xiang={(poemXiang[p.id] || []).join(' ')} data-era={eraOf(p.dynasty)}>
         <div class="pc-head">
           <h3 class="pc-title">{p.title}</h3>
           <span class="pc-byline">{p.author} · {p.dynasty}</span>
@@ -88,7 +138,7 @@ const flowPoems = [...poems].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
       </a>
     ))}
   </div>
-  <p class="empty-hint" id="empty-hint" hidden>暂无此意象的诗作。</p>
+  <p class="empty-hint" id="empty-hint" hidden>暂无符合的诗作，换个时代或意象试试。</p>
 
 </main>
 
@@ -108,33 +158,52 @@ const flowPoems = [...poems].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
     card.addEventListener('mouseleave', () => card.classList.remove('is-hovered'));
   });
 
-  // 意象筛选：点意象 → 只留含此意象的诗，并高亮其标签
-  const pills = Array.from(document.querySelectorAll<HTMLElement>('.xiang-pill'));
+  // 时代 × 意象 双轴筛选（组合取交集）
+  const xiangPills = Array.from(document.querySelectorAll<HTMLElement>('.xiang-pill'));
+  const eraChips = Array.from(document.querySelectorAll<HTMLElement>('.era-chip'));
   const cards = Array.from(document.querySelectorAll<HTMLElement>('.poemcard'));
   const hint = document.getElementById('flow-hint');
   const emptyHint = document.getElementById('empty-hint');
-  let sel = '__all__';
+  let selX = '__all__', selE = '__all__';
+
+  const eraLabel: Record<string, string> = {};
+  eraChips.forEach((c) => { eraLabel[c.dataset.era || ''] = (c.childNodes[0]?.textContent || '').trim(); });
 
   function apply() {
     let vis = 0;
     cards.forEach((c) => {
       const xs = (c.dataset.xiang || '').split(' ');
-      const show = sel === '__all__' || xs.includes(sel);
+      const okX = selX === '__all__' || xs.includes(selX);
+      const okE = selE === '__all__' || c.dataset.era === selE;
+      const show = okX && okE;
       c.style.display = show ? '' : 'none';
       if (show) vis++;
-      c.querySelectorAll<HTMLElement>('.pcx').forEach((t) => t.classList.toggle('on', sel !== '__all__' && t.dataset.x === sel));
+      c.querySelectorAll<HTMLElement>('.pcx').forEach((t) => t.classList.toggle('on', selX !== '__all__' && t.dataset.x === selX));
     });
     if (emptyHint) emptyHint.hidden = vis > 0;
-    if (hint) hint.textContent = sel === '__all__'
-      ? `全 ${cards.length} 首 · 点上方意象，看它在诗中的流转`
-      : `意象「${sel}」· ${vis} 首`;
+    if (hint) {
+      const parts: string[] = [];
+      if (selE !== '__all__') parts.push(eraLabel[selE] || selE);
+      if (selX !== '__all__') parts.push(`意象「${selX}」`);
+      hint.textContent = parts.length
+        ? `${parts.join(' · ')} · ${vis} 首`
+        : `全 ${cards.length} 首 · 择时代或意象，看诗史流转`;
+    }
   }
 
-  pills.forEach((pill) => {
+  xiangPills.forEach((pill) => {
     pill.addEventListener('click', () => {
-      pills.forEach((p) => p.classList.remove('cur'));
+      xiangPills.forEach((p) => p.classList.remove('cur'));
       pill.classList.add('cur');
-      sel = pill.dataset.xiang || '__all__';
+      selX = pill.dataset.xiang || '__all__';
+      apply();
+    });
+  });
+  eraChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      eraChips.forEach((c) => c.classList.remove('cur'));
+      chip.classList.add('cur');
+      selE = chip.dataset.era || '__all__';
       apply();
     });
   });
@@ -142,11 +211,11 @@ const flowPoems = [...poems].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
   // 从详情页带 ?x=意象 进入时，自动选中该意象
   const wantX = new URLSearchParams(location.search).get('x');
   if (wantX) {
-    const target = pills.find((p) => p.dataset.xiang === wantX);
+    const target = xiangPills.find((p) => p.dataset.xiang === wantX);
     if (target) {
-      pills.forEach((p) => p.classList.remove('cur'));
+      xiangPills.forEach((p) => p.classList.remove('cur'));
       target.classList.add('cur');
-      sel = wantX;
+      selX = wantX;
     }
   }
   apply();
@@ -213,24 +282,45 @@ a, a:visited, a:link { color: inherit; text-decoration: none; }
 .intro-text { max-width: 580px; margin: 1.4rem auto 0; font-size: 0.88rem; line-height: 2; color: var(--ink-light); letter-spacing: 0.02em; }
 .page-search { margin-top: 1.8rem; }
 
-/* 意象之网导航（吸顶） */
+/* 时代 × 意象 双轴筛选（吸顶） */
 .xiang-nav {
   position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; gap: 0.9rem;
-  margin-top: 2rem; padding: 0.6rem 0;
+  display: flex; align-items: flex-start; gap: 0.9rem;
+  margin-top: 2rem; padding: 0.7rem 0;
   background: rgba(242,237,227,0.97);
   border-top: 1px solid rgba(42,38,32,0.1); border-bottom: 1px solid rgba(42,38,32,0.14);
 }
-.xiang-pills { flex: 1; display: flex; flex-wrap: wrap; gap: 0.45rem; }
-.xiang-pill {
+.filter-rows { flex: 1; display: flex; flex-direction: column; gap: 0.55rem; }
+.filter-row { display: flex; align-items: flex-start; gap: 0.7rem; }
+.filter-label {
+  flex-shrink: 0; width: 2.2em; padding-top: 0.4em;
+  font-size: 0.72rem; letter-spacing: 0.24em; color: var(--ink-light); opacity: 0.65;
+}
+.chips { flex: 1; display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+/* 意象按族群逐行排列：每族一行、行首标注族名，一眼可寻 */
+.xiang-stack { flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
+.xf-line { display: flex; align-items: baseline; gap: 0.7rem; }
+.xf-name {
+  flex-shrink: 0; width: 2.6em; text-align: left; padding-top: 0.15em;
+  font-size: 0.72rem; letter-spacing: 0.12em; color: var(--blue); opacity: 0.62;
+}
+.xf-pills { flex: 1; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+.era-chip, .xiang-pill {
   display: inline-flex; align-items: baseline; gap: 0.3em; flex-shrink: 0; white-space: nowrap; cursor: pointer;
   font-family: var(--font-serif); font-size: 0.86rem; letter-spacing: 0.08em; color: var(--ink-light);
-  background: transparent; border: 1px solid rgba(63,111,143,0.32); padding: 0.28em 0.85em; transition: all 0.18s;
+  background: transparent; padding: 0.26em 0.8em; transition: all 0.18s;
 }
+/* 时代轴：朱红 */
+.era-chip { border: 1px solid rgba(184,50,50,0.32); }
+.era-chip:hover { color: var(--red); border-color: var(--red); }
+.era-chip.cur { color: #fff; background: var(--red); border-color: var(--red); }
+/* 意象轴：靛蓝 */
+.xiang-pill { border: 1px solid rgba(63,111,143,0.32); }
 .xiang-pill:hover { color: var(--blue); border-color: var(--blue); }
 .xiang-pill.cur { color: #fff; background: var(--blue); border-color: var(--blue); }
 .xp-count { font-family: var(--font-en); font-size: 0.64rem; opacity: 0.6; }
-.xiang-pill.cur .xp-count { opacity: 0.85; }
+.era-chip.cur .xp-count, .xiang-pill.cur .xp-count { opacity: 0.85; }
 .to-top {
   flex-shrink: 0; font-family: var(--font-serif); font-size: 0.76rem; letter-spacing: 0.06em;
   color: var(--ink-light); background: transparent; border: 1px solid rgba(42,38,32,0.25);
